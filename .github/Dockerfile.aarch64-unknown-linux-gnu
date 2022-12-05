@@ -1,0 +1,5 @@
+FROM messense/manylinux2014-cross:aarch64
+
+ENV CC_aarch64_unknown_linux_gnu=clang \
+    CXX_aarch64_unknown_linux_gnu=clang++
+RUN apt update && apt install -y --no-install-recommends libboost-dev ragel crossbuild-essential-arm64 && apt clean

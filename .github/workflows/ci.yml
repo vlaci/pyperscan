@@ -91,11 +91,14 @@ jobs:
       matrix:
         include:
           - target: x86_64-unknown-linux-gnu
+          - target: aarch64-unknown-linux-gnu
     name: Build Docker env - ${{ matrix.target }}
     runs-on: ubuntu-latest
     outputs:
-      image: ${{ steps.build.outputs.image }}
-      tag: ${{ steps.build.outputs.tag }}
+      image-x86_64-unknown-linux-gnu: ${{ steps.build.outputs.image-x86_64-unknown-linux-gnu }}
+      tag-x86_64-unknown-linux-gnu: ${{ steps.build.outputs.tag-x86_64-unknown-linux-gnu }}
+      image-aarch64-unknown-linux-gnu: ${{ steps.build.outputs.image-aarch64-unknown-linux-gnu }}
+      tag-aarch64-unknown-linux-gnu: ${{ steps.build.outputs.tag-aarch64-unknown-linux-gnu }}
     steps:
       - uses: actions/checkout@v3
       - name: Prepare build
@@ -106,8 +109,8 @@ jobs:
           TAG=${{ hashFiles(format('.github/Dockerfile.{0}', matrix.target)) }}
           REF=$IMAGE-${{ matrix.target }}:$TAG
           echo ref=$REF > $GITHUB_ENV
-          echo image=$IMAGE > $GITHUB_OUTPUT
-          echo tag=$TAG >> $GITHUB_OUTPUT
+          echo image-${{ matrix.target }}=$IMAGE > $GITHUB_OUTPUT
+          echo tag-${{ matrix.target }}=$TAG >> $GITHUB_OUTPUT
           if ! docker manifest inspect $REF; then
             echo build=true >> $GITHUB_ENV
           fi
@@ -169,6 +172,10 @@ jobs:
             maturin: "-F vectorscan"
             target: x86_64-unknown-linux-gnu
             kind: static-vectorscan
+          - os: ubuntu-latest
+            maturin: "-F vectorscan --target aarch64-unknown-linux-gnu"
+            target: aarch64-unknown-linux-gnu
+            kind: static-vectorscan
           - os: macos-latest
             target: universal2-apple-darwin
             maturin: "-F vectorscan --universal2"
@@ -198,7 +205,7 @@ jobs:
       - name: Building builder container
         if: ${{ runner.os == 'Linux' }}
         run: |
-          CONTAINER=${{ needs.prepare-build-env.outputs.image }}-${{ matrix.target }}:${{ needs.prepare-build-env.outputs.tag }}
+          CONTAINER=${{ needs.prepare-build-env.outputs[format('image-{0}', matrix.target)] }}-${{ matrix.target }}:${{ needs.prepare-build-env.outputs[format('tag-{0}', matrix.target)] }}
           echo container=$CONTAINER > $GITHUB_ENV
       - name: Disable tools
         run: |
@@ -209,13 +216,31 @@ jobs:
           command: build
           args: --release --strip -o dist -vv ${{ matrix.maturin }}
       - uses: actions/setup-python@v4
+        if: ${{ !startsWith(matrix.target, 'aarch64') }}
         with:
           python-version: "3.8"
       - name: Installing built wheel
+        if: ${{ !startsWith(matrix.target, 'aarch64') }}
         run: |
           whl=(dist/pyperscan-*.whl)
           pip install "$whl[test]"
       - uses: dariocurr/pytest-summary@main
+        if: ${{ !startsWith(matrix.target, 'aarch64') }}
+      - uses: uraimo/run-on-arch-action@v2
+        if: ${{ startsWith(matrix.target, 'aarch64') }}
+        name: Cross testing built wheel
+        with:
+          arch: aarch64
+          distro: ubuntu20.04
+          githubToken: ${{ github.token }}
+          install: |
+            apt update
+            apt install -y --no-install-recommends python3 python3-venv libgcc1 libstdc++6
+          run: |
+            python3 -m venv venv
+            whl=(dist/pyperscan-*.whl)
+            venv/bin/pip install "$whl[test]"
+            venv/bin/py.test
       - name: Upload wheels
         uses: actions/upload-artifact@v3
         with:
@@ -236,6 +261,9 @@ jobs:
       - uses: actions/download-artifact@v3
         with:
           name: wheels-x86_64-unknown-linux-gnu.static-vectorscan
+      - uses: actions/download-artifact@v3
+        with:
+          name: wheels-aarch64-unknown-linux-gnu.static-vectorscan
       - uses: actions/download-artifact@v3
         with:
           name: wheels-universal2-apple-darwin.static-vectorscan
