@@ -31,6 +31,28 @@
         "type": "github"
       }
     },
+    "nix-old-libc": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ],
+        "nixpkgs-old": "nixpkgs-old",
+        "utils": "utils"
+      },
+      "locked": {
+        "lastModified": 1670429209,
+        "narHash": "sha256-cXCRdDKxxMglVH3j25PYBAQZmekyzZ3Nx52BwphzceQ=",
+        "ref": "refs/heads/main",
+        "rev": "8d96ed75340180d4f79c1fc0a65a4bcc02f9a198",
+        "revCount": 1,
+        "type": "git",
+        "url": "ssh://git@git.sr.ht/~vlaci/nix-old-libc"
+      },
+      "original": {
+        "type": "git",
+        "url": "ssh://git@git.sr.ht/~vlaci/nix-old-libc"
+      }
+    },
     "nixpkgs": {
       "locked": {
         "lastModified": 1669165918,
@@ -45,6 +67,18 @@
         "ref": "nixpkgs-unstable",
         "repo": "nixpkgs",
         "type": "github"
+      }
+    },
+    "nixpkgs-old": {
+      "flake": false,
+      "locked": {
+        "narHash": "sha256-dZP4FgqRNgfjSaSi53yMfz6PWITsqwQcWW7xgi9ShuI=",
+        "type": "tarball",
+        "url": "https://releases.nixos.org/nixos/13.10/nixos-13.10.35728.91e952a/nixexprs.tar.xz"
+      },
+      "original": {
+        "type": "tarball",
+        "url": "https://releases.nixos.org/nixos/13.10/nixos-13.10.35728.91e952a/nixexprs.tar.xz"
       }
     },
     "nixpkgs_2": {
@@ -66,9 +100,10 @@
     "root": {
       "inputs": {
         "maturin": "maturin",
+        "nix-old-libc": "nix-old-libc",
         "nixpkgs": "nixpkgs",
         "rust-overlay": "rust-overlay",
-        "utils": "utils"
+        "utils": "utils_2"
       }
     },
     "rust-overlay": {
@@ -91,6 +126,21 @@
       }
     },
     "utils": {
+      "locked": {
+        "lastModified": 1667395993,
+        "narHash": "sha256-nuEHfE/LcWyuSWnS8t12N1wc105Qtau+/OdUAjtQ0rA=",
+        "owner": "numtide",
+        "repo": "flake-utils",
+        "rev": "5aed5285a952e0b949eb3ba02c12fa4fcfef535f",
+        "type": "github"
+      },
+      "original": {
+        "owner": "numtide",
+        "repo": "flake-utils",
+        "type": "github"
+      }
+    },
+    "utils_2": {
       "locked": {
         "lastModified": 1667395993,
         "narHash": "sha256-nuEHfE/LcWyuSWnS8t12N1wc105Qtau+/OdUAjtQ0rA=",
