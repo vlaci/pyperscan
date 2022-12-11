@@ -2,39 +2,37 @@
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
     utils.url = "github:numtide/flake-utils";
+    filter.url = "github:numtide/nix-filter";
     maturin.url = "github:PyO3/maturin/v0.14.5";
     maturin.flake = false;
     rust-overlay.url = "github:oxalica/rust-overlay";
   };
 
-  outputs = { self, nixpkgs, utils, maturin, rust-overlay }:
-    utils.lib.eachDefaultSystem
-      (system:
-        let
-          overlays = [
-            rust-overlay.overlays.default
-            (final: prev: {
-              maturin = prev.maturin.overrideAttrs (super: {
-                version = maturin.shortRev;
-                src = maturin;
-                cargoDeps = final.rustPlatform.importCargoLock {
-                  lockFile = "${maturin}/Cargo.lock";
-                };
-              });
-            })
-          ];
-          pkgs = import nixpkgs { inherit overlays system; };
-          inherit (pkgs.lib) optionals;
+  outputs = { self, nixpkgs, utils, filter, maturin, rust-overlay }:
+    let
+      rust-toolchain_toml = (builtins.fromTOML (builtins.readFile ./rust-toolchain.toml)).toolchain;
 
-          rust-toolchain_toml = (builtins.fromTOML (builtins.readFile ./rust-toolchain.toml)).toolchain;
-          rustToolchain = pkgs.rust-bin.fromRustupToolchain rust-toolchain_toml;
-          rustToolchainDev = rustToolchain.override {
+      overlays = [
+        rust-overlay.overlays.default
+        filter.overlays.default
+        (final: prev: {
+          maturin = prev.maturin.overrideAttrs (super: {
+            version = maturin.shortRev;
+            src = maturin;
+            cargoDeps = final.rustPlatform.importCargoLock {
+              lockFile = "${maturin}/Cargo.lock";
+            };
+          });
+
+          rustToolchain = final.rust-bin.fromRustupToolchain rust-toolchain_toml;
+          rustToolchainDev = final.rustToolchain.override {
             extensions = (rust-toolchain_toml.components or [ ]) ++ [ "rust-src" ];
           };
+
           pyperscan =
             let
-              drv = pkgs.callPackage ./nix/pyperscan.nix {
-                rustPlatform = pkgs.makeRustPlatform { cargo = rustToolchain; rustc = rustToolchain; };
+              drv = final.callPackage ./nix/pyperscan.nix {
+                rustPlatform = final.makeRustPlatform { cargo = final.rustToolchain; rustc = final.rustToolchain; };
               };
             in
             drv.overrideAttrs (_: {
@@ -44,29 +42,41 @@
                 vectorscan = drv.override { vendorVectorscan = true; };
               };
             });
+        })
+      ];
+    in
+    utils.lib.eachDefaultSystem
+      (system:
+        let
+          pkgs = import nixpkgs { inherit overlays system; };
         in
         {
-          packages = pkgs;
-          defaultPackage = pyperscan;
-          devShell =
+          packages = with pkgs; {
+            default = pyperscan;
+          };
+
+          devShells =
             let
               inherit (pkgs.lib) filter hasSuffix;
               noHooks = filter (drv: !(hasSuffix "hook.sh" drv.name));
-              pyperscan' = pyperscan.override { python3Packages = pkgs.python38Packages; };
-
+              pyperscan' = pkgs.pyperscan.override { python3Packages = pkgs.python38Packages; };
             in
-            with pkgs; mkShell {
-              nativeBuildInputs = noHooks pyperscan'.hyperscan.nativeBuildInputs;
-              buildInputs = [
-                just
-                pre-commit
-                rustToolchainDev
-                pkgs.maturin
-                pkgs.rust-bin.nightly.latest.rust-analyzer
-              ]
-              ++ pyperscan'.hyperscan.buildInputs
-              ++ (optionals (system == "x86_64-linux")
-                pyperscan'.buildInputs);
+            rec {
+              default =
+                with pkgs; mkShell {
+                  nativeBuildInputs = noHooks pyperscan'.hyperscan.nativeBuildInputs;
+                  buildInputs = [
+                    just
+                    maturin
+                    pre-commit
+                    rust-bin.nightly.latest.rust-analyzer
+                    rustToolchainDev
+                  ]
+                  ++ pyperscan'.hyperscan.buildInputs
+                  ++ (pkgs.lib.optionals (system == "x86_64-linux")
+                    pyperscan'.buildInputs);
+                };
             };
+
         });
 }
