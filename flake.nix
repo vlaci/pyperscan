@@ -2,7 +2,7 @@
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
     utils.url = "github:numtide/flake-utils";
-    maturin.url = "github:PyO3/maturin";
+    maturin.url = "github:PyO3/maturin/v0.14.5";
     maturin.flake = false;
     rust-overlay.url = "github:oxalica/rust-overlay";
   };
