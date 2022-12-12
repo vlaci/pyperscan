@@ -175,6 +175,8 @@ jobs:
             kind: static-vectorscan
     name: Build - ${{ matrix.target }} ${{ matrix.kind }}
     runs-on: ${{ matrix.os }}
+    env:
+      MACOSX_DEPLOYMENT_TARGET: "10.9"
     steps:
       - uses: actions/checkout@v3
         with:
