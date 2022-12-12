@@ -67,7 +67,8 @@
                   nativeBuildInputs = noHooks pyperscan'.hyperscan.nativeBuildInputs;
                   buildInputs = [
                     just
-                    maturin
+                    pkgs.maturin
+                    podman
                     pre-commit
                     rust-bin.nightly.latest.rust-analyzer
                     rustToolchainDev
