@@ -35,6 +35,7 @@ jobs:
       - name: Installing dependencies
         run: |
           sudo apt install -y libhyperscan-dev libhyperscan5
+          pip install maturin
           pip install '.[test]'
       - uses: pre-commit-ci/lite-action@v1.0.0
       - uses: pre-commit/action@v3.0.0
