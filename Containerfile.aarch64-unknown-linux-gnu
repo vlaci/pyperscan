@@ -14,17 +14,15 @@ RUN cd /usr/src/ragel && ./autogen.sh && ./configure --with-colm=/usr/local && m
     && make DESTDIR=/opt/ragel install
 
 FROM quay.io/pypa/manylinux2014_aarch64:latest
-RUN  yum -y install epel-release \
-    && yum install -y llvm-toolset-7.0-clang \
-    llvm-toolset-7.0-llvm llvm-toolset-7.0-runtime && yum clean all
+COPY --from=ragel /opt/ragel /
+RUN ldconfig
+
+RUN yum install -y llvm-toolset-7.0-clang llvm-toolset-7.0-llvm llvm-toolset-7.0-runtime && yum clean all
 RUN curl -L https://boostorg.jfrog.io/artifactory/main/release/1.80.0/source/boost_1_80_0.tar.gz -o boost.tar.gz \
     && test 4b2136f98bdd1f5857f1c3dea9ac2018effe65286cf251534b6ae20cc45e1847 == $(sha256sum -b boost.tar.gz | cut -c1-64) \
     || { echo "Checksum mismatch"; exit 11; } \
     && tar --strip-components 1 -xf boost.tar.gz -C /usr/include \
     && rm boost.tar.gz
-
-COPY --from=ragel /opt/ragel /
-RUN ldconfig
 
 ENV PATH="${PATH}:/opt/python/cp38-cp38/bin:/root/.cargo/bin"
 RUN pip install maturin \
