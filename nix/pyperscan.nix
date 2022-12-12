@@ -47,7 +47,7 @@ python3Packages.buildPythonPackage {
     lockFile = ../Cargo.lock;
   };
 
-  maturinBuildFlags = (optionals vendorHyperscan [ "-F hyperscan" ]) ++ (optionals vendorVectorscan [ "-F vectorscan" ]);
+  maturinBuildFlags = (optionals vendorHyperscan [ "-F hyperscan" ]) ++ (optionals (!vendorVectorscan) [ "--no-default-features" ]);
 
   buildInputs = if vendor then [ boost util-linux ] else [ hyperscan ];
 
