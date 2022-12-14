@@ -25,6 +25,8 @@ RUN curl -L https://boostorg.jfrog.io/artifactory/main/release/1.80.0/source/boo
     && rm boost.tar.gz
 
 ENV PATH="${PATH}:/opt/python/cp38-cp38/bin:/root/.cargo/bin"
+ENV CARGO_NET_GIT_FETCH_WITH_CLI=true
+
 RUN pip install maturin \
     && curl https://sh.rustup.rs -sSf | sh -s -- -y --default-toolchain 1.65.0 \
     && cargo --config net.git-fetch-with-cli=true search warming-up-package-cache
