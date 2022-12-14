@@ -17,6 +17,7 @@ thiserror = "1.0.37"
 hyperscan-sys = { path = "./hyperscan-sys" }
 
 [features]
+default = ["vectorscan"]
 hyperscan = ["hyperscan-sys/hyperscan"]
 vectorscan = ["hyperscan-sys/vectorscan"]
 

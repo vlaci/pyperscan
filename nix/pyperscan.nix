@@ -1,4 +1,5 @@
 { lib
+, nix-filter
 , python3Packages
 , rustPlatform
 , hyperscan
@@ -25,13 +26,28 @@ python3Packages.buildPythonPackage {
   pname = "pyperscan";
   format = "pyproject";
 
-  src = builtins.path { name = "pyperscan-source"; path = ../.; filter = p: t: !(t == "directory" && baseNameOf p == "target"); };
+  src = nix-filter {
+    root = ../.;
+    include = [
+      "Cargo.toml"
+      "Cargo.lock"
+      "LICENSE-APACHE"
+      "LICENSE-MIT"
+      "README.md"
+      "pyperscan.pyi"
+      "pyproject.toml"
+      "rust-toolchain.toml"
+      "hyperscan-sys"
+      "src"
+      "tests"
+    ];
+  };
 
   cargoDeps = rustPlatform.importCargoLock {
     lockFile = ../Cargo.lock;
   };
 
-  maturinBuildFlags = (optionals vendorHyperscan [ "-F hyperscan" ]) ++ (optionals vendorVectorscan [ "-F vectorscan" ]);
+  maturinBuildFlags = (optionals vendorHyperscan [ "-F hyperscan" ]) ++ (optionals (!vendorVectorscan) [ "--no-default-features" ]);
 
   buildInputs = if vendor then [ boost util-linux ] else [ hyperscan ];
 

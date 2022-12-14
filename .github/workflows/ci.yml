@@ -26,30 +26,14 @@ jobs:
             target/
           key: checks-cargo-${{ hashFiles('**/Cargo.lock') }}
           restore-keys: checks-cargo-
-      - name: Python code format
-        uses: psf/black@stable
-      - name: Installing nightly Rust toolchain
-        uses: dtolnay/rust-toolchain@nightly
-        with:
-          components: clippy, rustfmt
-      - name: Installing dependencies
-        run: |
-          sudo apt install -y libhyperscan-dev libhyperscan5
-          pip install maturin
-          pip install '.[test]'
-      - uses: pre-commit-ci/lite-action@v1.0.0
-      - uses: pre-commit/action@v3.0.0
-      - name: Rust code checks
-        run: |
-          rm -f rust-toolchain.toml
-          cargo fmt --all -- --check
-          cargo clippy -- -D warnings
-      - name: Python type check
-        run: mypy . --exclude hyperscan-sys
-      - name: Python tests
-        uses: dariocurr/pytest-summary@main
+      - name: Installing Rust toolchain
+        uses: dtolnay/rust-toolchain@1.65.0
+      - name: Installing pre-commit
+        run: pip install pre-commit
+      - name: pre-commit check
+        run: pre-commit
 
-  build-nix:
+  build:
     needs:
       - checks
     strategy:
@@ -64,7 +48,7 @@ jobs:
           - os: ubuntu-latest
             arch: x86_64-linux
             drv: "vectorscan"
-          - os: macos-latest
+          - os: macos-11
             arch: x86_64-darwin
             drv: vectorscan
     name: Nix - ${{ matrix.arch }}.${{ matrix.drv }}
@@ -80,70 +64,17 @@ jobs:
           authToken: "${{ secrets.CACHIX_AUTH_TOKEN }}"
       - name: Build nix shell
         run: |
-          nix build -L .#devShell.${{ matrix.arch }}
+          nix build -L .#devShells.${{ matrix.arch }}.default
       - name: Build nix package
-        run: nix build -L .?submodules=1#defaultPackage.${{ matrix.arch }}.${{ matrix.drv }}
-
-  prepare-build-env:
-    needs:
-      - checks
-    strategy:
-      matrix:
-        include:
-          - target: x86_64-unknown-linux-gnu
-    name: Build Docker env - ${{ matrix.target }}
-    runs-on: ubuntu-latest
-    outputs:
-      image: ${{ steps.build.outputs.image }}
-      tag: ${{ steps.build.outputs.tag }}
-    steps:
-      - uses: actions/checkout@v3
-      - name: Prepare build
-        id: build
-        if: ${{ runner.os == 'Linux' }}
-        run: |
-          IMAGE=ghcr.io/vlaci/pyperscan-builder
-          TAG=${{ hashFiles(format('.github/Dockerfile.{0}', matrix.target)) }}
-          REF=$IMAGE-${{ matrix.target }}:$TAG
-          echo ref=$REF > $GITHUB_ENV
-          echo image=$IMAGE > $GITHUB_OUTPUT
-          echo tag=$TAG >> $GITHUB_OUTPUT
-          if ! docker manifest inspect $REF; then
-            echo build=true >> $GITHUB_ENV
-          fi
-      - name: Login to GitHub Container Registry
-        if: ${{ env.build }}
-        uses: docker/login-action@v2
-        with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-      - name: Build and push
-        if: ${{ env.build }}
-        uses: docker/build-push-action@v3
-        with:
-          file: ./.github/Dockerfile.${{ matrix.target }}
-          push: true
-          tags: ${{ env.ref }}
+        run: nix build -L .?submodules=1#packages.${{ matrix.arch }}.default.${{ matrix.drv }}
 
   sdist:
     name: Build - sdist
-    runs-on: ubuntu-latest
     needs:
       - checks
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - name: Set up cargo cache
-        uses: actions/cache@v3
-        with:
-          path: |
-            ~/.cargo/bin/
-            ~/.cargo/registry/index/
-            ~/.cargo/registry/cache/
-            ~/.cargo/git/db/
-            target/
-          key: sdist-cargo-${{ hashFiles('**/Cargo.lock') }}
-          restore-keys: sdist-cargo-
       - uses: PyO3/maturin-action@v1
         with:
           container: off
@@ -155,26 +86,66 @@ jobs:
           name: sdist
           path: dist
 
-  build-wheels:
-    needs:
-      - prepare-build-env
+  linux-wheels:
     strategy:
       matrix:
         include:
-          - os: ubuntu-latest
-            maturin: "-F hyperscan"
-            target: x86_64-unknown-linux-gnu
-            kind: static-hyperscan
-          - os: ubuntu-latest
-            maturin: "-F vectorscan"
-            target: x86_64-unknown-linux-gnu
-            kind: static-vectorscan
-          - os: macos-latest
-            target: universal2-apple-darwin
-            maturin: "-F vectorscan --universal2"
-            kind: static-vectorscan
-    name: Build - ${{ matrix.target }} ${{ matrix.kind }}
-    runs-on: ${{ matrix.os }}
+          - target: x86_64-unknown-linux-gnu
+            arch: amd64
+          - target: aarch64-unknown-linux-gnu
+            arch: arm64
+    name: Build wheel - ${{ matrix.target }}
+    needs:
+      - checks
+    runs-on: ubuntu-latest
+    env:
+      image: ghcr.io/vlaci/pyperscan-builder-${{ matrix.target }}
+    permissions:
+      packages: write
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          submodules: true
+      - name: Set up cargo cache
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.cargo/bin/
+            ~/.cargo/registry/index/
+            ~/.cargo/registry/cache/
+            ~/.cargo/git/db/
+            target/
+          key: ${{ matrix.target }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+          restore-keys: linux-cargo-
+      - name: Install dependencies
+        uses: extractions/setup-crate@v1
+        with:
+          owner: casey
+          name: just
+          version: 1.9.0
+      - name: Log in to the GitHub Container registry
+        uses: redhat-actions/podman-login@v1
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Check cached build image
+        run: |
+          TAG=${{hashFiles(format('Containerfile.{0}', matrix.target)) }}
+          echo tag=$TAG >> $GITHUB_ENV
+      - run: just wheel ${{ matrix.target }}
+      - run: podman push $image:$tag
+      - name: Upload wheels
+        uses: actions/upload-artifact@v3
+        with:
+          name: wheels-${{ matrix.target }}
+          path: dist
+
+  macos-wheel:
+    needs:
+      - checks
+    name: Build wheel - universal2-apple-darwin
+    runs-on: macos-11
     env:
       MACOSX_DEPLOYMENT_TARGET: "10.9"
     steps:
@@ -190,26 +161,19 @@ jobs:
             ~/.cargo/registry/cache/
             ~/.cargo/git/db/
             target/
-          key: ${{ matrix.target }}-${{ matrix.kind }}-cargo-${{ hashFiles('**/Cargo.lock') }}
-          restore-keys: ${{ matrix.target }}-${{ matrix.kind }}-cargo-
+          key: macos-cargo-${{ hashFiles('**/Cargo.lock') }}
+          restore-keys: macos-cargo-
       - name: Install dependencies
-        if: ${{ runner.os == 'macOS' }}
         run: |
           brew install boost ragel
           echo container= > $GITHUB_ENV
-      - name: Building builder container
-        if: ${{ runner.os == 'Linux' }}
-        run: |
-          CONTAINER=${{ needs.prepare-build-env.outputs.image }}-${{ matrix.target }}:${{ needs.prepare-build-env.outputs.tag }}
-          echo container=$CONTAINER > $GITHUB_ENV
       - name: Disable tools
         run: |
           rm hyperscan-sys/*/tools/CMakeLists.txt
       - uses: PyO3/maturin-action@v1
         with:
-          container: ${{ env.container }}
           command: build
-          args: --release --strip -o dist -vv ${{ matrix.maturin }}
+          args: --release --strip -o dist -F vectorscan --universal2
       - uses: actions/setup-python@v4
         with:
           python-version: "3.8"
@@ -221,7 +185,7 @@ jobs:
       - name: Upload wheels
         uses: actions/upload-artifact@v3
         with:
-          name: wheels-${{ matrix.target }}.${{ matrix.kind }}
+          name: wheels-universal2-apple-darwin
           path: dist
 
   release:
@@ -230,21 +194,16 @@ jobs:
     if: "startsWith(github.ref, 'refs/tags/')"
     needs:
       - sdist
-      - build-wheels
+      - linux-wheels
+      - macos-wheel
     steps:
       - uses: actions/download-artifact@v3
         with:
-          name: sdist
-      - uses: actions/download-artifact@v3
-        with:
-          name: wheels-x86_64-unknown-linux-gnu.static-vectorscan
-      - uses: actions/download-artifact@v3
-        with:
-          name: wheels-universal2-apple-darwin.static-vectorscan
+          path: dist
       - name: Publish to PyPI
         uses: messense/maturin-action@v1
         env:
           MATURIN_PYPI_TOKEN: ${{ secrets.PYPI_API_TOKEN }}
         with:
           command: upload
-          args: --skip-existing *
+          args: --skip-existing dist/*/*
