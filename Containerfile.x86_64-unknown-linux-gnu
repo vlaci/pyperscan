@@ -1,10 +1,20 @@
 FROM quay.io/pypa/manylinux2014_x86_64:latest
 
-RUN echo -e '#!/usr/bin/env bash\nsource scl_source enable llvm-toolset-7\nexec "$@"' > /entrypoint.sh && chmod +x /entrypoint.sh
 RUN yum install -y llvm-toolset-7 ragel && yum clean all
 RUN curl -L https://boostorg.jfrog.io/artifactory/main/release/1.80.0/source/boost_1_80_0.tar.gz -o boost.tar.gz \
     && test 4b2136f98bdd1f5857f1c3dea9ac2018effe65286cf251534b6ae20cc45e1847 == $(sha256sum -b boost.tar.gz | cut -c1-64) \
     || { echo "Checksum mismatch"; exit 11; } \
     && tar --strip-components 1 -xf boost.tar.gz -C /usr/include \
     && rm boost.tar.gz
+
+ENV PATH="${PATH}:/opt/python/cp38-cp38/bin:/root/.cargo/bin"
+ENV CARGO_NET_GIT_FETCH_WITH_CLI=true
+
+RUN pip install maturin \
+    && curl https://sh.rustup.rs -sSf | sh -s -- -y --default-toolchain 1.65.0
+
+RUN mkdir -p /usr/src/pyperscan
+WORKDIR /usr/src/pyperscan
+RUN echo -e '#!/usr/bin/env bash\nsource scl_source enable llvm-toolset-7\nexec "$@"' > /entrypoint.sh && chmod +x /entrypoint.sh
+CMD [ "maturin", "build", "-o", "dist" ]
 ENTRYPOINT ["/entrypoint.sh"]

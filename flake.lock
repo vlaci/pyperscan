@@ -1,5 +1,20 @@
 {
   "nodes": {
+    "filter": {
+      "locked": {
+        "lastModified": 1666547822,
+        "narHash": "sha256-razwnAybPHyoAyhkKCwXdxihIqJi1G6e1XP4FQOJTEs=",
+        "owner": "numtide",
+        "repo": "nix-filter",
+        "rev": "1a3b735e13e90a8d2fd5629f2f8363bd7ffbbec7",
+        "type": "github"
+      },
+      "original": {
+        "owner": "numtide",
+        "repo": "nix-filter",
+        "type": "github"
+      }
+    },
     "flake-utils": {
       "locked": {
         "lastModified": 1659877975,
@@ -18,15 +33,16 @@
     "maturin": {
       "flake": false,
       "locked": {
-        "lastModified": 1669212782,
-        "narHash": "sha256-k2XP0pzIjHTzp4Zouwj/lqir5uOCMpWu2iWbVjsoaf0=",
+        "lastModified": 1670473053,
+        "narHash": "sha256-3TEEmraQ9KGx29ok7IUdVzTW0ilaAci1dOZUlKvQYJE=",
         "owner": "PyO3",
         "repo": "maturin",
-        "rev": "a5e72368334ed41878b2befbd77fa6ac698312c5",
+        "rev": "3d786cda84a1f1b40f97185fb140b6a213ba7471",
         "type": "github"
       },
       "original": {
         "owner": "PyO3",
+        "ref": "v0.14.5",
         "repo": "maturin",
         "type": "github"
       }
@@ -65,6 +81,7 @@
     },
     "root": {
       "inputs": {
+        "filter": "filter",
         "maturin": "maturin",
         "nixpkgs": "nixpkgs",
         "rust-overlay": "rust-overlay",

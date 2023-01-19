@@ -1,0 +1,37 @@
+FROM quay.io/pypa/manylinux2014_aarch64:latest as ragel
+
+RUN mkdir -p /usr/src/{colm,ragel} \
+    && cd /usr/src/colm \
+    && git init \
+    && git fetch --depth 1 https://github.com/adrian-thurston/colm d00ef7930a9d42469c19a5880744a086065ee20c \
+    && git checkout FETCH_HEAD \
+    && cd /usr/src/ragel \
+    && git init \
+    && git fetch --depth 1 https://github.com/adrian-thurston/ragel d4577c924451b331c73c8ed0af04f6efd35ac0b4 \
+    && git checkout FETCH_HEAD
+RUN cd /usr/src/colm &&./autogen.sh && ./configure && make -j$(grep -c ^processor /proc/cpuinfo) && make install && make DESTDIR=/opt/ragel install && ldconfig
+RUN cd /usr/src/ragel && ./autogen.sh && ./configure --with-colm=/usr/local && make -j$(grep -c ^processor /proc/cpuinfo) \
+    && make DESTDIR=/opt/ragel install
+
+FROM quay.io/pypa/manylinux2014_aarch64:latest
+COPY --from=ragel /opt/ragel /
+RUN ldconfig
+
+RUN yum install -y llvm-toolset-7.0-clang llvm-toolset-7.0-llvm llvm-toolset-7.0-runtime && yum clean all
+RUN curl -L https://boostorg.jfrog.io/artifactory/main/release/1.80.0/source/boost_1_80_0.tar.gz -o boost.tar.gz \
+    && test 4b2136f98bdd1f5857f1c3dea9ac2018effe65286cf251534b6ae20cc45e1847 == $(sha256sum -b boost.tar.gz | cut -c1-64) \
+    || { echo "Checksum mismatch"; exit 11; } \
+    && tar --strip-components 1 -xf boost.tar.gz -C /usr/include \
+    && rm boost.tar.gz
+
+ENV PATH="${PATH}:/opt/python/cp38-cp38/bin:/root/.cargo/bin"
+ENV CARGO_NET_GIT_FETCH_WITH_CLI=true
+
+RUN pip install maturin \
+    && curl https://sh.rustup.rs -sSf | sh -s -- -y --default-toolchain 1.65.0
+
+RUN mkdir -p /usr/src/pyperscan
+WORKDIR /usr/src/pyperscan
+RUN echo -e '#!/usr/bin/env bash\nsource scl_source enable llvm-toolset-7.0\nexec "$@"' > /entrypoint.sh && chmod +x /entrypoint.sh
+ENTRYPOINT ["/entrypoint.sh"]
+CMD [ "maturin", "build", "-o", "dist" ]
