@@ -3,12 +3,10 @@
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
     utils.url = "github:numtide/flake-utils";
     filter.url = "github:numtide/nix-filter";
-    maturin.url = "github:PyO3/maturin/v0.14.5";
-    maturin.flake = false;
     rust-overlay.url = "github:oxalica/rust-overlay";
   };
 
-  outputs = { self, nixpkgs, utils, filter, maturin, rust-overlay }:
+  outputs = { self, nixpkgs, utils, filter, rust-overlay }:
     let
       rust-toolchain_toml = (builtins.fromTOML (builtins.readFile ./rust-toolchain.toml)).toolchain;
 
@@ -16,15 +14,7 @@
         rust-overlay.overlays.default
         filter.overlays.default
         (final: prev: {
-          maturin = prev.maturin.overrideAttrs (super: {
-            version = maturin.shortRev;
-            src = maturin;
-            cargoDeps = final.rustPlatform.importCargoLock {
-              lockFile = "${maturin}/Cargo.lock";
-            };
-          });
-
-          rustToolchain = final.rust-bin.fromRustupToolchain rust-toolchain_toml;
+          rustToolchain = (final.rust-bin.fromRustupToolchain rust-toolchain_toml) // { inherit (final) llvmPackages; };
           rustToolchainDev = final.rustToolchain.override {
             extensions = (rust-toolchain_toml.components or [ ]) ++ [ "rust-src" ];
           };
