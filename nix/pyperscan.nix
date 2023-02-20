@@ -43,6 +43,8 @@ python3Packages.buildPythonPackage {
     ];
   };
 
+  strictDeps = true;
+
   cargoDeps = rustPlatform.importCargoLock {
     lockFile = ../Cargo.lock;
   };
@@ -60,7 +62,7 @@ python3Packages.buildPythonPackage {
     ] ++ (optionals vendor [ cmake ragel util-linux ]));
   dontUseCmakeConfigure = true;
 
-  checkInputs = [ python3Packages.pytest ];
+  nativeCheckInputs = [ python3Packages.pytest ];
   checkPhase = ''
     py.test
   '';
