@@ -48,6 +48,9 @@ jobs:
           - os: ubuntu-latest
             arch: x86_64-linux
             drv: "vectorscan"
+          - os: ubuntu-latest
+            arch: aarch64-linux
+            drv: "vectorscan"
           - os: macos-11
             arch: x86_64-darwin
             drv: vectorscan
@@ -62,11 +65,17 @@ jobs:
         with:
           name: pyperscan
           authToken: "${{ secrets.CACHIX_AUTH_TOKEN }}"
+      - name: setup emulation
+        if: ${{ matrix.arch == 'aarch64-linux' }}
+        run: |
+          sudo apt install -q -y qemu-system-aarch64 qemu-efi binfmt-support qemu-user-static
+          mkdir -p ~/.config/nix
+          echo "system-features = aarch64-linux arm-linux" | sudo tee -a /etc/nix/nix.conf
       - name: Build nix shell
         run: |
-          nix build -L .#devShells.${{ matrix.arch }}.default
+          nix build -L .#devShells.${{ matrix.arch }}.default --option system ${{ matrix.arch }} --extra-platforms ${{ matrix.arch }}
       - name: Build nix package
-        run: nix build -L .?submodules=1#packages.${{ matrix.arch }}.default.${{ matrix.drv }}
+        run: nix build -L .?submodules=1#packages.${{ matrix.arch }}.default.${{ matrix.drv }} --option system ${{ matrix.arch }} --extra-platforms ${{ matrix.arch }}
 
   sdist:
     name: Build - sdist
