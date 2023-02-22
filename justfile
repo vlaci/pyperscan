@@ -17,7 +17,7 @@ check:
     cargo clippy
 
 test *args="--":
-    .venv/bin/py.test "$@"
+    .venv/bin/pytest "$@"
 
 build-shared: _build
 build-static-hyperscan: (_build "-F" "hyperscan")

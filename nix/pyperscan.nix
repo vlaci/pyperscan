@@ -64,6 +64,6 @@ python3Packages.buildPythonPackage {
 
   nativeCheckInputs = [ python3Packages.pytest ];
   checkPhase = ''
-    py.test
+    pytest
   '';
 }
