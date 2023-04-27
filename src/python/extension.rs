@@ -211,8 +211,21 @@ struct PyStreamScanner(StreamScanner<PyContext>);
 
 #[pymethods]
 impl PyStreamScanner {
-    fn scan(&mut self, data: Buffer) -> PyResult<PyScan> {
-        Ok(self.0.scan(&data)?.into())
+    fn scan(&mut self, data: Buffer, chunk_size: Option<usize>) -> PyResult<PyScan> {
+        let mut rv = Scan::default();
+        match chunk_size {
+            None => rv = self.0.scan(&data)?,
+            Some(length) => {
+                for slice in data.chunks(length) {
+                    rv = self.0.scan(slice)?;
+                    if rv == Scan::Terminate {
+                        break;
+                    }
+                }
+            }
+        };
+
+        Ok(rv.into())
     }
 }
 

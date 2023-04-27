@@ -4,7 +4,9 @@ use std::ffi::c_void;
 
 use super::{wrapper, AsResult, Error, HyperscanErrorCode, Pattern, ScanMode};
 
+#[derive(Default, Eq, PartialEq)]
 pub enum Scan {
+    #[default]
     Continue,
     Terminate,
 }
