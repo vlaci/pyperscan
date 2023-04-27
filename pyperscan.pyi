@@ -1,6 +1,6 @@
 from collections.abc import Callable, Collection
 from mmap import mmap
-from typing import Any, Generic, TypeVar, Union
+from typing import Any, TypeVar, Union
 
 class Flag:
     CASELESS = ...
