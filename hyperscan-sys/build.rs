@@ -53,6 +53,11 @@ fn main() {
             "OFF"
         };
 
+        env::set_var(
+            "CMAKE_BUILD_PARALLEL_LEVEL",
+            env::var(dbg!("NUM_JOBS")).unwrap(),
+        );
+
         let dst = cmake::Config::new(&src_dir)
             .profile("release")
             .define("CMAKE_INSTALL_INCLUDEDIR", &include_dir)
