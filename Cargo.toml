@@ -15,6 +15,7 @@ foreign-types = "0.5.0"
 pyo3 = { version = "0.17", features = ["extension-module", "abi3-py38"] }
 thiserror = "1.0.37"
 hyperscan-sys = { path = "./hyperscan-sys" }
+libc = "0.2.142"
 
 [features]
 default = ["vectorscan"]

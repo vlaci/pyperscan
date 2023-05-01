@@ -2,7 +2,11 @@ use crate::hyperscan::{AsResult, Error};
 use bitflags::bitflags;
 use foreign_types::{foreign_type, ForeignType};
 use hyperscan_sys as hs;
-use std::{ffi::CString, mem::MaybeUninit, ptr};
+use std::{
+    ffi::{c_void, CString},
+    mem::MaybeUninit,
+    ptr,
+};
 
 foreign_type! {
     unsafe type CompileError {
@@ -114,6 +118,20 @@ impl Database {
             let mut copy = MaybeUninit::uninit();
             hs::hs_deserialize_database(buf, len, copy.as_mut_ptr()).ok()?;
             let copy = copy.assume_init();
+            // Safe as long as `hs_set_database_allocator` and co. are unused:
+            // hs_error_t hs_set_database_allocator(hs_alloc_t alloc_func, hs_free_t free_func)
+            //
+            // Set the allocate and free functions used by Hyperscan
+            // for allocating memory for database bytecode produced by
+            // the compile calls (hs_compile(), hs_compile_multi(),
+            // hs_compile_ext_multi()) and by database deserialization
+            // (hs_deserialize_database()).
+            //
+            // If no database allocation functions are set, or if NULL
+            // is used in place of both parameters, then memory
+            // allocation will default to standard methods (such as
+            // the system malloc() and free() calls)
+            libc::free(buf as *mut _ as *mut c_void);
             Ok(Self::from_ptr(copy))
         }
     }
