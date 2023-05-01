@@ -3,4 +3,4 @@
 	url = https://github.com/VectorCamp/vectorscan
 [submodule "hyperscan-src/hyperscan"]
 	path = hyperscan-sys/hyperscan
-	url = https://git.sr.ht/~vlaci/hyperscan
+	url = https://github.com/intel/hyperscan
