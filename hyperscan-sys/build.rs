@@ -27,21 +27,55 @@ fn main() {
             .into_os_string()
             .into_string()
             .unwrap();
-        let out = String::from_utf8(
-            std::process::Command::new("c++")
-                .args(["-v"])
-                .output()
-                .expect("Cannot find C++ compiler")
-                .stderr,
-        )
-        .unwrap();
 
-        if out.contains("gcc") {
-            println!("cargo:rustc-link-lib=stdc++");
-        } else if out.contains("clang") {
-            println!("cargo:rustc-link-lib=c++");
-        } else {
-            panic!("No compatible compiler found. Either clang or gcc is needed.");
+        #[cfg(target_os = "linux")]
+        {
+            let out = String::from_utf8(
+                std::process::Command::new("c++")
+                    .args(["-v"])
+                    .output()
+                    .expect("Cannot find C++ compiler")
+                    .stderr,
+            )
+            .unwrap();
+
+            let cpp_runtime = if out.contains("gcc") {
+                "libstdc++.a"
+            } else if out.contains("clang") {
+                "libc++.a"
+            } else {
+                panic!("No compatible compiler found. Either clang or gcc is needed.");
+            };
+
+            let cpp_runtime_path =
+                std::process::Command::new(env::var("CXX").unwrap_or_else(|_| "c++".to_string()))
+                    .arg(format!("--print-file-name={cpp_runtime}"))
+                    .output()
+                    .expect("Failed to execute $CXX to get runtime library path")
+                    .stdout;
+
+            println!(
+                "cargo:rustc-link-search=native={}",
+                String::from_utf8_lossy(&cpp_runtime_path)
+                    .trim()
+                    .strip_suffix(&cpp_runtime)
+                    .expect("Failed to strip suffix"),
+            );
+
+            println!(
+                "cargo:rustc-link-lib=static={}",
+                cpp_runtime
+                    .chars()
+                    .skip("lib".len())
+                    .take(cpp_runtime.len() - "lib.a".len())
+                    .collect::<String>()
+            );
+        }
+
+        #[cfg(target_os = "macos")]
+        {
+            println!("cargo:rustc-link-lib=dylib=c++");
+            println!("cargo:rustc-link-lib=dylib=c++abi");
         }
 
         let arch = env::var("CARGO_CFG_TARGET_ARCH").unwrap();
