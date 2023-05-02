@@ -133,6 +133,26 @@ def test_stream_database_chunked_scan(database, ctx, tag, on_match):
     ]
 
 
+@pytest.mark.parametrize(
+    "database",
+    (ps.StreamDatabase,),
+    indirect=True,
+)
+def test_stream_database_reset(database, ctx, tag, on_match):
+    scan = database.build(ctx, on_match)
+    on_match.return_value = ps.Scan.Terminate
+
+    assert scan.scan(b"foobarxxxxxxxx") == ps.Scan.Terminate
+    on_match.assert_called_once_with(ctx, tag, 0, 3)
+    scan.reset()
+
+    assert scan.scan(b"foobarxxxxxxxx") == ps.Scan.Terminate
+    assert on_match.call_args_list == [
+        mock.call(ctx, tag, 0, 3),
+        mock.call(ctx, tag, 0, 3),
+    ]
+
+
 def test_pattern_tags(ctx, on_match):
     scan = ps.BlockDatabase(ps.Pattern(b"foo", tag="tag"), ps.Pattern(b"bar")).build(
         ctx, on_match
