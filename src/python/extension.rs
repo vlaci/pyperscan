@@ -227,6 +227,10 @@ impl PyStreamScanner {
 
         Ok(rv.into())
     }
+
+    fn reset(&mut self) -> PyResult<PyScan> {
+        Ok(self.0.reset()?.into())
+    }
 }
 
 fn to_tag_mapping(

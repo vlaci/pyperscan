@@ -156,6 +156,20 @@ impl<U> StreamScanner<U> {
             .to_scan_result(self.context.match_error.take())
         }
     }
+
+    pub fn reset(&mut self) -> Result<Scan, Error> {
+        unsafe {
+            hs::hs_reset_stream(
+                self.stream.as_ptr(),
+                0,
+                self.scratch.as_ptr(),
+                Some(on_match::<U>),
+                &mut self.context as *mut _ as *mut c_void,
+            )
+            .ok()
+            .to_scan_result(self.context.match_error.take())
+        }
+    }
 }
 
 impl<U> BlockScanner<U> {

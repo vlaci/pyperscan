@@ -26,6 +26,7 @@ Buffer = Union[bytes, mmap]
 
 class BlockScanner:
     def scan(self, data: Buffer) -> Scan: ...
+    def reset(self) -> Scan: ...
 
 C = TypeVar("C")
 
