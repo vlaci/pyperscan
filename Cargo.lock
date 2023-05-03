@@ -118,7 +118,7 @@ checksum = "d2fabcfbdc87f4758337ca535fb41a6d701b65693ce38287d856d1674551ec9b"
 
 [[package]]
 name = "hyperscan-sys"
-version = "0.2.0"
+version = "0.2.1"
 dependencies = [
  "bindgen",
  "cmake",
@@ -314,7 +314,7 @@ dependencies = [
 
 [[package]]
 name = "pyperscan"
-version = "0.2.0"
+version = "0.2.1"
 dependencies = [
  "bitflags",
  "foreign-types",
