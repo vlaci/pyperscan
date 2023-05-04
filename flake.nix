@@ -1,73 +1,159 @@
 {
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
-    utils.url = "github:numtide/flake-utils";
+
     filter.url = "github:numtide/nix-filter";
-    rust-overlay.url = "github:oxalica/rust-overlay";
+
+    crane = {
+      url = "github:ipetkov/crane";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    fenix = {
+      url = "github:nix-community/fenix";
+      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.rust-analyzer-src.follows = "";
+    };
+
+    flake-utils.url = "github:numtide/flake-utils";
+
+    advisory-db = {
+      url = "github:rustsec/advisory-db";
+      flake = false;
+    };
   };
 
-  outputs = { self, nixpkgs, utils, filter, rust-overlay }:
-    let
-      rust-toolchain_toml = (builtins.fromTOML (builtins.readFile ./rust-toolchain.toml)).toolchain;
+  outputs = { self, nixpkgs, filter, crane, fenix, flake-utils, advisory-db }:
+    flake-utils.lib.eachDefaultSystem (system:
+      let
+        pkgs = import nixpkgs {
+          inherit system;
+        };
 
-      overlays = [
-        rust-overlay.overlays.default
-        filter.overlays.default
-        (final: prev: {
-          rustToolchain = (final.rust-bin.fromRustupToolchain rust-toolchain_toml) // { inherit (final) llvmPackages; };
-          rustToolchainDev = final.rustToolchain.override {
-            extensions = (rust-toolchain_toml.components or [ ]) ++ [ "rust-src" ];
-          };
+        inherit (pkgs) lib makeRustPlatform;
 
-          pyperscan =
-            let
-              drv = final.callPackage ./nix/pyperscan.nix {
-                rustPlatform = final.makeRustPlatform { cargo = final.rustToolchain; rustc = final.rustToolchain; };
-              };
-            in
-            drv.overrideAttrs (_: {
-              passthru = {
-                shared = drv;
-                hyperscan = drv.override { vendorHyperscan = true; };
-                vectorscan = drv.override { vendorVectorscan = true; };
-              };
-            });
-        })
-      ];
-    in
-    utils.lib.eachDefaultSystem
-      (system:
-        let
-          pkgs = import nixpkgs { inherit overlays system; };
-        in
-        {
-          packages = with pkgs; {
-            default = pyperscan;
-          };
+        rust-toolchain_toml = (builtins.fromTOML (builtins.readFile ./rust-toolchain.toml)).toolchain;
+        channel = (builtins.fromTOML (builtins.readFile ./rust-toolchain.toml)).toolchain.channel;
+        rust-toolchain = fenix.packages.${system}.toolchainOf {
+          inherit channel;
+          sha256 = "sha256-DzNEaW724O8/B8844tt5AVHmSjSQ3cmzlU4BP90oRlY=";
+        };
 
-          devShells =
-            let
-              inherit (pkgs.lib) filter hasSuffix;
-              noHooks = filter (drv: !(hasSuffix "hook.sh" drv.name));
-              pyperscan' = pkgs.pyperscan.override { python3Packages = pkgs.python38Packages; };
-            in
-            rec {
-              default =
-                with pkgs; mkShell {
-                  nativeBuildInputs = noHooks pyperscan'.hyperscan.nativeBuildInputs;
-                  buildInputs = [
-                    just
-                    pkgs.maturin
-                    podman
-                    pre-commit
-                    rust-bin.nightly.latest.rust-analyzer
-                    rustToolchainDev
-                  ]
-                  ++ pyperscan'.hyperscan.buildInputs
-                  ++ (pkgs.lib.optionals (system == "x86_64-linux")
-                    pyperscan'.buildInputs);
-                };
-            };
+        craneLib = (crane.mkLib pkgs).overrideToolchain rust-toolchain.toolchain;
 
+        src = craneLib.cleanCargoSource (craneLib.path ./.);
+
+        # Common arguments can be set here to avoid repeating them later
+        commonArgs = {
+          inherit src;
+
+          buildInputs = [
+            # Add additional build inputs here
+          ] ++ lib.optionals pkgs.stdenv.isDarwin [
+            # Additional darwin specific inputs can be set here
+            pkgs.libiconv
+          ];
+
+          # Additional environment variables can be set directly
+          # MY_CUSTOM_VAR = "some value";
+        };
+
+        craneLibLLvmTools = craneLib.overrideToolchain
+          (fenix.packages.${system}.complete.withComponents [
+            "cargo"
+            "llvm-tools"
+            "rustc"
+          ]);
+
+        # Build *just* the cargo dependencies, so we can reuse
+        # all of that work (e.g. via cachix) when running in CI
+        cargoArtifacts = craneLib.buildDepsOnly commonArgs;
+
+        # Build the actual crate itself, reusing the dependency
+        # artifacts from above.
+        libpyperscan = craneLib.buildPackage (commonArgs // {
+          inherit cargoArtifacts;
         });
+
+        rustPlatform = makeRustPlatform {
+          inherit (rust-toolchain) cargo rustc;
+        };
+
+        pyperscan =
+          let
+            drv = (pkgs.callPackage ./nix/pyperscan.nix {
+              inherit rustPlatform;
+            });
+          in
+          drv.overrideAttrs (_: {
+            shared = drv;
+            hyperscan = drv.override { vendorHyperscan = true; };
+            vectorscan = drv.override { vendorVectorscan = true; };
+          });
+
+      in
+      {
+        checks = {
+          # Build the crate as part of `nix flake check` for convenience
+          inherit libpyperscan;
+
+          # Run clippy (and deny all warnings) on the crate source,
+          # again, resuing the dependency artifacts from above.
+          #
+          # Note that this is done as a separate derivation so that
+          # we can block the CI if there are issues here, but not
+          # prevent downstream consumers from building our crate by itself.
+          my-crate-clippy = craneLib.cargoClippy (commonArgs // {
+            inherit cargoArtifacts;
+            cargoClippyExtraArgs = "--all-targets -- --deny warnings";
+          });
+
+          my-crate-doc = craneLib.cargoDoc (commonArgs // {
+            inherit cargoArtifacts;
+          });
+
+          # Check formatting
+          my-crate-fmt = craneLib.cargoFmt {
+            inherit src;
+          };
+
+          # Audit dependencies
+          my-crate-audit = craneLib.cargoAudit {
+            inherit src advisory-db;
+          };
+
+          # Run tests with cargo-nextest
+          # Consider setting `doCheck = false` on `my-crate` if you do not want
+          # the tests to run twice
+          my-crate-nextest = craneLib.cargoNextest (commonArgs // {
+            inherit cargoArtifacts;
+            partitions = 1;
+            partitionType = "count";
+          });
+        } // lib.optionalAttrs (system == "x86_64-linux") {
+          # NB: cargo-tarpaulin only supports x86_64 systems
+          # Check code coverage (note: this will not upload coverage anywhere)
+          my-crate-coverage = craneLib.cargoTarpaulin (commonArgs // {
+            inherit cargoArtifacts;
+          });
+        };
+
+        packages = with pkgs; {
+          default = pyperscan;
+        };
+
+        devShells.default =
+          with pkgs; mkShell {
+            inputsFrom = builtins.attrValues self.checks.${system};
+            nativeBuildInputs = [
+              just
+              pkgs.maturin
+              podman
+              pre-commit
+              #fenix.packages.${system}.rust-analyzer
+            ];
+          };
+
+        formatter = pkgs.nixpkgs-fmt;
+      });
 }
