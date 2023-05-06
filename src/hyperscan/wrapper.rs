@@ -9,22 +9,22 @@ use std::{
 };
 
 foreign_type! {
-    unsafe type CompileError {
+    unsafe type CompileError: Send {
         type CType = hs::hs_compile_error_t;
         fn drop = hs::hs_free_compile_error;
     }
 
-    pub unsafe type Database: Send + Sync {
+    pub unsafe type Database: Send {
         type CType = hs::hs_database_t;
         fn drop = hs::hs_free_database;
     }
 
-    pub unsafe type Scratch {
+    pub unsafe type Scratch: Send {
         type CType = hs::hs_scratch_t;
         fn drop = hs::hs_free_scratch;
     }
 
-    pub unsafe type Stream {
+    pub unsafe type Stream: Send {
         type CType = hs::hs_stream_t;
         fn drop = stream_drop;
     }

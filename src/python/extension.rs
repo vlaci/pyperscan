@@ -133,8 +133,8 @@ struct PyBlockScanner(BlockScanner<PyContext>);
 
 #[pymethods]
 impl PyBlockScanner {
-    fn scan(&mut self, data: Buffer) -> PyResult<PyScan> {
-        Ok(self.0.scan(&data)?.into())
+    fn scan(&mut self, py: Python, data: Buffer) -> PyResult<PyScan> {
+        py.allow_threads(|| Ok(self.0.scan(&data)?.into()))
     }
 }
 
@@ -172,9 +172,11 @@ struct PyVectoredScanner(VectoredScanner<PyContext>);
 
 #[pymethods]
 impl PyVectoredScanner {
-    fn scan(&mut self, data: Vec<Buffer>) -> PyResult<PyScan> {
-        let data = data.iter().map(|d| d.deref()).collect();
-        Ok(self.0.scan(data)?.into())
+    fn scan(&mut self, py: Python, data: Vec<Buffer>) -> PyResult<PyScan> {
+        py.allow_threads(|| {
+            let data = data.iter().map(|d| d.deref()).collect();
+            Ok(self.0.scan(data)?.into())
+        })
     }
 }
 #[pyclass(name = "StreamDatabase", module = "pyperscan._pyperscan")]
@@ -211,21 +213,23 @@ struct PyStreamScanner(StreamScanner<PyContext>);
 
 #[pymethods]
 impl PyStreamScanner {
-    fn scan(&mut self, data: Buffer, chunk_size: Option<usize>) -> PyResult<PyScan> {
-        let mut rv = Scan::default();
-        match chunk_size {
-            None => rv = self.0.scan(&data)?,
-            Some(length) => {
-                for slice in data.chunks(length) {
-                    rv = self.0.scan(slice)?;
-                    if rv == Scan::Terminate {
-                        break;
+    fn scan(&mut self, py: Python, data: Buffer, chunk_size: Option<usize>) -> PyResult<PyScan> {
+        py.allow_threads(|| {
+            let mut rv = Scan::default();
+            match chunk_size {
+                None => rv = self.0.scan(&data)?,
+                Some(length) => {
+                    for slice in data.chunks(length) {
+                        rv = self.0.scan(slice)?;
+                        if rv == Scan::Terminate {
+                            break;
+                        }
                     }
                 }
-            }
-        };
+            };
 
-        Ok(rv.into())
+            Ok(rv.into())
+        })
     }
 
     fn reset(&mut self) -> PyResult<PyScan> {
