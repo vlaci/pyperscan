@@ -103,7 +103,11 @@ jobs:
         include:
           - target: x86_64-unknown-linux-gnu
             arch: amd64
+          - target: x86_64-unknown-linux-musl
+            arch: amd64
           - target: aarch64-unknown-linux-gnu
+            arch: arm64
+          - target: aarch64-unknown-linux-musl
             arch: arm64
     name: Build wheel - ${{ matrix.target }}
     needs:

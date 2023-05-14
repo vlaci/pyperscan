@@ -1,0 +1,32 @@
+FROM quay.io/pypa/musllinux_1_1_x86_64:latest AS ragel
+
+WORKDIR /usr/src/colm
+RUN curl -L https://github.com/adrian-thurston/colm/archive/refs/tags/0.14.7.tar.gz | tar -xz --strip-components 1 \
+    && ./autogen.sh \
+    && ./configure --disable-manual \
+    && make MAKEFLAGS=-j$(cat /proc/cpuinfo | grep processor | wc -l) \
+    && make DESTDIR=/build install \
+    && make install
+
+WORKDIR /usr/src/ragel
+RUN curl -L https://github.com/adrian-thurston/ragel/archive/refs/tags/7.0.4.tar.gz | tar -xz --strip-components 1 \
+    && ./autogen.sh \
+    && ./configure --disable-manual --with-colm=/usr/local \
+    && make MAKEFLAGS=-j$(cat /proc/cpuinfo | grep processor | wc -l) \
+    && make DESTDIR=/build install
+
+FROM quay.io/pypa/musllinux_1_1_x86_64:latest
+
+COPY --from=ragel /build/ /
+
+RUN apk add boost-dev clang-libs
+
+ENV PATH="${PATH}:/opt/python/cp38-cp38/bin:/root/.cargo/bin"
+ENV CARGO_NET_GIT_FETCH_WITH_CLI=true
+
+RUN pip install maturin \
+    && curl https://sh.rustup.rs -sSf | sh -s -- -y --default-toolchain 1.65.0
+
+WORKDIR /usr/src/pyperscan
+
+CMD [ "maturin", "build", "-o", "dist", "--compatibility", "musllinux_1_1" ]
