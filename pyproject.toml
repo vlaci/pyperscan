@@ -13,13 +13,47 @@ dynamic = [
 ]
 
 [project.urls]
-repository = "https://github.com/vlaci/pyperscan"
+Repository = "https://github.com/vlaci/pyperscan"
+Changelog = "https://github.com/vlaci/pyperscan/blob/main/CHANGELOG.md"
 
 [build-system]
 requires = ["maturin>=0.14,<0.15"]
 build-backend = "maturin"
 
+[tool.maturin]
+include = ["CHANGELOG.md"]
+
+[tool.towncrier]
+directory = "changelog.d"
+filename = "CHANGELOG.md"
+start_string = "<!-- towncrier release notes start -->\n"
+underlines = ["", "", ""]
+template = "changelog.d/changelog_template.jinja"
+title_format = "## [{version}](https://github.com/vlaci/pyperscan/tree/{version}) - {project_date}"
+issue_format = "[#{issue}](https://github.com/vlaci/pyperscan/issues/{issue})"
+
+[[tool.towncrier.type]]
+directory = "deprecated"
+name = "Deprecated"
+showcontent = true
+
+[[tool.towncrier.type]]
+directory = "added"
+name = "Added"
+showcontent = true
+
+[[tool.towncrier.type]]
+directory = "changed"
+name = "Changed"
+showcontent = true
+
+[[tool.towncrier.type]]
+directory = "fixed"
+name = "Fixed"
+showcontent = true
+
 [tool.pdm.scripts]
+changelog = "towncrier"
 venv = "pdm sync -d"
 mypy = "mypy ."
 ruff = "ruff ."
@@ -33,7 +67,7 @@ dev = [
     "mypy       ~= 1.2",
     "pre-commit ~= 3.3",
     "ruff       ~= 0.0.264",
-    #"towncrier  ~= 22.12.0",
+    "towncrier  ~= 22.12.0",
 ]
 test = [
   "pytest ~= 7.0.0",
