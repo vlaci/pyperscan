@@ -1,9 +1,8 @@
 import mmap
 from unittest import mock
 
-import pytest
-
 import pyperscan as ps
+import pytest
 
 
 def args(*args, **kwargs):
@@ -12,7 +11,7 @@ def args(*args, **kwargs):
 
 @pytest.mark.parametrize(
     "args",
-    (
+    [
         pytest.param(
             args(
                 b"foo",
@@ -27,7 +26,7 @@ def args(*args, **kwargs):
             args(b"foo", ps.Flag.SOM_LEFTMOST, ps.Flag.DOTALL, tag="bar"),
             id="flag-tag",
         ),
-    ),
+    ],
 )
 def test_patterns(args):
     ps.Pattern(*args[0], **args[1])
@@ -79,7 +78,13 @@ def on_match():
     return on_match
 
 
-@pytest.mark.parametrize("database", (ps.BlockDatabase,), indirect=True)
+@pytest.mark.parametrize(
+    "database",
+    [
+        ps.BlockDatabase,
+    ],
+    indirect=True,
+)
 def test_block_database(database, ctx, tag, on_match):
     scan = database.build(ctx, on_match)
 
@@ -91,7 +96,9 @@ def test_block_database(database, ctx, tag, on_match):
 
 @pytest.mark.parametrize(
     "database",
-    (ps.VectoredDatabase,),
+    [
+        ps.VectoredDatabase,
+    ],
     indirect=True,
 )
 def test_vectored_database(database, ctx, tag, on_match):
@@ -103,7 +110,9 @@ def test_vectored_database(database, ctx, tag, on_match):
 
 @pytest.mark.parametrize(
     "database",
-    (ps.StreamDatabase,),
+    [
+        ps.StreamDatabase,
+    ],
     indirect=True,
 )
 def test_stream_database(database, ctx, tag, on_match):
@@ -118,12 +127,14 @@ def test_stream_database(database, ctx, tag, on_match):
 
 @pytest.mark.parametrize(
     "database",
-    (ps.StreamDatabase,),
+    [
+        ps.StreamDatabase,
+    ],
     indirect=True,
 )
 def test_stream_database_chunked_scan(database, ctx, tag, on_match):
     scan = database.build(ctx, on_match)
-    on_match.side_effect = [ps.Scan.Continue, ps.Scan.Terminate]
+    on_match.side_effect = ps.Scan.Continue, ps.Scan.Terminate
 
     assert scan.scan(b"foobarfoobarfoo", chunk_size=4) == ps.Scan.Terminate
 
@@ -135,7 +146,9 @@ def test_stream_database_chunked_scan(database, ctx, tag, on_match):
 
 @pytest.mark.parametrize(
     "database",
-    (ps.StreamDatabase,),
+    [
+        ps.StreamDatabase,
+    ],
     indirect=True,
 )
 def test_stream_database_reset(database, ctx, tag, on_match):
@@ -175,22 +188,22 @@ def test_data_can_be_mmap_object(ctx, on_match):
 
 @pytest.mark.parametrize(
     "database,data",
-    (
+    [
         (ps.BlockDatabase, b"foofoo"),
         (
             ps.VectoredDatabase,
             (b"foofoo",),
         ),
         (ps.StreamDatabase, b"foofoo"),
-    ),
+    ],
     indirect=("database",),
 )
-def test_scanning_can_be_aborted(database, data, ctx, tag, on_match):
+def test_scanning_can_be_aborted(database, data, ctx, on_match):
     scan = database.build(ctx, on_match)
 
     on_match.return_value = ps.Scan.Continue
     assert scan.scan(data) == ps.Scan.Continue
-    assert on_match.call_count == 2
+    assert on_match.call_count == 2  # noqa: PLR2004
 
     on_match.reset_mock()
     on_match.return_value = ps.Scan.Terminate
