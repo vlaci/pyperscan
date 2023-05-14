@@ -1,15 +1,37 @@
 [project]
 name = "pyperscan"
+authors = [
+    {name = "László Vaskó", email = "1771332+vlaci@users.noreply.github.com"},
+]
+dependencies = []
 requires-python = ">=3.8"
-classifiers = [
-    "Programming Language :: Rust",
-    "Programming Language :: Python :: Implementation :: CPython",
-    "Programming Language :: Python :: Implementation :: PyPy",
+dynamic = [
+    'description',
+    'license',
+    'readme',
+    'version'
 ]
 
-[project.optional-dependencies]
+[project.urls]
+repository = "https://github.com/vlaci/pyperscan"
+
+[build-system]
+requires = ["maturin>=0.14,<0.15"]
+build-backend = "maturin"
+
+[tool.pdm.scripts]
+venv = "pdm sync -d"
+mypy = "mypy ."
+ruff = "ruff ."
+pytest = "python -m pytest tests"
+clippy = "cargo clippy --all-targets -- --deny warnings"
+all = { composite = ["clippy", "venv", "ruff", "mypy", "pytest"] }
+
+[tool.pdm.dev-dependencies]
 dev = [
-  "pre-commit ~= 2.20",
+    "black      ~= 23.3",
+    "mypy       ~= 1.2",
+    "pre-commit ~= 3.3",
 ]
 test = [
   "pytest ~= 7.0.0",
@@ -17,7 +39,3 @@ test = [
 
 [tool.isort]
 profile = "black"
-
-[build-system]
-requires = ["maturin>=0.14,<0.15"]
-build-backend = "maturin"

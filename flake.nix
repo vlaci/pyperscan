@@ -58,6 +58,7 @@
                   buildInputs = [
                     just
                     pkgs.maturin
+                    pkgs.pdm
                     podman
                     pre-commit
                     rust-bin.nightly.latest.rust-analyzer
