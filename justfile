@@ -46,8 +46,12 @@ _test_in_container target:
         cd /usr/src/pyperscan
         ARCH=$(echo "{{ target }}" | cut -d- -f1)
         whl=(dist/pyperscan-*$ARCH*.whl)
-        pip install "$whl[test]"
-        py.test
+        curl -sSL https://raw.githubusercontent.com/pdm-project/pdm/main/install-pdm.py | python3.10 -
+        export PATH=/root/.local/bin:$PATH
+        pdm sync -d --no-self -G test
+        pdm run python -m ensurepip
+        pdm run python -m pip install $whl
+        pdm run pytest
     EOF
 
 ensure-foreign-emulation target:
