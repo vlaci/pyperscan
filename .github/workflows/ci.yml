@@ -8,32 +8,38 @@ on:
       - v*.*.*
   pull_request:
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref_name }}
+  cancel-in-progress: true
+
 jobs:
   checks:
     name: Checks
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - name: Set up cache
-        uses: actions/cache@v3
+      - uses: cachix/install-nix-action@v20
+      - uses: cachix/cachix-action@v12
         with:
-          path: |
-            ~/.cache/pre-commit
-          key: checks-pre-commit-${{ hashFiles('.pre-commit-config.yaml') }}
-          restore-keys: checks-pre-commit-
-      - uses: actions-rust-lang/setup-rust-toolchain@v1
-      - run: |
-          sudo apt update
-          sudo apt install --no-install-recommends libhyperscan-dev
-      - uses: pdm-project/setup-pdm@v3
-      - run: pdm install --no-self
-      - name: pre-commit hooks
-        run: pdm run pre-commit install-hooks
-        env:
-          RUSTFLAGS: ""
-      - name: pre-commit check
-        run: pdm run pre-commit run --all
-
+          name: pyperscan
+          authToken: "${{ secrets.CACHIX_AUTH_TOKEN }}"
+      - name: Nix Flake checks
+        run: |
+          nix flake check \
+              --keep-going \
+              --print-build-logs
+      - name: Code coverage
+        run: |
+          nix build .#checks.x86_64-linux.libpyperscan-coverage -o cargo-test.codecov
+          nix build .#checks.x86_64-linux.coverage -o pytest.codecov
+      - uses: codecov/codecov-action@v3
+        with:
+          flags: cargo-test
+          files: cargo-test.codecov
+      - uses: codecov/codecov-action@v3
+        with:
+          flags: pytest
+          files: pytest.codecov
   build:
     needs:
       - checks
@@ -179,7 +185,7 @@ jobs:
       - uses: PyO3/maturin-action@v1
         with:
           target: ${{ matrix.target }}
-          args: --release --out dist --find-interpreter -F vectorscan
+          args: --release --out dist -F vectorscan
           sccache: "true"
       - name: Upload wheels
         uses: actions/upload-artifact@v3
