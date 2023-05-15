@@ -32,6 +32,7 @@ _build_container target:
     cache_tag=$(< $containerfile openssl sha256 -binary |  openssl sha256 -r | cut -d " " -f 1)
     image={{ builder_image_prefix }}-{{ target }}
     if ! podman pull $image:$cache_tag; then
+        podman pull $image:latest || true
         podman build -t $image:$cache_tag -f $containerfile
     fi
     podman tag $image:$cache_tag $image:latest

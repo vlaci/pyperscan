@@ -143,6 +143,8 @@ jobs:
           echo tag=$TAG >> $GITHUB_ENV
       - run: just wheel ${{ matrix.target }}
       - run: podman push $image:$tag
+      - run: podman push $image:latest
+        if: github.ref_name == 'main'
       - name: Upload wheels
         uses: actions/upload-artifact@v3
         with:
