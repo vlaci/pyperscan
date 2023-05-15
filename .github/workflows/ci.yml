@@ -184,7 +184,7 @@ jobs:
       - name: Upload wheels
         uses: actions/upload-artifact@v3
         with:
-          name: wheels-universal2-apple-darwin
+          name: wheels-${{ matrix.target }}-darwin
           path: dist
       - uses: pdm-project/setup-pdm@v3
       - name: Test wheels
