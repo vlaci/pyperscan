@@ -34,4 +34,4 @@ RUN mkdir -p /usr/src/pyperscan
 WORKDIR /usr/src/pyperscan
 RUN echo -e '#!/usr/bin/env bash\nsource scl_source enable llvm-toolset-7.0\nexec "$@"' > /entrypoint.sh && chmod +x /entrypoint.sh
 ENTRYPOINT ["/entrypoint.sh"]
-CMD [ "maturin", "build", "-o", "dist" ]
+CMD [ "maturin", "build", "-o", "dist", "-F", "vectorscan" ]

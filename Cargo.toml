@@ -18,7 +18,6 @@ hyperscan-sys = { path = "./hyperscan-sys" }
 libc = "0.2.142"
 
 [features]
-default = ["vectorscan"]
 hyperscan = ["hyperscan-sys/hyperscan"]
 vectorscan = ["hyperscan-sys/vectorscan"]
 
