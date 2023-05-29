@@ -7,7 +7,7 @@ use crate::hyperscan::{
 };
 use pyo3::{create_exception, exceptions::PyValueError, prelude::*, types::PyTuple};
 
-#[pyclass(name = "Pattern", unsendable)]
+#[pyclass(name = "Pattern", module = "pyperscan._pyperscan", unsendable)]
 struct PyPattern {
     expression: Vec<u8>,
     tag: Option<PyObject>,
@@ -32,7 +32,7 @@ enum PyFlag {
     QUIET,
 }
 
-#[pyclass(name = "Scan")]
+#[pyclass(name = "Scan", module = "pyperscan._pyperscan")]
 #[derive(Clone)]
 enum PyScan {
     Continue,
@@ -99,7 +99,7 @@ struct PyContext {
     tag_mapping: Vec<Option<PyObject>>,
 }
 
-#[pyclass(name = "BlockDatabase")]
+#[pyclass(name = "BlockDatabase", module = "pyperscan._pyperscan")]
 struct PyBlockDatabase {
     db: BlockDatabase,
     tag_mapping: Vec<Option<PyObject>>,
@@ -128,7 +128,7 @@ impl PyBlockDatabase {
     }
 }
 
-#[pyclass(unsendable, name = "BlockDatabase")]
+#[pyclass(unsendable, name = "BlockScanner", module = "pyperscan._pyperscan")]
 struct PyBlockScanner(BlockScanner<PyContext>);
 
 #[pymethods]
@@ -138,7 +138,7 @@ impl PyBlockScanner {
     }
 }
 
-#[pyclass(name = "VectoredDatabase")]
+#[pyclass(name = "VectoredDatabase", module = "pyperscan._pyperscan")]
 struct PyVectoredDatabase {
     db: VectoredDatabase,
     tag_mapping: Vec<Option<PyObject>>,
@@ -167,7 +167,7 @@ impl PyVectoredDatabase {
     }
 }
 
-#[pyclass(unsendable, name = "VectoredScanner")]
+#[pyclass(unsendable, name = "VectoredScanner", module = "pyperscan._pyperscan")]
 struct PyVectoredScanner(VectoredScanner<PyContext>);
 
 #[pymethods]
@@ -177,7 +177,7 @@ impl PyVectoredScanner {
         Ok(self.0.scan(data)?.into())
     }
 }
-#[pyclass(name = "StreamDatabase")]
+#[pyclass(name = "StreamDatabase", module = "pyperscan._pyperscan")]
 struct PyStreamDatabase {
     db: StreamDatabase,
     tag_mapping: Vec<Option<PyObject>>,
@@ -206,7 +206,7 @@ impl PyStreamDatabase {
     }
 }
 
-#[pyclass(unsendable, name = "StreamScanner")]
+#[pyclass(name = "StreamScanner", module = "pyperscan._pyperscan", unsendable)]
 struct PyStreamScanner(StreamScanner<PyContext>);
 
 #[pymethods]
@@ -294,11 +294,19 @@ impl From<Error> for PyErr {
     }
 }
 
-create_exception!(module, HyperscanError, pyo3::exceptions::PyException);
-create_exception!(module, HyperscanCompileError, pyo3::exceptions::PyException);
+create_exception!(
+    pyperscan._pyperscan,
+    HyperscanError,
+    pyo3::exceptions::PyException
+);
+create_exception!(
+    pyperscan._pyperscan,
+    HyperscanCompileError,
+    pyo3::exceptions::PyException
+);
 
 #[pymodule]
-pub fn pyperscan(py: Python, m: &PyModule) -> PyResult<()> {
+pub fn _pyperscan(py: Python, m: &PyModule) -> PyResult<()> {
     m.add_class::<PyFlag>()?;
     m.add_class::<PyScan>()?;
     m.add_class::<PyBlockDatabase>()?;

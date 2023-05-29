@@ -22,6 +22,8 @@ build-backend = "maturin"
 
 [tool.maturin]
 include = ["CHANGELOG.md"]
+python-source = "python"
+module-name = "pyperscan._pyperscan"
 
 [tool.towncrier]
 directory = "changelog.d"

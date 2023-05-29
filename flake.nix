@@ -77,7 +77,7 @@
           rustc = rust-toolchain-llvm-tools;
         };
 
-        pyFilter = path: _type: builtins.match ".*pyi?$|.*/pyproject.toml|.*/README.md$|.*/LICENSE" path != null;
+        pyFilter = path: _type: builtins.match ".*pyi?$|.*/py.typed$|.*/pyproject.toml|.*/README.md$|.*/LICENSE" path != null;
         testFilter = p: t: builtins.match ".*/(tests|tests/.*\.py)$" p != null;
 
         mkNativeBuildInputs = { rustPlatform, extra ? [ ] }: with rustPlatform; [
