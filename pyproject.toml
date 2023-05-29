@@ -74,6 +74,11 @@ dev = [
 test = [
   "pytest ~= 7.0.0",
 ]
+docs = [
+    "mkdocs               ~= 1.4",
+    "mkdocstrings[python] ~= 0.22.0",
+    "mkdocs-material      ~= 9.1",
+]
 
 [tool.ruff]
 target-version = "py38"
