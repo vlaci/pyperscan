@@ -183,7 +183,7 @@
                           pyperscan-cov = pyperscan.overridePythonAttrs (with pkgs; super: {
                             pname = "${super.pname}-coverage";
                             nativeBuildInputs = mkNativeBuildInputs {
-                              inherit rustPlatform;
+                              rustPlatform = rustPlatform-cov;
                               extra = [
                                 cargo-llvm-cov
                               ];
@@ -191,7 +191,6 @@
                             preConfigure = (super.preConfigure or "") + ''
                               source <(cargo llvm-cov show-env --export-prefix)
                             '';
-                            env.LIBCLANG_PATH = "${pkgs.llvmPackages.libclang.lib}/lib";
                           });
                         in
                         with python3Packages; buildPythonPackage
@@ -219,7 +218,7 @@
                             '';
 
                             nativeBuildInputs =
-                              (with rustPlatform; [
+                              (with rustPlatform-cov; [
                                 cargoSetupHook
                               ]);
 
