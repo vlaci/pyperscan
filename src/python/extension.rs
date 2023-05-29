@@ -310,8 +310,11 @@ pub fn _pyperscan(py: Python, m: &PyModule) -> PyResult<()> {
     m.add_class::<PyFlag>()?;
     m.add_class::<PyScan>()?;
     m.add_class::<PyBlockDatabase>()?;
+    m.add_class::<PyBlockScanner>()?;
     m.add_class::<PyVectoredDatabase>()?;
+    m.add_class::<PyVectoredScanner>()?;
     m.add_class::<PyStreamDatabase>()?;
+    m.add_class::<PyStreamScanner>()?;
     m.add_class::<PyPattern>()?;
     m.add_class::<HyperscanErrorCode>()?;
 
