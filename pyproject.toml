@@ -17,7 +17,7 @@ Repository = "https://github.com/vlaci/pyperscan"
 Changelog = "https://github.com/vlaci/pyperscan/blob/main/CHANGELOG.md"
 
 [build-system]
-requires = ["maturin>=0.14,<0.15"]
+requires = ["maturin>=1.0,<2.0"]
 build-backend = "maturin"
 
 [tool.maturin]
