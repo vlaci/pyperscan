@@ -29,7 +29,7 @@
         };
         inherit (pkgs) lib makeRustPlatform python3Packages;
 
-        craneLib = (crane.mkLib pkgs).overrideToolchain rust-toolchain;
+        craneLib = crane.lib.${system};
         cppFilter = path: _type: builtins.match ".*/hyperscan-sys/(wrapper.h|hyperscan|vectorscan).*$" path != null;
 
         sourceFilter = path: type:
@@ -183,7 +183,7 @@
                           pyperscan-cov = pyperscan.overridePythonAttrs (with pkgs; super: {
                             pname = "${super.pname}-coverage";
                             nativeBuildInputs = mkNativeBuildInputs {
-                              inherit rustPlatform;
+                              rustPlatform = rustPlatform-cov;
                               extra = [
                                 cargo-llvm-cov
                               ];
@@ -191,7 +191,6 @@
                             preConfigure = (super.preConfigure or "") + ''
                               source <(cargo llvm-cov show-env --export-prefix)
                             '';
-                            env.LIBCLANG_PATH = "${pkgs.llvmPackages.libclang.lib}/lib";
                           });
                         in
                         with python3Packages; buildPythonPackage
@@ -219,7 +218,7 @@
                             '';
 
                             nativeBuildInputs =
-                              (with rustPlatform; [
+                              (with rustPlatform-cov; [
                                 cargoSetupHook
                               ]);
 
@@ -317,13 +316,14 @@
           in
           rec {
             default = with pkgs; mkShell {
-              inputsFrom = builtins.attrValues self.checks.${system};
+              inputsFrom = with self.checks.${system}; [ libpyperscan ];
               buildInputs = [
                 just
                 maturin
                 pdm
                 podman
                 pre-commit
+                fenix.packages.${system}.complete.rust-analyzer
               ];
             };
           };

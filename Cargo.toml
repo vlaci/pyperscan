@@ -3,6 +3,7 @@ name = "pyperscan"
 authors.workspace = true
 version.workspace = true
 edition.workspace = true
+rust-version.workspace = true
 license.workspace = true
 
 [lib]
@@ -30,3 +31,4 @@ version = "0.2.2"
 authors = ["László Vaskó <1771332+vlaci@users.noreply.github.com>"]
 license = "MIT OR Apache-2.0"
 edition = "2021"
+rust-version = "1.64"
