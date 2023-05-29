@@ -316,13 +316,14 @@
           in
           rec {
             default = with pkgs; mkShell {
-              inputsFrom = builtins.attrValues self.checks.${system};
+              inputsFrom = with self.checks.${system}; [ libpyperscan ];
               buildInputs = [
                 just
                 maturin
                 pdm
                 podman
                 pre-commit
+                fenix.packages.${system}.complete.rust-analyzer
               ];
             };
           };
