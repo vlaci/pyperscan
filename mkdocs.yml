@@ -1,0 +1,67 @@
+site_name: pyperscan
+strict: true
+repo_name: vlaci/pyperscan
+repo_url: https://github.com/vlaci/pyperscan
+site_url: https://vlaci.github.io/pyperscan
+
+theme:
+  name: material
+  font:
+    text: Open Sans
+    code: Fira Code
+  features:
+    - content.code.annotate
+    - content.code.copy
+    - toc.integrate
+    - toc.follow
+    - navigation.instant
+    - navigation.top
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: deep purple
+      toggle:
+        icon: material/weather-sunny
+        name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: deep purple
+      toggle:
+        icon: material/weather-night
+        name: Switch to light mode
+
+nav:
+  - Home: index.md
+  - Usage: usage.md
+  - API Documentation: api.md
+  - Changelog: changelog.md
+  - License:
+      - Apache: "LICENSE-APACHE.md"
+      - MIT: "LICENSE-MIT.md"
+
+watch:
+  - CHANGELOG.md
+  - README.md
+  - python
+  - tests/examples
+
+plugins:
+  - autorefs
+  - mkdocstrings:
+      handlers:
+        python:
+          paths: [python]
+          options:
+            allow_inspection: false
+            separate_signature: true
+            members_order: source
+hooks:
+  - docs/hooks.py
+
+markdown_extensions:
+  - pymdownx.highlight
+  - pymdownx.snippets
+  - pymdownx.superfences
+  - toc:
+      permalink: "#"
+      toc_depth: 2
