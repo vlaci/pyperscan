@@ -78,7 +78,7 @@ impl From<&PyFlag> for Flag {
 #[pymethods]
 impl PyPattern {
     #[new]
-    #[args(expression, flags = "*", tag = "None")]
+    #[pyo3(signature = (expression, *flags, tag = None))]
     fn py_new(expression: &[u8], flags: &PyTuple, tag: Option<PyObject>) -> PyResult<Self> {
         let flags = flags
             .iter()
@@ -108,7 +108,7 @@ struct PyBlockDatabase {
 #[pymethods]
 impl PyBlockDatabase {
     #[new]
-    #[args(patterns = "*")]
+    #[pyo3(signature = (*patterns))]
     fn py_new(py: Python<'_>, patterns: &PyTuple) -> PyResult<Self> {
         let (patterns, tag_mapping) = to_tag_mapping(py, patterns)?;
         Ok(Self {
@@ -147,7 +147,7 @@ struct PyVectoredDatabase {
 #[pymethods]
 impl PyVectoredDatabase {
     #[new]
-    #[args(patterns = "*")]
+    #[pyo3(signature = (*patterns))]
     fn py_new(py: Python<'_>, patterns: &PyTuple) -> PyResult<Self> {
         let (patterns, tag_mapping) = to_tag_mapping(py, patterns)?;
         Ok(Self {
@@ -186,7 +186,7 @@ struct PyStreamDatabase {
 #[pymethods]
 impl PyStreamDatabase {
     #[new]
-    #[args(patterns = "*")]
+    #[pyo3(signature=(*patterns))]
     fn py_new(py: Python<'_>, patterns: &PyTuple) -> PyResult<Self> {
         let (patterns, tag_mapping) = to_tag_mapping(py, patterns)?;
         Ok(Self {
