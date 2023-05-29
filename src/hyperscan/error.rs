@@ -11,7 +11,7 @@ pub enum Error {
     #[error("Error originating from Hyperscan API")]
     Hyperscan(HyperscanErrorCode, i32),
 
-    #[error("Pattern comilation failed, {0} at {1}")]
+    #[error("Pattern compilation failed, {0} at {1}")]
     HypercanCompile(String, i32),
 
     #[error("Exception raised from Python callback")]
@@ -64,9 +64,9 @@ pub enum HyperscanErrorCode {
 
     /// The scratch region was already in use.
     ///
-    /// s error is returned when Hyperscan is able to detect that the
-    /// scratch region given is already in use by another Hyperscan
-    /// API call.
+    /// This error is returned when Hyperscan is able to detect that
+    /// the scratch region given is already in use by another
+    /// Hyperscan API call.
     ///
     /// A separate scratch region, allocated with hs_alloc_scratch()
     /// or hs_clone_scratch(), is required for every concurrent caller
