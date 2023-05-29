@@ -1,13 +1,20 @@
 # pyperscan
 
+An opinionated Python binding for [Hyperscan](http://hyperscan.io) focusing on easy of
+use and safety.
+
+See [Usage](docs/usage.md) to get started and [API Documentation](docs/api.md) for a comprehensive
+overview.
+
+
 ## License
 
 Licensed under either of
 
 - Apache License, Version 2.0
-  ([LICENSE-APACHE](LICENSE-APACHE) or http://www.apache.org/licenses/LICENSE-2.0)
+  ([LICENSE-APACHE](LICENSE-APACHE) or <https://www.apache.org/licenses/LICENSE-2.0>)
 - MIT license
-  ([LICENSE-MIT](LICENSE-MIT) or http://opensource.org/licenses/MIT)
+  ([LICENSE-MIT](LICENSE-MIT) or <https://opensource.org/licenses/MIT>)
 
 at your option.
 

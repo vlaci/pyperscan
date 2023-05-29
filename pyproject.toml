@@ -13,6 +13,7 @@ dynamic = [
 ]
 
 [project.urls]
+Homepage = "https://vlaci.github.io/pyperscan"
 Repository = "https://github.com/vlaci/pyperscan"
 Changelog = "https://github.com/vlaci/pyperscan/blob/main/CHANGELOG.md"
 
@@ -73,6 +74,11 @@ dev = [
 ]
 test = [
   "pytest ~= 7.0.0",
+]
+docs = [
+    "mkdocs               ~= 1.4",
+    "mkdocstrings[python] ~= 0.22.0",
+    "mkdocs-material      ~= 9.1",
 ]
 
 [tool.ruff]
