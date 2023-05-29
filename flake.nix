@@ -29,7 +29,7 @@
         };
         inherit (pkgs) lib makeRustPlatform python3Packages;
 
-        craneLib = (crane.mkLib pkgs).overrideToolchain rust-toolchain;
+        craneLib = crane.lib.${system};
         cppFilter = path: _type: builtins.match ".*/hyperscan-sys/(wrapper.h|hyperscan|vectorscan).*$" path != null;
 
         sourceFilter = path: type:
