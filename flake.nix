@@ -90,6 +90,7 @@
           let
             drv = pkgs.callPackage
               ({ lib
+               , stdenv
                , python3Packages
                , rustPlatform
                , hyperscan
@@ -107,7 +108,7 @@
                 assert vendorVectorscan -> !vendorHyperscan;
 
                 let
-                  inherit (lib) optionals;
+                  inherit (lib) optional optionals;
                   vendor = vendorHyperscan || vendorVectorscan;
                   cargo_toml = builtins.fromTOML (builtins.readFile ./Cargo.toml);
                 in
@@ -141,7 +142,10 @@
 
                     nativeBuildInputs = mkNativeBuildInputs {
                       inherit rustPlatform;
-                      extra = optionals vendor [ cmake ragel util-linux ];
+                      extra = (
+                        optionals vendor [ cmake ragel ]
+                        ++ optional (vendor && stdenv.isLinux) util-linux
+                      );
                     };
 
                     dontUseCmakeConfigure = true;
