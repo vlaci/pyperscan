@@ -1,4 +1,5 @@
 { lib
+, stdenv
 , nix-filter
 , python3Packages
 , rustPlatform
@@ -16,7 +17,7 @@ assert vendorHyperscan -> !vendorVectorscan;
 assert vendorVectorscan -> !vendorHyperscan;
 
 let
-  inherit (lib) optionals;
+  inherit (lib) optinal optionals;
   vendor = vendorHyperscan || vendorVectorscan;
   cargo_toml = builtins.fromTOML (builtins.readFile ../Cargo.toml);
 in
@@ -51,7 +52,7 @@ python3Packages.buildPythonPackage {
 
   maturinBuildFlags = (optionals vendorHyperscan [ "-F hyperscan" ]) ++ (optionals (vendorVectorscan) [ "-F vectorscan" ]);
 
-  buildInputs = if vendor then [ boost util-linux ] else [ hyperscan ];
+  buildInputs = if vendor then [ boost ] else [ hyperscan ];
 
   nativeBuildInputs =
     (with rustPlatform; [
@@ -59,7 +60,9 @@ python3Packages.buildPythonPackage {
       cargoSetupHook
       maturinBuildHook
       pkg-config
-    ] ++ (optionals vendor [ cmake ragel util-linux ]));
+    ]
+    ++ (optionals vendor [ cmake ragel ])
+    ++ optional vendor && stdenv.isLinux util-linux);
   dontUseCmakeConfigure = true;
 
   nativeCheckInputs = [ python3Packages.pytest ];
