@@ -90,11 +90,14 @@ impl StreamDatabase {
 pub struct Context<U> {
     user_data: U,
     match_error: Option<Error>,
-    match_event_handler: Box<dyn MatchEventHandler<U>>,
+    match_event_handler: Box<dyn MatchEventHandler<U> + Send>,
 }
 
 impl<U> Context<U> {
-    pub fn new(user_data: U, match_event_handler: impl MatchEventHandler<U> + 'static) -> Self {
+    pub fn new(
+        user_data: U,
+        match_event_handler: impl MatchEventHandler<U> + Send + 'static,
+    ) -> Self {
         Self {
             user_data,
             match_error: None,
