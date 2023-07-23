@@ -54,18 +54,27 @@
         ];
         craneLibLLvmTools = craneLib.overrideToolchain rust-toolchain-llvm-tools;
 
+        commonArgs = {
+          inherit src buildInputs;
+
+          # python package  build will recompile PyO3 when built with maturin
+          # as there are different build features are used for the extension module
+          # and the standalone dylib which is used for tests and benchmarks
+          doNotLinkInheritedArtifacts = true;
+        };
+
         # Build *just* the cargo dependencies, so we can reuse
         # all of that work (e.g. via cachix) when running in CI
-        cargoArtifacts = craneLib.buildDepsOnly { inherit src buildInputs; };
+        cargoArtifacts = craneLib.buildDepsOnly commonArgs;
 
         # Build the actual crate itself, reusing the dependency
         # artifacts from above.
-        libpyperscan = craneLib.buildPackage {
-          inherit src buildInputs cargoArtifacts;
+        libpyperscan = craneLib.buildPackage (commonArgs // {
+          inherit cargoArtifacts;
           nativeBuildInputs = with rustPlatform; [
             bindgenHook
           ];
-        };
+        });
 
         rustPlatform = makeRustPlatform {
           cargo = rust-toolchain;
@@ -90,6 +99,7 @@
           let
             drv = pkgs.callPackage
               ({ lib
+               , stdenv
                , python3Packages
                , rustPlatform
                , hyperscan
@@ -107,12 +117,12 @@
                 assert vendorVectorscan -> !vendorHyperscan;
 
                 let
-                  inherit (lib) optionals;
+                  inherit (lib) optional optionals;
                   vendor = vendorHyperscan || vendorVectorscan;
                   cargo_toml = builtins.fromTOML (builtins.readFile ./Cargo.toml);
                 in
                 python3Packages.buildPythonPackage
-                  {
+                  (commonArgs // {
                     inherit (cargo_toml.workspace.package) version;
 
                     pname = "pyperscan";
@@ -141,7 +151,10 @@
 
                     nativeBuildInputs = mkNativeBuildInputs {
                       inherit rustPlatform;
-                      extra = optionals vendor [ cmake ragel util-linux ];
+                      extra = (
+                        optionals vendor [ cmake ragel ]
+                          ++ optional (vendor && stdenv.isLinux) util-linux
+                      );
                     };
 
                     dontUseCmakeConfigure = true;
@@ -250,7 +263,7 @@
                         };
                     };
 
-                  })
+                  }))
               {
                 inherit rustPlatform;
               };
@@ -274,14 +287,14 @@
             # Note that this is done as a separate derivation so that
             # we can block the CI if there are issues here, but not
             # prevent downstream consumers from building our crate by itself.
-            libpyperscan-clippy = craneLib.cargoClippy {
-              inherit src buildInputs nativeBuildInputs cargoArtifacts;
+            libpyperscan-clippy = craneLib.cargoClippy (commonArgs // {
+              inherit nativeBuildInputs cargoArtifacts;
               cargoClippyExtraArgs = "--all-targets -- --deny warnings";
-            };
+            });
 
-            libpyperscan-doc = craneLib.cargoDoc {
-              inherit src buildInputs nativeBuildInputs cargoArtifacts;
-            };
+            libpyperscan-doc = craneLib.cargoDoc (commonArgs // {
+              inherit nativeBuildInputs cargoArtifacts;
+            });
 
             # Check formatting
             libpyperscan-fmt = craneLib.cargoFmt {
