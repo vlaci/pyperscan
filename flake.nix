@@ -336,6 +336,10 @@
                 pdm
                 podman
                 pre-commit
+                rust-toolchain
+                boost
+                cmake
+                ragel
                 fenix.packages.${system}.complete.rust-analyzer
               ];
             };
