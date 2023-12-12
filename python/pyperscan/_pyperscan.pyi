@@ -4,7 +4,7 @@ from mmap import mmap
 from typing import Any, Generic, Protocol, TypeAlias, TypeVar, Union
 
 BufferType: TypeAlias = Union[array[int], bytes, bytearray, memoryview, mmap]
-_TContext = TypeVar("_TContext")
+_TContext_contra = TypeVar("_TContext_contra", contravariant=True)
 _TScanner = TypeVar("_TScanner", BlockScanner, VectoredScanner, StreamScanner)
 
 class Pattern:
@@ -23,7 +23,7 @@ class Pattern:
 class Flag:
     """Pattern compile flags."""
 
-    CASELESS = ...
+    CASELESS: Flag = ...
     """Set case-insensitive matching.
 
     This flag sets the expression to be matched case-insensitively by default.  The
@@ -33,7 +33,7 @@ class Flag:
     See
     [HS_FLAGS_CASELESS](https://intel.github.io/hyperscan/dev-reference/api_files.html#c.HS_FLAG_CASELESS)
     """
-    DOTALL = ...
+    DOTALL: Flag = ...
     """Matching a `.` will not exclude newlines.
 
     This flag sets any instances of the `.` token to match newline characters as well as
@@ -44,7 +44,7 @@ class Flag:
     See
     [HS_FLAGS_DOTALL](https://intel.github.io/hyperscan/dev-reference/api_files.html#c.HS_FLAG_DOTALL)
     """
-    MULTILINE = ...
+    MULTILINE: Flag = ...
     """Set multi-line anchoring.
 
     This flag instructs the expression to make the `^` and `$` tokens match newline
@@ -56,7 +56,7 @@ class Flag:
     See
     [HS_FLAGS_MULTILINE](https://intel.github.io/hyperscan/dev-reference/api_files.html#c.HS_FLAG_MULTILINE)
     """
-    SINGLEMATCH = ...
+    SINGLEMATCH: Flag = ...
     """Set single-match only mode.
 
     This flag sets the expression's match ID to match at most once.  In streaming mode,
@@ -76,7 +76,7 @@ class Flag:
     See
     [HS_FLAGS_SINGLEMATCH](https://intel.github.io/hyperscan/dev-reference/api_files.html#c.HS_FLAG_SINGLEMATCH)
     """
-    ALLOWEMPTY = ...
+    ALLOWEMPTY: Flag = ...
     """Allow expressions that can match against empty buffers.
 
     This flag instructs the compiler to allow expressions that can match against empty
@@ -88,7 +88,7 @@ class Flag:
     See
     [HS_FLAGS_ALLOWEMPTY](https://intel.github.io/hyperscan/dev-reference/api_files.html#c.HS_FLAG_ALLOWEMPTY)
     """
-    UTF8 = ...
+    UTF8: Flag = ...
     """Enable UTF-8 mode for this expression.
 
     This flag instructs Hyperscan to treat the pattern as a sequence of UTF-8
@@ -99,7 +99,7 @@ class Flag:
     See
     [HS_FLAGS_UTF8](https://intel.github.io/hyperscan/dev-reference/api_files.html#c.HS_FLAG_UTF8)
     """
-    UCP = ...
+    UCP: Flag = ...
     """Enable Unicode property support for this expression.
 
     This flag instructs Hyperscan to use Unicode properties, rather than the default
@@ -110,7 +110,7 @@ class Flag:
     See
     [HS_FLAGS_UCP](https://intel.github.io/hyperscan/dev-reference/api_files.html#c.HS_FLAG_UCP)
     """
-    PREFILTER = ...
+    PREFILTER: Flag = ...
     """Enable prefiltering mode for this expression.
 
     This flag instructs Hyperscan to compile an “approximate” version of this pattern
@@ -138,7 +138,7 @@ class Flag:
     See
     [HS_FLAGS_PREFILTER](https://intel.github.io/hyperscan/dev-reference/api_files.html#c.HS_FLAG_PREFILTER)
     """
-    SOM_LEFTMOST = ...
+    SOM_LEFTMOST: Flag = ...
     """Enable leftmost start of match reporting.
 
     This flag instructs Hyperscan to report the leftmost possible start of match offset
@@ -151,7 +151,7 @@ class Flag:
     See
     [HS_FLAGS_LEFTMOST](https://intel.github.io/hyperscan/dev-reference/api_files.html#c.HS_FLAG_LEFTMOST)
     """
-    COMBINATION = ...
+    COMBINATION: Flag = ...
     """Logical combination.
 
     This flag instructs Hyperscan to parse this expression as logical combination
@@ -162,7 +162,7 @@ class Flag:
     See
     [HS_FLAGS_COMBINATION](https://intel.github.io/hyperscan/dev-reference/api_files.html#c.HS_FLAG_COMBINATION)
     """
-    QUIET = ...
+    QUIET: Flag = ...
     """Don't do any match reporting.
 
     This flag instructs Hyperscan to ignore match reporting for this expression.  It is
@@ -172,10 +172,12 @@ class Flag:
     [HS_FLAGS_QUIET](https://intel.github.io/hyperscan/dev-reference/api_files.html#c.HS_FLAG_QUIET)
     """
 
-class OnMatch(Protocol, Generic[_TContext]):
+class OnMatch(Protocol, Generic[_TContext_contra]):
     """Callback called on match."""
 
-    def __call__(self, context: _TContext, tag: Any, start: int, end: Any) -> Scan:
+    def __call__(
+        self, context: _TContext_contra, tag: Any, start: int, end: Any
+    ) -> Scan:
         """Called when a match happens.
 
         Note:
@@ -204,7 +206,9 @@ class Database(Generic[_TScanner]):
             Calls [hs_compile_ext_multi](https://intel.github.io/hyperscan/dev-reference/api_files.html#c.hs_compile_ext_multi)
             internally.
         """
-    def build(self, context: _TContext, on_match: OnMatch[_TContext]) -> _TScanner:
+    def build(
+        self, context: _TContext_contra, on_match: OnMatch[_TContext_contra]
+    ) -> _TScanner:
         """Build a scanner object that is usable to search for pattern procurances.
 
         Args:
@@ -224,9 +228,9 @@ class StreamDatabase(Database[StreamScanner]):  # noqa: F821
 class Scan:
     """Match callback return value to instruct Hyperscan wether to contine or terminate scanning."""
 
-    Continue = ...
+    Continue: Scan = ...
     """Continue scanning."""
-    Terminate = ...
+    Terminate: Scan = ...
     """Terminate scanning."""
 
 class BlockScanner:
@@ -291,7 +295,7 @@ class HyperscanErrorCode:
     Most error codes cannot appear in Pyperscan.
     """
 
-    Invalid = ...
+    Invalid: HyperscanErrorCode = ...
     """A parameter passed to this function was invalid.
 
     This error is only returned in cases where the function can detect an invalid
@@ -299,44 +303,44 @@ class HyperscanErrorCode:
     or other invalid data.
     """
 
-    Nomem = ...
+    Nomem: HyperscanErrorCode = ...
     """A memory allocation failed."""
 
-    ScanTerminated = ...
+    ScanTerminated: HyperscanErrorCode = ...
     """The engine was terminated by callback.
 
     This return value indicates that the target buffer was partially scanned, but that
     the callback function requested that scanning cease after a match was located.
     """
 
-    CompilerError = ...
+    CompilerError: HyperscanErrorCode = ...
     """The pattern compiler failed, and the hs_compile_error_t should be inspected for
     more detail.
     """
 
-    DbVersionError = ...
+    DbVersionError: HyperscanErrorCode = ...
     """The given database was built for a different version of Hyperscan."""
 
-    DbPlatformError = ...
+    DbPlatformError: HyperscanErrorCode = ...
     """The given database was built for a different platform (i.e., CPU type)."""
 
-    DbModeError = ...
+    DbModeError: HyperscanErrorCode = ...
     """The given database was built for a different mode of operation.
 
     This error is returned when streaming calls are used with a block or vectored
     database and vice versa.
     """
 
-    BadAlign = ...
+    BadAlign: HyperscanErrorCode = ...
     """A parameter passed to this function was not correctly aligned."""
 
-    BadAlloc = ...
+    BadAlloc: HyperscanErrorCode = ...
     """The memory allocator (either malloc() or the allocator set with
     hs_set_allocator()) did not correctly return memory suitably aligned for the largest
     representable data type on this platform.
     """
 
-    ScratchInUse = ...
+    ScratchInUse: HyperscanErrorCode = ...
     """The scratch region was already in use.
 
     This error is returned when Hyperscan is able to detect that the scratch region
@@ -353,7 +357,7 @@ class HyperscanErrorCode:
     intended as a best-effort debugging tool, not a guarantee.
     """
 
-    ArchError = ...
+    ArchError: HyperscanErrorCode = ...
     """Unsupported CPU architecture.
 
     This error is returned when Hyperscan is able to detect that the current system does
@@ -362,7 +366,7 @@ class HyperscanErrorCode:
     At a minimum, Hyperscan requires Supplemental Streaming SIMD Extensions 3 (SSSE3).
     """
 
-    InsufficientSpace = ...
+    InsufficientSpace: HyperscanErrorCode = ...
     """
     Provided buffer was too small.
 
@@ -374,7 +378,7 @@ class HyperscanErrorCode:
     was successful.
     """
 
-    UnknownError = ...
+    UnknownError: HyperscanErrorCode = ...
     """Unexpected internal error.
 
     This error indicates that there was unexpected matching behaviors.  This could be
@@ -382,7 +386,7 @@ class HyperscanErrorCode:
     users.
     """
 
-    UnknownErrorCode = ...
+    UnknownErrorCode: HyperscanErrorCode = ...
     """An error unknown to Pyperscan happened."""
 
 class HyperscanError:
