@@ -1,16 +1,14 @@
-from __future__ import __annotations__
-
 from array import array
 from collections.abc import Collection
 from mmap import mmap
-from typing import Any, Generic, Protocol, Tuple, TypeAlias, TypeVar, Union
+from typing import Any, Generic, Protocol, TypeAlias, TypeVar, Union
 
 BufferType: TypeAlias = Union[array[int], bytes, bytearray, memoryview, mmap]
-TContext = TypeVar("TContext")
-TScanner = TypeVar("TScanner", BlockScanner, VectoredScanner, StreamScanner)
+_TContext = TypeVar("_TContext")
+_TScanner = TypeVar("_TScanner", BlockScanner, VectoredScanner, StreamScanner)
 
 class Pattern:
-    "Pattern to search matches for."
+    """Pattern to search matches for."""
 
     def __new__(cls, expression: bytes, *flags: Flag, tag: Any = None):
         """Construct a new search pattern.
@@ -23,7 +21,7 @@ class Pattern:
         """
 
 class Flag:
-    "Pattern compile flags"
+    """Pattern compile flags."""
 
     CASELESS = ...
     """Set case-insensitive matching.
@@ -61,7 +59,7 @@ class Flag:
     SINGLEMATCH = ...
     """Set single-match only mode.
 
-    This flag sets the expression’s match ID to match at most once.  In streaming mode,
+    This flag sets the expression's match ID to match at most once.  In streaming mode,
     this means that the expression will return only a single match over the lifetime of
     the stream, rather than reporting every match as per standard Hyperscan semantics.
     In block mode or vectored mode, only the first match for each invocation of
@@ -165,7 +163,7 @@ class Flag:
     [HS_FLAGS_COMBINATION](https://intel.github.io/hyperscan/dev-reference/api_files.html#c.HS_FLAG_COMBINATION)
     """
     QUIET = ...
-    """Don’t do any match reporting.
+    """Don't do any match reporting.
 
     This flag instructs Hyperscan to ignore match reporting for this expression.  It is
     designed to be used on the sub-expressions in logical combinations.
@@ -174,10 +172,10 @@ class Flag:
     [HS_FLAGS_QUIET](https://intel.github.io/hyperscan/dev-reference/api_files.html#c.HS_FLAG_QUIET)
     """
 
-class OnMatch(Protocol, Generic[TContext]):
-    """Callback called on match"""
+class OnMatch(Protocol, Generic[_TContext]):
+    """Callback called on match."""
 
-    def __call__(self, context: TContext, tag: Any, start: int, end: Any) -> Scan:
+    def __call__(self, context: _TContext, tag: Any, start: int, end: Any) -> Scan:
         """Called when a match happens.
 
         Note:
@@ -193,7 +191,7 @@ class OnMatch(Protocol, Generic[TContext]):
             Instructs Hyperscan wether to continue or stop searching for subsequent matches.
         """
 
-class Database(Generic[TScanner]):
+class Database(Generic[_TScanner]):
     """A Hyperscan pattern database."""
 
     def __new__(cls, *patterns: Pattern):
@@ -206,32 +204,33 @@ class Database(Generic[TScanner]):
             Calls [hs_compile_ext_multi](https://intel.github.io/hyperscan/dev-reference/api_files.html#c.hs_compile_ext_multi)
             internally.
         """
-    def build(self, context: TContext, on_match: OnMatch[TContext]) -> TScanner:
-        """Builds a scanner object that is usable to search for pattern procurances.
+    def build(self, context: _TContext, on_match: OnMatch[_TContext]) -> _TScanner:
+        """Build a scanner object that is usable to search for pattern procurances.
 
         Args:
             context: arbitrary object which is passed as a first parameter to `on_match`.
             on_match: callable to call when a match happens upon `scan` call.
         """
 
-class BlockDatabase(Database[BlockScanner]):
+class BlockDatabase(Database[BlockScanner]):  # noqa: F821
     """A database for block (non-streaming) scanning."""
 
-class VectoredDatabase(Database[VectoredScanner]):
+class VectoredDatabase(Database[VectoredScanner]):  # noqa: F821
     """A databes for vectored scanning."""
 
-class StreamDatabase(Database[StreamScanner]):
-    """A database for stream scanning"""
+class StreamDatabase(Database[StreamScanner]):  # noqa: F821
+    """A database for stream scanning."""
 
 class Scan:
-    "Match callback return value to instruct Hyperscan wether to contine or terminate scanning."
+    """Match callback return value to instruct Hyperscan wether to contine or terminate scanning."""
+
     Continue = ...
-    "Continue scanning."
+    """Continue scanning."""
     Terminate = ...
-    "Terminate scanning."
+    """Terminate scanning."""
 
 class BlockScanner:
-    """Created from `BlockDatabase` for block scanning"""
+    """Created from `BlockDatabase` for block scanning."""
 
     def scan(self, data: BufferType) -> Scan:
         """Scan for matches in a single buffer (block).
@@ -244,7 +243,7 @@ class BlockScanner:
         """
 
 class VectoredScanner:
-    """Created from `VectoredDatabase` for scanning"""
+    """Created from `VectoredDatabase` for scanning."""
 
     def scan(self, data: Collection[BufferType]) -> Scan:
         """Scan for matches in a multiple buffers (vector).
@@ -257,7 +256,7 @@ class VectoredScanner:
         """
 
 class StreamScanner:
-    """Created from `StreamDatabase` for stream scanning"""
+    """Created from `StreamDatabase` for stream scanning."""
 
     def scan(self, data: BufferType, chunk_size: int | None = None) -> Scan:
         """Scan for matches in a stream.
@@ -387,11 +386,13 @@ class HyperscanErrorCode:
     """An error unknown to Pyperscan happened."""
 
 class HyperscanError:
-    "An error happened while calling the low level Hyperscan API."
-    args: Tuple[HyperscanErrorCode, int]
-    "An error flag and low level error codes."
+    """An error happened while calling the low level Hyperscan API."""
+
+    args: tuple[HyperscanErrorCode, int]
+    """An error flag and low level error codes."""
 
 class HyperscanCompileError:
-    "One of the patterns to be compiled is invalid"
-    args: Tuple[str, int]
-    "Contains a human readable message and the index of the offending pattern."
+    """One of the patterns to be compiled is invalid."""
+
+    args: tuple[str, int]
+    """Contains a human readable message and the index of the offending pattern."""
