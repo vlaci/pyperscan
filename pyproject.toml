@@ -147,3 +147,8 @@ parametrize-names-type = "csv"
 [tool.ruff.lint.pydocstyle]
 convention = "google"
 
+[tool.mypy]
+exclude = [
+    "^hyperscan-sys/hyperscan/.*",
+    "^hyperscan-sys/vectorscan/.*",
+]
