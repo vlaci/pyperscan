@@ -9,3 +9,21 @@ This project uses [_towncrier_](https://towncrier.readthedocs.io/) and the chang
 <!-- --8<-- [start:changelog] -->
 
 <!-- towncrier release notes start -->
+
+## [0.3.0](https://github.com/vlaci/pyperscan/tree/0.3.0) - 2023-12-12
+
+
+### Added
+
+- Support added for musllinux (Alpine Linux) wheels [#16](https://github.com/vlaci/pyperscan/issues/16)
+
+
+### Changed
+
+- Build separate x86_64 and aarch64 wheels for macOS [#17](https://github.com/vlaci/pyperscan/issues/17)
+- Using [PDM](https://pdm.fming.dev) for project management [#19](https://github.com/vlaci/pyperscan/issues/19)
+
+
+### Fixed
+
+- Linux wheels are now built with release optimizations [#30](https://github.com/vlaci/pyperscan/issues/30)
