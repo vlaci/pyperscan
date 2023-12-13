@@ -203,6 +203,7 @@
                             };
                             preConfigure = (super.preConfigure or "") + ''
                               source <(cargo llvm-cov show-env --export-prefix)
+                              export RUSTFLAGS="-C target-feature=-crt-static -C instrument-coverage -C llvm-args=--instrprof-atomic-counter-update-all --cfg=coverage --cfg=coverage_nightly --cfg=trybuild_no_target"
                             '';
                           });
                         in
