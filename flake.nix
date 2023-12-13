@@ -44,7 +44,7 @@
           python3
         ] ++ lib.optional stdenv.isDarwin libiconv
         ++ lib.optional (system == "x86_64-linux") hyperscan
-        ++ lib.optional (system != "x86_64-linux") vectorscan;
+        ++ lib.optional (system != "x86_64-linux") (vectorscan.override { boost = boost183; });
 
         rust-toolchain = fenix.packages.${system}.complete.toolchain;
         rust-toolchain-llvm-tools = fenix.packages.${system}.complete.withComponents [
@@ -147,7 +147,7 @@
                     ] ++ lib.optional stdenv.isDarwin libiconv
                     ++ lib.optional vendor boost
                     ++ lib.optional (!vendor && system == "x86_64-linux") hyperscan
-                    ++ lib.optional (!vendor && system != "x86_64-linux") vectorscan;
+                    ++ lib.optional (!vendor && system != "x86_64-linux") (vectorscan.override { boost = boost183; });
 
                     nativeBuildInputs = mkNativeBuildInputs {
                       inherit rustPlatform;
@@ -267,6 +267,8 @@
                   }))
               {
                 inherit rustPlatform;
+                vectorscan = pkgs.vectorscan.override { boost = pkgs.boost183; };
+                boost = pkgs.boost183;
               };
           in
           drv;
