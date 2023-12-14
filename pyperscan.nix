@@ -100,10 +100,10 @@ let
       ++ (optionals (vendorVectorscan) [ "-F vectorscan" ]);
 
     nativeBuildInputs = with rustPlatform; [
-      bindgenHook
       cargoSetupHook
       (maturinBuildHook.override { pkgsHostTarget = { inherit maturin cargo rustc; }; })
     ] ++ optional (vendor && stdenv.isLinux) util-linux
+    ++ optional (!stdenv.isDarwin) bindgenHook # HACK: bindgen segfaults on Darwin with LLVM from nixpkgs
     ++ optional coverage cargo-llvm-cov;
 
     preConfigure = optionalString coverage ''
