@@ -33,12 +33,17 @@
           rustPlatform = final.makeRustPlatform { inherit stdenv; inherit (final) rustc cargo; };
         in
         {
-          pyperscan = final.callPackage (import ./pyperscan.nix inputs) { inherit stdenv rustPlatform; };
+          pythonPackagesExtensions = prev.pythonPackagesExtensions ++ [
+            (python-final: python-prev: {
+              pyperscan = final.callPackage (import ./pyperscan.nix inputs) { inherit stdenv rustPlatform; python3 = python-final.python; };
+            })
+          ];
           vectorscan = prev.vectorscan.override { inherit stdenv; };
         };
       checks = forAllSystems (system:
         let
-          inherit (nixpkgsFor.${system}) pyperscan rustPlatform;
+          inherit (nixpkgsFor.${system}) rustPlatform;
+          inherit (nixpkgsFor.${system}.python3Packages) pyperscan;
           nativeBuildInputs = with rustPlatform; [
             bindgenHook
           ];
@@ -79,8 +84,7 @@
 
       packages = forAllSystems (system:
         let
-
-          inherit (nixpkgsFor.${system}) pyperscan;
+          inherit (nixpkgsFor.${system}.python3Packages) pyperscan;
         in
         {
           inherit pyperscan;
@@ -93,7 +97,7 @@
         in
         {
           default = with pkgs; mkShell {
-            inputsFrom = [ pyperscan.libpyperscan ];
+            inputsFrom = [ python3Packages.pyperscan.libpyperscan ];
             buildInputs = [
               just
               maturin

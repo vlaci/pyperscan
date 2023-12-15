@@ -8,10 +8,12 @@
 , testFilter
 , cargo-llvm-cov
 , python3
-, pyperscan
 , ruff
 }:
 
+let
+  inherit (python3.pkgs) pyperscan;
+in
 {
   checks = with python3.pkgs; buildPythonPackage {
     inherit (pyperscan) version;
