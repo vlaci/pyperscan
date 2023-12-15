@@ -1,0 +1,3462 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://vlaci.github.io/pyperscan/api/">
+      
+      
+        <link rel="prev" href="../usage/">
+      
+      
+        <link rel="next" href="../changelog/">
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-9.5.2">
+    
+    
+      
+        <title>API Documentation - pyperscan</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.50c56a3b.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,700,700i%7CFira+Code:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Open Sans";--md-code-font:"Fira Code"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/_mkdocstrings.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="deep-purple" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#reference" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="pyperscan" class="md-header__button md-logo" aria-label="pyperscan" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            pyperscan
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              API Documentation
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="deep-purple" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5c-.84 0-1.65.15-2.39.42L12 2M3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29L3.34 7m.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14L3.36 17M20.65 7l-1.77 3.79a7.023 7.023 0 0 0-2.38-4.15l4.15.36m-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29L20.64 17M12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44L12 22Z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="deep-purple" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3 3.19.09m3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95 2.06.05m-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31Z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var media,input,key,value,palette=__md_get("__palette");if(palette&&palette.color){"(prefers-color-scheme)"===palette.color.media&&(media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']"),palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent"));for([key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/vlaci/pyperscan" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    vlaci/pyperscan
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+  
+
+<nav class="md-nav md-nav--primary md-nav--integrated" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="pyperscan" class="md-nav__button md-logo" aria-label="pyperscan" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    pyperscan
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/vlaci/pyperscan" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    vlaci/pyperscan
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Home
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../usage/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Usage
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    API Documentation
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    API Documentation
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#pyperscan._pyperscan" class="md-nav__link">
+    <span class="md-ellipsis">
+      pyperscan._pyperscan
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pyperscan._pyperscan.Pattern" class="md-nav__link">
+    <span class="md-ellipsis">
+      Pattern
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pyperscan._pyperscan.Flag" class="md-nav__link">
+    <span class="md-ellipsis">
+      Flag
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pyperscan._pyperscan.OnMatch" class="md-nav__link">
+    <span class="md-ellipsis">
+      OnMatch
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pyperscan._pyperscan.Database" class="md-nav__link">
+    <span class="md-ellipsis">
+      Database
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pyperscan._pyperscan.BlockDatabase" class="md-nav__link">
+    <span class="md-ellipsis">
+      BlockDatabase
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pyperscan._pyperscan.VectoredDatabase" class="md-nav__link">
+    <span class="md-ellipsis">
+      VectoredDatabase
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pyperscan._pyperscan.StreamDatabase" class="md-nav__link">
+    <span class="md-ellipsis">
+      StreamDatabase
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pyperscan._pyperscan.Scan" class="md-nav__link">
+    <span class="md-ellipsis">
+      Scan
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pyperscan._pyperscan.BlockScanner" class="md-nav__link">
+    <span class="md-ellipsis">
+      BlockScanner
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pyperscan._pyperscan.VectoredScanner" class="md-nav__link">
+    <span class="md-ellipsis">
+      VectoredScanner
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pyperscan._pyperscan.StreamScanner" class="md-nav__link">
+    <span class="md-ellipsis">
+      StreamScanner
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pyperscan._pyperscan.HyperscanErrorCode" class="md-nav__link">
+    <span class="md-ellipsis">
+      HyperscanErrorCode
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pyperscan._pyperscan.HyperscanError" class="md-nav__link">
+    <span class="md-ellipsis">
+      HyperscanError
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pyperscan._pyperscan.HyperscanCompileError" class="md-nav__link">
+    <span class="md-ellipsis">
+      HyperscanCompileError
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../changelog/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Changelog
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    License
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            License
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../LICENSE-APACHE/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Apache
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../LICENSE-MIT/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    MIT
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+  
+  
+
+
+<h1 id="reference">Reference<a class="headerlink" href="#reference" title="Permanent link">#</a></h1>
+
+
+<div class="doc doc-object doc-module">
+
+
+<a id="pyperscan._pyperscan"></a>
+  <div class="doc doc-contents first">
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-class">
+
+
+
+<h2 id="pyperscan._pyperscan.Pattern" class="doc doc-heading">
+        <span class="doc doc-object-name doc-class-name">Pattern</span>
+
+
+<a href="#pyperscan._pyperscan.Pattern" class="headerlink" title="Permanent link">#</a></h2>
+
+
+  <div class="doc doc-contents ">
+
+  
+      <p>Pattern to search matches for.</p>
+
+
+        <details class="quote">
+          <summary>Source code in <code>python/pyperscan/_pyperscan.pyi</code></summary>
+          <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">10</span>
+<span class="normal">11</span>
+<span class="normal">12</span>
+<span class="normal">13</span>
+<span class="normal">14</span>
+<span class="normal">15</span>
+<span class="normal">16</span>
+<span class="normal">17</span>
+<span class="normal">18</span>
+<span class="normal">19</span>
+<span class="normal">20</span>
+<span class="normal">21</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">Pattern</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Pattern to search matches for.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__new__</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">expression</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">,</span> <span class="o">*</span><span class="n">flags</span><span class="p">:</span> <span class="n">Flag</span><span class="p">,</span> <span class="n">tag</span><span class="p">:</span> <span class="n">Any</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Construct a new search pattern.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            expression: Regular expression.</span>
+<span class="sd">            flags: modify expression matching behavior.</span>
+<span class="sd">            tag: Python object to pass to callback when match succeeds.</span>
+<span class="sd">                If unset, the pattern index is used.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+</code></pre></div></td></tr></table></div>
+        </details>
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h3 id="pyperscan._pyperscan.Pattern.__new__" class="doc doc-heading">
+        <span class="doc doc-object-name doc-function-name">__new__</span>
+
+
+<a href="#pyperscan._pyperscan.Pattern.__new__" class="headerlink" title="Permanent link">#</a></h3>
+<div class="highlight"><pre><span></span><code><span class="fm">__new__</span><span class="p">(</span><span class="n">expression</span><span class="p">,</span> <span class="o">*</span><span class="n">flags</span><span class="p">,</span> <span class="n">tag</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+</code></pre></div>
+
+  <div class="doc doc-contents ">
+  
+      <p>Construct a new search pattern.</p>
+
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>expression</code></td>
+          <td>
+                <code>bytes</code>
+          </td>
+          <td><p>Regular expression.</p></td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr>
+          <td><code>flags</code></td>
+          <td>
+                <code><a class="autorefs autorefs-internal" title="pyperscan._pyperscan.Flag" href="#pyperscan._pyperscan.Flag">Flag</a></code>
+          </td>
+          <td><p>modify expression matching behavior.</p></td>
+          <td>
+                <code>()</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>tag</code></td>
+          <td>
+                <code><span title="typing.Any">Any</span></code>
+          </td>
+          <td><p>Python object to pass to callback when match succeeds.
+If unset, the pattern index is used.</p></td>
+          <td>
+                <code>None</code>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+      <details class="quote">
+        <summary>Source code in <code>python/pyperscan/_pyperscan.pyi</code></summary>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">13</span>
+<span class="normal">14</span>
+<span class="normal">15</span>
+<span class="normal">16</span>
+<span class="normal">17</span>
+<span class="normal">18</span>
+<span class="normal">19</span>
+<span class="normal">20</span>
+<span class="normal">21</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="fm">__new__</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">expression</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">,</span> <span class="o">*</span><span class="n">flags</span><span class="p">:</span> <span class="n">Flag</span><span class="p">,</span> <span class="n">tag</span><span class="p">:</span> <span class="n">Any</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Construct a new search pattern.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        expression: Regular expression.</span>
+<span class="sd">        flags: modify expression matching behavior.</span>
+<span class="sd">        tag: Python object to pass to callback when match succeeds.</span>
+<span class="sd">            If unset, the pattern index is used.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+</code></pre></div></td></tr></table></div>
+      </details>
+  </div>
+
+</div>
+
+
+
+  </div>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h2 id="pyperscan._pyperscan.Flag" class="doc doc-heading">
+        <span class="doc doc-object-name doc-class-name">Flag</span>
+
+
+<a href="#pyperscan._pyperscan.Flag" class="headerlink" title="Permanent link">#</a></h2>
+
+
+  <div class="doc doc-contents ">
+
+  
+      <p>Pattern compile flags.</p>
+
+
+        <details class="quote">
+          <summary>Source code in <code>python/pyperscan/_pyperscan.pyi</code></summary>
+          <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 23</span>
+<span class="normal"> 24</span>
+<span class="normal"> 25</span>
+<span class="normal"> 26</span>
+<span class="normal"> 27</span>
+<span class="normal"> 28</span>
+<span class="normal"> 29</span>
+<span class="normal"> 30</span>
+<span class="normal"> 31</span>
+<span class="normal"> 32</span>
+<span class="normal"> 33</span>
+<span class="normal"> 34</span>
+<span class="normal"> 35</span>
+<span class="normal"> 36</span>
+<span class="normal"> 37</span>
+<span class="normal"> 38</span>
+<span class="normal"> 39</span>
+<span class="normal"> 40</span>
+<span class="normal"> 41</span>
+<span class="normal"> 42</span>
+<span class="normal"> 43</span>
+<span class="normal"> 44</span>
+<span class="normal"> 45</span>
+<span class="normal"> 46</span>
+<span class="normal"> 47</span>
+<span class="normal"> 48</span>
+<span class="normal"> 49</span>
+<span class="normal"> 50</span>
+<span class="normal"> 51</span>
+<span class="normal"> 52</span>
+<span class="normal"> 53</span>
+<span class="normal"> 54</span>
+<span class="normal"> 55</span>
+<span class="normal"> 56</span>
+<span class="normal"> 57</span>
+<span class="normal"> 58</span>
+<span class="normal"> 59</span>
+<span class="normal"> 60</span>
+<span class="normal"> 61</span>
+<span class="normal"> 62</span>
+<span class="normal"> 63</span>
+<span class="normal"> 64</span>
+<span class="normal"> 65</span>
+<span class="normal"> 66</span>
+<span class="normal"> 67</span>
+<span class="normal"> 68</span>
+<span class="normal"> 69</span>
+<span class="normal"> 70</span>
+<span class="normal"> 71</span>
+<span class="normal"> 72</span>
+<span class="normal"> 73</span>
+<span class="normal"> 74</span>
+<span class="normal"> 75</span>
+<span class="normal"> 76</span>
+<span class="normal"> 77</span>
+<span class="normal"> 78</span>
+<span class="normal"> 79</span>
+<span class="normal"> 80</span>
+<span class="normal"> 81</span>
+<span class="normal"> 82</span>
+<span class="normal"> 83</span>
+<span class="normal"> 84</span>
+<span class="normal"> 85</span>
+<span class="normal"> 86</span>
+<span class="normal"> 87</span>
+<span class="normal"> 88</span>
+<span class="normal"> 89</span>
+<span class="normal"> 90</span>
+<span class="normal"> 91</span>
+<span class="normal"> 92</span>
+<span class="normal"> 93</span>
+<span class="normal"> 94</span>
+<span class="normal"> 95</span>
+<span class="normal"> 96</span>
+<span class="normal"> 97</span>
+<span class="normal"> 98</span>
+<span class="normal"> 99</span>
+<span class="normal">100</span>
+<span class="normal">101</span>
+<span class="normal">102</span>
+<span class="normal">103</span>
+<span class="normal">104</span>
+<span class="normal">105</span>
+<span class="normal">106</span>
+<span class="normal">107</span>
+<span class="normal">108</span>
+<span class="normal">109</span>
+<span class="normal">110</span>
+<span class="normal">111</span>
+<span class="normal">112</span>
+<span class="normal">113</span>
+<span class="normal">114</span>
+<span class="normal">115</span>
+<span class="normal">116</span>
+<span class="normal">117</span>
+<span class="normal">118</span>
+<span class="normal">119</span>
+<span class="normal">120</span>
+<span class="normal">121</span>
+<span class="normal">122</span>
+<span class="normal">123</span>
+<span class="normal">124</span>
+<span class="normal">125</span>
+<span class="normal">126</span>
+<span class="normal">127</span>
+<span class="normal">128</span>
+<span class="normal">129</span>
+<span class="normal">130</span>
+<span class="normal">131</span>
+<span class="normal">132</span>
+<span class="normal">133</span>
+<span class="normal">134</span>
+<span class="normal">135</span>
+<span class="normal">136</span>
+<span class="normal">137</span>
+<span class="normal">138</span>
+<span class="normal">139</span>
+<span class="normal">140</span>
+<span class="normal">141</span>
+<span class="normal">142</span>
+<span class="normal">143</span>
+<span class="normal">144</span>
+<span class="normal">145</span>
+<span class="normal">146</span>
+<span class="normal">147</span>
+<span class="normal">148</span>
+<span class="normal">149</span>
+<span class="normal">150</span>
+<span class="normal">151</span>
+<span class="normal">152</span>
+<span class="normal">153</span>
+<span class="normal">154</span>
+<span class="normal">155</span>
+<span class="normal">156</span>
+<span class="normal">157</span>
+<span class="normal">158</span>
+<span class="normal">159</span>
+<span class="normal">160</span>
+<span class="normal">161</span>
+<span class="normal">162</span>
+<span class="normal">163</span>
+<span class="normal">164</span>
+<span class="normal">165</span>
+<span class="normal">166</span>
+<span class="normal">167</span>
+<span class="normal">168</span>
+<span class="normal">169</span>
+<span class="normal">170</span>
+<span class="normal">171</span>
+<span class="normal">172</span>
+<span class="normal">173</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">Flag</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Pattern compile flags.&quot;&quot;&quot;</span>
+
+    <span class="n">CASELESS</span><span class="p">:</span> <span class="n">Flag</span> <span class="o">=</span> <span class="o">...</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Set case-insensitive matching.</span>
+
+<span class="sd">    This flag sets the expression to be matched case-insensitively by default.  The</span>
+<span class="sd">    expression may still use PCRE tokens (notably (?i) and (?-i)) to switch</span>
+<span class="sd">    case-insensitive matching on and off.</span>
+
+<span class="sd">    See</span>
+<span class="sd">    [HS_FLAGS_CASELESS](https://intel.github.io/hyperscan/dev-reference/api_files.html#c.HS_FLAG_CASELESS)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">DOTALL</span><span class="p">:</span> <span class="n">Flag</span> <span class="o">=</span> <span class="o">...</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Matching a `.` will not exclude newlines.</span>
+
+<span class="sd">    This flag sets any instances of the `.` token to match newline characters as well as</span>
+<span class="sd">    all other characters.  The PCRE specification states that the `.` token does not</span>
+<span class="sd">    match newline characters by default, so without this flag the `.` token will not</span>
+<span class="sd">    cross line boundaries.</span>
+
+<span class="sd">    See</span>
+<span class="sd">    [HS_FLAGS_DOTALL](https://intel.github.io/hyperscan/dev-reference/api_files.html#c.HS_FLAG_DOTALL)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">MULTILINE</span><span class="p">:</span> <span class="n">Flag</span> <span class="o">=</span> <span class="o">...</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Set multi-line anchoring.</span>
+
+<span class="sd">    This flag instructs the expression to make the `^` and `$` tokens match newline</span>
+<span class="sd">    characters as well as the start and end of the stream.  If this flag is not</span>
+<span class="sd">    specified, the `^` token will only ever match at the start of a stream, and the `$`</span>
+<span class="sd">    token will only ever match at the end of a stream within the guidelines of the PCRE</span>
+<span class="sd">    specification.</span>
+
+<span class="sd">    See</span>
+<span class="sd">    [HS_FLAGS_MULTILINE](https://intel.github.io/hyperscan/dev-reference/api_files.html#c.HS_FLAG_MULTILINE)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">SINGLEMATCH</span><span class="p">:</span> <span class="n">Flag</span> <span class="o">=</span> <span class="o">...</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Set single-match only mode.</span>
+
+<span class="sd">    This flag sets the expression&#39;s match ID to match at most once.  In streaming mode,</span>
+<span class="sd">    this means that the expression will return only a single match over the lifetime of</span>
+<span class="sd">    the stream, rather than reporting every match as per standard Hyperscan semantics.</span>
+<span class="sd">    In block mode or vectored mode, only the first match for each invocation of</span>
+<span class="sd">    `scan()` will be returned.</span>
+
+<span class="sd">    If multiple expressions in the database share the same match ID, then they either</span>
+<span class="sd">    must all specify `SINGLEMATCH`. or none of them specify `SINGLEMATCH`.</span>
+<span class="sd">    If a group of expressions sharing a match ID specify the flag, then at most one</span>
+<span class="sd">    match with the match ID will be generated per stream.</span>
+
+<span class="sd">    Note: The use of this flag in combination with `SOM_LEFTMOST` is not currently</span>
+<span class="sd">    supported.</span>
+
+<span class="sd">    See</span>
+<span class="sd">    [HS_FLAGS_SINGLEMATCH](https://intel.github.io/hyperscan/dev-reference/api_files.html#c.HS_FLAG_SINGLEMATCH)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">ALLOWEMPTY</span><span class="p">:</span> <span class="n">Flag</span> <span class="o">=</span> <span class="o">...</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Allow expressions that can match against empty buffers.</span>
+
+<span class="sd">    This flag instructs the compiler to allow expressions that can match against empty</span>
+<span class="sd">    buffers, such as `.?`, `.*`, `(a|)`.  Since Hyperscan can return every possible</span>
+<span class="sd">    match for an expression, such expressions generally execute very slowly; the default</span>
+<span class="sd">    behaviour is to return an error when an attempt to compile one is made.  Using this</span>
+<span class="sd">    flag will force the compiler to allow such an expression.</span>
+
+<span class="sd">    See</span>
+<span class="sd">    [HS_FLAGS_ALLOWEMPTY](https://intel.github.io/hyperscan/dev-reference/api_files.html#c.HS_FLAG_ALLOWEMPTY)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">UTF8</span><span class="p">:</span> <span class="n">Flag</span> <span class="o">=</span> <span class="o">...</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Enable UTF-8 mode for this expression.</span>
+
+<span class="sd">    This flag instructs Hyperscan to treat the pattern as a sequence of UTF-8</span>
+<span class="sd">    characters.  The results of scanning invalid UTF-8 sequences with a Hyperscan</span>
+<span class="sd">    library that has been compiled with one or more patterns using this flag are</span>
+<span class="sd">    undefined.</span>
+
+<span class="sd">    See</span>
+<span class="sd">    [HS_FLAGS_UTF8](https://intel.github.io/hyperscan/dev-reference/api_files.html#c.HS_FLAG_UTF8)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">UCP</span><span class="p">:</span> <span class="n">Flag</span> <span class="o">=</span> <span class="o">...</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Enable Unicode property support for this expression.</span>
+
+<span class="sd">    This flag instructs Hyperscan to use Unicode properties, rather than the default</span>
+<span class="sd">    ASCII interpretations, for character mnemonics like \\w and \\s as well as the POSIX</span>
+<span class="sd">    character classes.  It is only meaningful in conjunction with</span>
+<span class="sd">    [UTF8][pyperscan._pyperscan.Flag.UTF8].</span>
+
+<span class="sd">    See</span>
+<span class="sd">    [HS_FLAGS_UCP](https://intel.github.io/hyperscan/dev-reference/api_files.html#c.HS_FLAG_UCP)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">PREFILTER</span><span class="p">:</span> <span class="n">Flag</span> <span class="o">=</span> <span class="o">...</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Enable prefiltering mode for this expression.</span>
+
+<span class="sd">    This flag instructs Hyperscan to compile an “approximate” version of this pattern</span>
+<span class="sd">    for use in a prefiltering application, even if Hyperscan does not support the</span>
+<span class="sd">    pattern in normal operation.</span>
+
+<span class="sd">    The set of matches returned when this flag is used is guaranteed to be a superset of</span>
+<span class="sd">    the matches specified by the non-prefiltering expression.</span>
+
+<span class="sd">    If the pattern contains pattern constructs not supported by Hyperscan (such as</span>
+<span class="sd">    zero-width assertions, back-references or conditional references) these constructs</span>
+<span class="sd">    will be replaced internally with broader constructs that may match more often.</span>
+
+<span class="sd">    Furthermore, in prefiltering mode Hyperscan may simplify a pattern that would</span>
+<span class="sd">    otherwise return a “Pattern too large” error at compile time, or for performance</span>
+<span class="sd">    reasons (subject to the matching guarantee above).</span>
+
+<span class="sd">    It is generally expected that the application will subsequently confirm prefilter</span>
+<span class="sd">    matches with another regular expression matcher that can provide exact matches for</span>
+<span class="sd">    the pattern.</span>
+
+<span class="sd">    Note: The use of this flag in combination with</span>
+<span class="sd">    [SOM_LEFTMOST][pyperscan._pyperscan.Flag.SOM_LEFTMOST] is not currently supported.</span>
+
+<span class="sd">    See</span>
+<span class="sd">    [HS_FLAGS_PREFILTER](https://intel.github.io/hyperscan/dev-reference/api_files.html#c.HS_FLAG_PREFILTER)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">SOM_LEFTMOST</span><span class="p">:</span> <span class="n">Flag</span> <span class="o">=</span> <span class="o">...</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Enable leftmost start of match reporting.</span>
+
+<span class="sd">    This flag instructs Hyperscan to report the leftmost possible start of match offset</span>
+<span class="sd">    when a match is reported for this expression.  (By default, no start of match is</span>
+<span class="sd">    returned.)</span>
+
+<span class="sd">    For all the 3 modes, enabling this behaviour may reduce performance.  And</span>
+<span class="sd">    particularly, it may increase stream state requirements in streaming mod</span>
+
+<span class="sd">    See</span>
+<span class="sd">    [HS_FLAGS_LEFTMOST](https://intel.github.io/hyperscan/dev-reference/api_files.html#c.HS_FLAG_LEFTMOST)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">COMBINATION</span><span class="p">:</span> <span class="n">Flag</span> <span class="o">=</span> <span class="o">...</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Logical combination.</span>
+
+<span class="sd">    This flag instructs Hyperscan to parse this expression as logical combination</span>
+<span class="sd">    syntax.  Logical constraints consist of operands, operators and parentheses.  The</span>
+<span class="sd">    operands are expression indices, and operators can be `!` (NOT), `&amp;` (AND) or `|`</span>
+<span class="sd">    (OR).  For example: `(101&amp;102&amp;103)|(104&amp;!105)` `((301|302)&amp;303)&amp;(304|305)`</span>
+
+<span class="sd">    See</span>
+<span class="sd">    [HS_FLAGS_COMBINATION](https://intel.github.io/hyperscan/dev-reference/api_files.html#c.HS_FLAG_COMBINATION)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">QUIET</span><span class="p">:</span> <span class="n">Flag</span> <span class="o">=</span> <span class="o">...</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Don&#39;t do any match reporting.</span>
+
+<span class="sd">    This flag instructs Hyperscan to ignore match reporting for this expression.  It is</span>
+<span class="sd">    designed to be used on the sub-expressions in logical combinations.</span>
+
+<span class="sd">    See</span>
+<span class="sd">    [HS_FLAGS_QUIET](https://intel.github.io/hyperscan/dev-reference/api_files.html#c.HS_FLAG_QUIET)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+</code></pre></div></td></tr></table></div>
+        </details>
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h3 id="pyperscan._pyperscan.Flag.CASELESS" class="doc doc-heading">
+        <span class="doc doc-object-name doc-attribute-name">CASELESS</span>
+
+  
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-class-attribute"><code>class-attribute</code></small>
+      <small class="doc doc-label doc-label-instance-attribute"><code>instance-attribute</code></small>
+  </span>
+
+<a href="#pyperscan._pyperscan.Flag.CASELESS" class="headerlink" title="Permanent link">#</a></h3>
+<div class="highlight"><pre><span></span><code><span class="n">CASELESS</span><span class="p">:</span> <span class="n">Flag</span> <span class="o">=</span> <span class="bp">Ellipsis</span>
+</code></pre></div>
+
+  <div class="doc doc-contents ">
+  
+      <p>Set case-insensitive matching.</p>
+<p>This flag sets the expression to be matched case-insensitively by default.  The
+expression may still use PCRE tokens (notably (?i) and (?-i)) to switch
+case-insensitive matching on and off.</p>
+<p>See
+<a href="https://intel.github.io/hyperscan/dev-reference/api_files.html#c.HS_FLAG_CASELESS">HS_FLAGS_CASELESS</a></p>
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h3 id="pyperscan._pyperscan.Flag.DOTALL" class="doc doc-heading">
+        <span class="doc doc-object-name doc-attribute-name">DOTALL</span>
+
+  
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-class-attribute"><code>class-attribute</code></small>
+      <small class="doc doc-label doc-label-instance-attribute"><code>instance-attribute</code></small>
+  </span>
+
+<a href="#pyperscan._pyperscan.Flag.DOTALL" class="headerlink" title="Permanent link">#</a></h3>
+<div class="highlight"><pre><span></span><code><span class="n">DOTALL</span><span class="p">:</span> <span class="n">Flag</span> <span class="o">=</span> <span class="bp">Ellipsis</span>
+</code></pre></div>
+
+  <div class="doc doc-contents ">
+  
+      <p>Matching a <code>.</code> will not exclude newlines.</p>
+<p>This flag sets any instances of the <code>.</code> token to match newline characters as well as
+all other characters.  The PCRE specification states that the <code>.</code> token does not
+match newline characters by default, so without this flag the <code>.</code> token will not
+cross line boundaries.</p>
+<p>See
+<a href="https://intel.github.io/hyperscan/dev-reference/api_files.html#c.HS_FLAG_DOTALL">HS_FLAGS_DOTALL</a></p>
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h3 id="pyperscan._pyperscan.Flag.MULTILINE" class="doc doc-heading">
+        <span class="doc doc-object-name doc-attribute-name">MULTILINE</span>
+
+  
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-class-attribute"><code>class-attribute</code></small>
+      <small class="doc doc-label doc-label-instance-attribute"><code>instance-attribute</code></small>
+  </span>
+
+<a href="#pyperscan._pyperscan.Flag.MULTILINE" class="headerlink" title="Permanent link">#</a></h3>
+<div class="highlight"><pre><span></span><code><span class="n">MULTILINE</span><span class="p">:</span> <span class="n">Flag</span> <span class="o">=</span> <span class="bp">Ellipsis</span>
+</code></pre></div>
+
+  <div class="doc doc-contents ">
+  
+      <p>Set multi-line anchoring.</p>
+<p>This flag instructs the expression to make the <code>^</code> and <code>$</code> tokens match newline
+characters as well as the start and end of the stream.  If this flag is not
+specified, the <code>^</code> token will only ever match at the start of a stream, and the <code>$</code>
+token will only ever match at the end of a stream within the guidelines of the PCRE
+specification.</p>
+<p>See
+<a href="https://intel.github.io/hyperscan/dev-reference/api_files.html#c.HS_FLAG_MULTILINE">HS_FLAGS_MULTILINE</a></p>
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h3 id="pyperscan._pyperscan.Flag.SINGLEMATCH" class="doc doc-heading">
+        <span class="doc doc-object-name doc-attribute-name">SINGLEMATCH</span>
+
+  
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-class-attribute"><code>class-attribute</code></small>
+      <small class="doc doc-label doc-label-instance-attribute"><code>instance-attribute</code></small>
+  </span>
+
+<a href="#pyperscan._pyperscan.Flag.SINGLEMATCH" class="headerlink" title="Permanent link">#</a></h3>
+<div class="highlight"><pre><span></span><code><span class="n">SINGLEMATCH</span><span class="p">:</span> <span class="n">Flag</span> <span class="o">=</span> <span class="bp">Ellipsis</span>
+</code></pre></div>
+
+  <div class="doc doc-contents ">
+  
+      <p>Set single-match only mode.</p>
+<p>This flag sets the expression's match ID to match at most once.  In streaming mode,
+this means that the expression will return only a single match over the lifetime of
+the stream, rather than reporting every match as per standard Hyperscan semantics.
+In block mode or vectored mode, only the first match for each invocation of
+<code>scan()</code> will be returned.</p>
+<p>If multiple expressions in the database share the same match ID, then they either
+must all specify <code>SINGLEMATCH</code>. or none of them specify <code>SINGLEMATCH</code>.
+If a group of expressions sharing a match ID specify the flag, then at most one
+match with the match ID will be generated per stream.</p>
+<p>Note: The use of this flag in combination with <code>SOM_LEFTMOST</code> is not currently
+supported.</p>
+<p>See
+<a href="https://intel.github.io/hyperscan/dev-reference/api_files.html#c.HS_FLAG_SINGLEMATCH">HS_FLAGS_SINGLEMATCH</a></p>
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h3 id="pyperscan._pyperscan.Flag.ALLOWEMPTY" class="doc doc-heading">
+        <span class="doc doc-object-name doc-attribute-name">ALLOWEMPTY</span>
+
+  
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-class-attribute"><code>class-attribute</code></small>
+      <small class="doc doc-label doc-label-instance-attribute"><code>instance-attribute</code></small>
+  </span>
+
+<a href="#pyperscan._pyperscan.Flag.ALLOWEMPTY" class="headerlink" title="Permanent link">#</a></h3>
+<div class="highlight"><pre><span></span><code><span class="n">ALLOWEMPTY</span><span class="p">:</span> <span class="n">Flag</span> <span class="o">=</span> <span class="bp">Ellipsis</span>
+</code></pre></div>
+
+  <div class="doc doc-contents ">
+  
+      <p>Allow expressions that can match against empty buffers.</p>
+<p>This flag instructs the compiler to allow expressions that can match against empty
+buffers, such as <code>.?</code>, <code>.*</code>, <code>(a|)</code>.  Since Hyperscan can return every possible
+match for an expression, such expressions generally execute very slowly; the default
+behaviour is to return an error when an attempt to compile one is made.  Using this
+flag will force the compiler to allow such an expression.</p>
+<p>See
+<a href="https://intel.github.io/hyperscan/dev-reference/api_files.html#c.HS_FLAG_ALLOWEMPTY">HS_FLAGS_ALLOWEMPTY</a></p>
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h3 id="pyperscan._pyperscan.Flag.UTF8" class="doc doc-heading">
+        <span class="doc doc-object-name doc-attribute-name">UTF8</span>
+
+  
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-class-attribute"><code>class-attribute</code></small>
+      <small class="doc doc-label doc-label-instance-attribute"><code>instance-attribute</code></small>
+  </span>
+
+<a href="#pyperscan._pyperscan.Flag.UTF8" class="headerlink" title="Permanent link">#</a></h3>
+<div class="highlight"><pre><span></span><code><span class="n">UTF8</span><span class="p">:</span> <span class="n">Flag</span> <span class="o">=</span> <span class="bp">Ellipsis</span>
+</code></pre></div>
+
+  <div class="doc doc-contents ">
+  
+      <p>Enable UTF-8 mode for this expression.</p>
+<p>This flag instructs Hyperscan to treat the pattern as a sequence of UTF-8
+characters.  The results of scanning invalid UTF-8 sequences with a Hyperscan
+library that has been compiled with one or more patterns using this flag are
+undefined.</p>
+<p>See
+<a href="https://intel.github.io/hyperscan/dev-reference/api_files.html#c.HS_FLAG_UTF8">HS_FLAGS_UTF8</a></p>
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h3 id="pyperscan._pyperscan.Flag.UCP" class="doc doc-heading">
+        <span class="doc doc-object-name doc-attribute-name">UCP</span>
+
+  
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-class-attribute"><code>class-attribute</code></small>
+      <small class="doc doc-label doc-label-instance-attribute"><code>instance-attribute</code></small>
+  </span>
+
+<a href="#pyperscan._pyperscan.Flag.UCP" class="headerlink" title="Permanent link">#</a></h3>
+<div class="highlight"><pre><span></span><code><span class="n">UCP</span><span class="p">:</span> <span class="n">Flag</span> <span class="o">=</span> <span class="bp">Ellipsis</span>
+</code></pre></div>
+
+  <div class="doc doc-contents ">
+  
+      <p>Enable Unicode property support for this expression.</p>
+<p>This flag instructs Hyperscan to use Unicode properties, rather than the default
+ASCII interpretations, for character mnemonics like \w and \s as well as the POSIX
+character classes.  It is only meaningful in conjunction with
+<a class="autorefs autorefs-internal" href="#pyperscan._pyperscan.Flag.UTF8">UTF8</a>.</p>
+<p>See
+<a href="https://intel.github.io/hyperscan/dev-reference/api_files.html#c.HS_FLAG_UCP">HS_FLAGS_UCP</a></p>
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h3 id="pyperscan._pyperscan.Flag.PREFILTER" class="doc doc-heading">
+        <span class="doc doc-object-name doc-attribute-name">PREFILTER</span>
+
+  
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-class-attribute"><code>class-attribute</code></small>
+      <small class="doc doc-label doc-label-instance-attribute"><code>instance-attribute</code></small>
+  </span>
+
+<a href="#pyperscan._pyperscan.Flag.PREFILTER" class="headerlink" title="Permanent link">#</a></h3>
+<div class="highlight"><pre><span></span><code><span class="n">PREFILTER</span><span class="p">:</span> <span class="n">Flag</span> <span class="o">=</span> <span class="bp">Ellipsis</span>
+</code></pre></div>
+
+  <div class="doc doc-contents ">
+  
+      <p>Enable prefiltering mode for this expression.</p>
+<p>This flag instructs Hyperscan to compile an “approximate” version of this pattern
+for use in a prefiltering application, even if Hyperscan does not support the
+pattern in normal operation.</p>
+<p>The set of matches returned when this flag is used is guaranteed to be a superset of
+the matches specified by the non-prefiltering expression.</p>
+<p>If the pattern contains pattern constructs not supported by Hyperscan (such as
+zero-width assertions, back-references or conditional references) these constructs
+will be replaced internally with broader constructs that may match more often.</p>
+<p>Furthermore, in prefiltering mode Hyperscan may simplify a pattern that would
+otherwise return a “Pattern too large” error at compile time, or for performance
+reasons (subject to the matching guarantee above).</p>
+<p>It is generally expected that the application will subsequently confirm prefilter
+matches with another regular expression matcher that can provide exact matches for
+the pattern.</p>
+<p>Note: The use of this flag in combination with
+<a class="autorefs autorefs-internal" href="#pyperscan._pyperscan.Flag.SOM_LEFTMOST">SOM_LEFTMOST</a> is not currently supported.</p>
+<p>See
+<a href="https://intel.github.io/hyperscan/dev-reference/api_files.html#c.HS_FLAG_PREFILTER">HS_FLAGS_PREFILTER</a></p>
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h3 id="pyperscan._pyperscan.Flag.SOM_LEFTMOST" class="doc doc-heading">
+        <span class="doc doc-object-name doc-attribute-name">SOM_LEFTMOST</span>
+
+  
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-class-attribute"><code>class-attribute</code></small>
+      <small class="doc doc-label doc-label-instance-attribute"><code>instance-attribute</code></small>
+  </span>
+
+<a href="#pyperscan._pyperscan.Flag.SOM_LEFTMOST" class="headerlink" title="Permanent link">#</a></h3>
+<div class="highlight"><pre><span></span><code><span class="n">SOM_LEFTMOST</span><span class="p">:</span> <span class="n">Flag</span> <span class="o">=</span> <span class="bp">Ellipsis</span>
+</code></pre></div>
+
+  <div class="doc doc-contents ">
+  
+      <p>Enable leftmost start of match reporting.</p>
+<p>This flag instructs Hyperscan to report the leftmost possible start of match offset
+when a match is reported for this expression.  (By default, no start of match is
+returned.)</p>
+<p>For all the 3 modes, enabling this behaviour may reduce performance.  And
+particularly, it may increase stream state requirements in streaming mod</p>
+<p>See
+<a href="https://intel.github.io/hyperscan/dev-reference/api_files.html#c.HS_FLAG_LEFTMOST">HS_FLAGS_LEFTMOST</a></p>
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h3 id="pyperscan._pyperscan.Flag.COMBINATION" class="doc doc-heading">
+        <span class="doc doc-object-name doc-attribute-name">COMBINATION</span>
+
+  
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-class-attribute"><code>class-attribute</code></small>
+      <small class="doc doc-label doc-label-instance-attribute"><code>instance-attribute</code></small>
+  </span>
+
+<a href="#pyperscan._pyperscan.Flag.COMBINATION" class="headerlink" title="Permanent link">#</a></h3>
+<div class="highlight"><pre><span></span><code><span class="n">COMBINATION</span><span class="p">:</span> <span class="n">Flag</span> <span class="o">=</span> <span class="bp">Ellipsis</span>
+</code></pre></div>
+
+  <div class="doc doc-contents ">
+  
+      <p>Logical combination.</p>
+<p>This flag instructs Hyperscan to parse this expression as logical combination
+syntax.  Logical constraints consist of operands, operators and parentheses.  The
+operands are expression indices, and operators can be <code>!</code> (NOT), <code>&amp;</code> (AND) or <code>|</code>
+(OR).  For example: <code>(101&amp;102&amp;103)|(104&amp;!105)</code> <code>((301|302)&amp;303)&amp;(304|305)</code></p>
+<p>See
+<a href="https://intel.github.io/hyperscan/dev-reference/api_files.html#c.HS_FLAG_COMBINATION">HS_FLAGS_COMBINATION</a></p>
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h3 id="pyperscan._pyperscan.Flag.QUIET" class="doc doc-heading">
+        <span class="doc doc-object-name doc-attribute-name">QUIET</span>
+
+  
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-class-attribute"><code>class-attribute</code></small>
+      <small class="doc doc-label doc-label-instance-attribute"><code>instance-attribute</code></small>
+  </span>
+
+<a href="#pyperscan._pyperscan.Flag.QUIET" class="headerlink" title="Permanent link">#</a></h3>
+<div class="highlight"><pre><span></span><code><span class="n">QUIET</span><span class="p">:</span> <span class="n">Flag</span> <span class="o">=</span> <span class="bp">Ellipsis</span>
+</code></pre></div>
+
+  <div class="doc doc-contents ">
+  
+      <p>Don't do any match reporting.</p>
+<p>This flag instructs Hyperscan to ignore match reporting for this expression.  It is
+designed to be used on the sub-expressions in logical combinations.</p>
+<p>See
+<a href="https://intel.github.io/hyperscan/dev-reference/api_files.html#c.HS_FLAG_QUIET">HS_FLAGS_QUIET</a></p>
+  </div>
+
+</div>
+
+
+
+
+
+  </div>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h2 id="pyperscan._pyperscan.OnMatch" class="doc doc-heading">
+        <span class="doc doc-object-name doc-class-name">OnMatch</span>
+
+
+<a href="#pyperscan._pyperscan.OnMatch" class="headerlink" title="Permanent link">#</a></h2>
+
+
+  <div class="doc doc-contents ">
+      <p class="doc doc-class-bases">
+        Bases: <code><span title="typing.Protocol">Protocol</span></code>, <code><span title="typing.Generic">Generic</span>[<span title="pyperscan._pyperscan._TContext_contra">_TContext_contra</span>]</code></p>
+
+  
+      <p>Callback called on match.</p>
+
+
+        <details class="quote">
+          <summary>Source code in <code>python/pyperscan/_pyperscan.pyi</code></summary>
+          <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">175</span>
+<span class="normal">176</span>
+<span class="normal">177</span>
+<span class="normal">178</span>
+<span class="normal">179</span>
+<span class="normal">180</span>
+<span class="normal">181</span>
+<span class="normal">182</span>
+<span class="normal">183</span>
+<span class="normal">184</span>
+<span class="normal">185</span>
+<span class="normal">186</span>
+<span class="normal">187</span>
+<span class="normal">188</span>
+<span class="normal">189</span>
+<span class="normal">190</span>
+<span class="normal">191</span>
+<span class="normal">192</span>
+<span class="normal">193</span>
+<span class="normal">194</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">OnMatch</span><span class="p">(</span><span class="n">Protocol</span><span class="p">,</span> <span class="n">Generic</span><span class="p">[</span><span class="n">_TContext_contra</span><span class="p">]):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Callback called on match.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">:</span> <span class="n">_TContext_contra</span><span class="p">,</span> <span class="n">tag</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">start</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">end</span><span class="p">:</span> <span class="n">Any</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Scan</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Called when a match happens.</span>
+
+<span class="sd">        Note:</span>
+<span class="sd">            Call parameters are passed positonally.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            context: Object passed to [Database.build][pyperscan._pyperscan.Database.build]</span>
+<span class="sd">            tag: [Pattern.tag][pyperscan._pyperscan.Pattern] of the pattern matched.</span>
+<span class="sd">            start: start index of the matched pattern.</span>
+<span class="sd">            end: end index of the matched pattern.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Instructs Hyperscan wether to continue or stop searching for subsequent matches.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+</code></pre></div></td></tr></table></div>
+        </details>
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h3 id="pyperscan._pyperscan.OnMatch.__call__" class="doc doc-heading">
+        <span class="doc doc-object-name doc-function-name">__call__</span>
+
+
+<a href="#pyperscan._pyperscan.OnMatch.__call__" class="headerlink" title="Permanent link">#</a></h3>
+<div class="highlight"><pre><span></span><code><span class="fm">__call__</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">tag</span><span class="p">,</span> <span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">)</span>
+</code></pre></div>
+
+  <div class="doc doc-contents ">
+  
+      <p>Called when a match happens.</p>
+
+<details class="note" open>
+  <summary>Note</summary>
+  <p>Call parameters are passed positonally.</p>
+</details>
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>context</code></td>
+          <td>
+                <code><span title="pyperscan._pyperscan._TContext_contra">_TContext_contra</span></code>
+          </td>
+          <td><p>Object passed to <a class="autorefs autorefs-internal" href="#pyperscan._pyperscan.Database.build">Database.build</a></p></td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr>
+          <td><code>tag</code></td>
+          <td>
+                <code><span title="typing.Any">Any</span></code>
+          </td>
+          <td><p><a class="autorefs autorefs-internal" href="#pyperscan._pyperscan.Pattern">Pattern.tag</a> of the pattern matched.</p></td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr>
+          <td><code>start</code></td>
+          <td>
+                <code>int</code>
+          </td>
+          <td><p>start index of the matched pattern.</p></td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr>
+          <td><code>end</code></td>
+          <td>
+                <code><span title="typing.Any">Any</span></code>
+          </td>
+          <td><p>end index of the matched pattern.</p></td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+  <p><strong>Returns:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td>
+                <code><a class="autorefs autorefs-internal" title="pyperscan._pyperscan.Scan" href="#pyperscan._pyperscan.Scan">Scan</a></code>
+          </td>
+          <td><p>Instructs Hyperscan wether to continue or stop searching for subsequent matches.</p></td>
+        </tr>
+    </tbody>
+  </table>
+
+      <details class="quote">
+        <summary>Source code in <code>python/pyperscan/_pyperscan.pyi</code></summary>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">178</span>
+<span class="normal">179</span>
+<span class="normal">180</span>
+<span class="normal">181</span>
+<span class="normal">182</span>
+<span class="normal">183</span>
+<span class="normal">184</span>
+<span class="normal">185</span>
+<span class="normal">186</span>
+<span class="normal">187</span>
+<span class="normal">188</span>
+<span class="normal">189</span>
+<span class="normal">190</span>
+<span class="normal">191</span>
+<span class="normal">192</span>
+<span class="normal">193</span>
+<span class="normal">194</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span>
+    <span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">:</span> <span class="n">_TContext_contra</span><span class="p">,</span> <span class="n">tag</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">start</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">end</span><span class="p">:</span> <span class="n">Any</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Scan</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Called when a match happens.</span>
+
+<span class="sd">    Note:</span>
+<span class="sd">        Call parameters are passed positonally.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        context: Object passed to [Database.build][pyperscan._pyperscan.Database.build]</span>
+<span class="sd">        tag: [Pattern.tag][pyperscan._pyperscan.Pattern] of the pattern matched.</span>
+<span class="sd">        start: start index of the matched pattern.</span>
+<span class="sd">        end: end index of the matched pattern.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Instructs Hyperscan wether to continue or stop searching for subsequent matches.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+</code></pre></div></td></tr></table></div>
+      </details>
+  </div>
+
+</div>
+
+
+
+  </div>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h2 id="pyperscan._pyperscan.Database" class="doc doc-heading">
+        <span class="doc doc-object-name doc-class-name">Database</span>
+
+
+<a href="#pyperscan._pyperscan.Database" class="headerlink" title="Permanent link">#</a></h2>
+
+
+  <div class="doc doc-contents ">
+      <p class="doc doc-class-bases">
+        Bases: <code><span title="typing.Generic">Generic</span>[<span title="pyperscan._pyperscan._TScanner">_TScanner</span>]</code></p>
+
+  
+      <p>A Hyperscan pattern database.</p>
+
+
+        <details class="quote">
+          <summary>Source code in <code>python/pyperscan/_pyperscan.pyi</code></summary>
+          <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">196</span>
+<span class="normal">197</span>
+<span class="normal">198</span>
+<span class="normal">199</span>
+<span class="normal">200</span>
+<span class="normal">201</span>
+<span class="normal">202</span>
+<span class="normal">203</span>
+<span class="normal">204</span>
+<span class="normal">205</span>
+<span class="normal">206</span>
+<span class="normal">207</span>
+<span class="normal">208</span>
+<span class="normal">209</span>
+<span class="normal">210</span>
+<span class="normal">211</span>
+<span class="normal">212</span>
+<span class="normal">213</span>
+<span class="normal">214</span>
+<span class="normal">215</span>
+<span class="normal">216</span>
+<span class="normal">217</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">Database</span><span class="p">(</span><span class="n">Generic</span><span class="p">[</span><span class="n">_TScanner</span><span class="p">]):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;A Hyperscan pattern database.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__new__</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="o">*</span><span class="n">patterns</span><span class="p">:</span> <span class="n">Pattern</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Compiles a Hyperscan pattern database.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            patterns: Expressions to compile into the database to later match against.</span>
+
+<span class="sd">        Note:</span>
+<span class="sd">            Calls [hs_compile_ext_multi](https://intel.github.io/hyperscan/dev-reference/api_files.html#c.hs_compile_ext_multi)</span>
+<span class="sd">            internally.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">build</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">:</span> <span class="n">_TContext_contra</span><span class="p">,</span> <span class="n">on_match</span><span class="p">:</span> <span class="n">OnMatch</span><span class="p">[</span><span class="n">_TContext_contra</span><span class="p">]</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_TScanner</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Build a scanner object that is usable to search for pattern procurances.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            context: arbitrary object which is passed as a first parameter to `on_match`.</span>
+<span class="sd">            on_match: callable to call when a match happens upon `scan` call.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+</code></pre></div></td></tr></table></div>
+        </details>
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h3 id="pyperscan._pyperscan.Database.__new__" class="doc doc-heading">
+        <span class="doc doc-object-name doc-function-name">__new__</span>
+
+
+<a href="#pyperscan._pyperscan.Database.__new__" class="headerlink" title="Permanent link">#</a></h3>
+<div class="highlight"><pre><span></span><code><span class="fm">__new__</span><span class="p">(</span><span class="o">*</span><span class="n">patterns</span><span class="p">)</span>
+</code></pre></div>
+
+  <div class="doc doc-contents ">
+  
+      <p>Compiles a Hyperscan pattern database.</p>
+
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>patterns</code></td>
+          <td>
+                <code><a class="autorefs autorefs-internal" title="pyperscan._pyperscan.Pattern" href="#pyperscan._pyperscan.Pattern">Pattern</a></code>
+          </td>
+          <td><p>Expressions to compile into the database to later match against.</p></td>
+          <td>
+                <code>()</code>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+<details class="note" open>
+  <summary>Note</summary>
+  <p>Calls <a href="https://intel.github.io/hyperscan/dev-reference/api_files.html#c.hs_compile_ext_multi">hs_compile_ext_multi</a>
+internally.</p>
+</details>
+      <details class="quote">
+        <summary>Source code in <code>python/pyperscan/_pyperscan.pyi</code></summary>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">199</span>
+<span class="normal">200</span>
+<span class="normal">201</span>
+<span class="normal">202</span>
+<span class="normal">203</span>
+<span class="normal">204</span>
+<span class="normal">205</span>
+<span class="normal">206</span>
+<span class="normal">207</span>
+<span class="normal">208</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="fm">__new__</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="o">*</span><span class="n">patterns</span><span class="p">:</span> <span class="n">Pattern</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Compiles a Hyperscan pattern database.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        patterns: Expressions to compile into the database to later match against.</span>
+
+<span class="sd">    Note:</span>
+<span class="sd">        Calls [hs_compile_ext_multi](https://intel.github.io/hyperscan/dev-reference/api_files.html#c.hs_compile_ext_multi)</span>
+<span class="sd">        internally.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+</code></pre></div></td></tr></table></div>
+      </details>
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+
+<h3 id="pyperscan._pyperscan.Database.build" class="doc doc-heading">
+        <span class="doc doc-object-name doc-function-name">build</span>
+
+
+<a href="#pyperscan._pyperscan.Database.build" class="headerlink" title="Permanent link">#</a></h3>
+<div class="highlight"><pre><span></span><code><span class="n">build</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">on_match</span><span class="p">)</span>
+</code></pre></div>
+
+  <div class="doc doc-contents ">
+  
+      <p>Build a scanner object that is usable to search for pattern procurances.</p>
+
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>context</code></td>
+          <td>
+                <code><span title="pyperscan._pyperscan._TContext_contra">_TContext_contra</span></code>
+          </td>
+          <td><p>arbitrary object which is passed as a first parameter to <code>on_match</code>.</p></td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr>
+          <td><code>on_match</code></td>
+          <td>
+                <code><a class="autorefs autorefs-internal" title="pyperscan._pyperscan.OnMatch" href="#pyperscan._pyperscan.OnMatch">OnMatch</a>[<span title="pyperscan._pyperscan._TContext_contra">_TContext_contra</span>]</code>
+          </td>
+          <td><p>callable to call when a match happens upon <code>scan</code> call.</p></td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+      <details class="quote">
+        <summary>Source code in <code>python/pyperscan/_pyperscan.pyi</code></summary>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">209</span>
+<span class="normal">210</span>
+<span class="normal">211</span>
+<span class="normal">212</span>
+<span class="normal">213</span>
+<span class="normal">214</span>
+<span class="normal">215</span>
+<span class="normal">216</span>
+<span class="normal">217</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">build</span><span class="p">(</span>
+    <span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">:</span> <span class="n">_TContext_contra</span><span class="p">,</span> <span class="n">on_match</span><span class="p">:</span> <span class="n">OnMatch</span><span class="p">[</span><span class="n">_TContext_contra</span><span class="p">]</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_TScanner</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Build a scanner object that is usable to search for pattern procurances.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        context: arbitrary object which is passed as a first parameter to `on_match`.</span>
+<span class="sd">        on_match: callable to call when a match happens upon `scan` call.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+</code></pre></div></td></tr></table></div>
+      </details>
+  </div>
+
+</div>
+
+
+
+  </div>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h2 id="pyperscan._pyperscan.BlockDatabase" class="doc doc-heading">
+        <span class="doc doc-object-name doc-class-name">BlockDatabase</span>
+
+
+<a href="#pyperscan._pyperscan.BlockDatabase" class="headerlink" title="Permanent link">#</a></h2>
+
+
+  <div class="doc doc-contents ">
+      <p class="doc doc-class-bases">
+        Bases: <code><a class="autorefs autorefs-internal" title="pyperscan._pyperscan.Database" href="#pyperscan._pyperscan.Database">Database</a>[<a class="autorefs autorefs-internal" title="pyperscan._pyperscan.BlockScanner" href="#pyperscan._pyperscan.BlockScanner">BlockScanner</a>]</code></p>
+
+  
+      <p>A database for block (non-streaming) scanning.</p>
+
+
+        <details class="quote">
+          <summary>Source code in <code>python/pyperscan/_pyperscan.pyi</code></summary>
+          <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">219</span>
+<span class="normal">220</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">BlockDatabase</span><span class="p">(</span><span class="n">Database</span><span class="p">[</span><span class="n">BlockScanner</span><span class="p">]):</span>  <span class="c1"># noqa: F821</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;A database for block (non-streaming) scanning.&quot;&quot;&quot;</span>
+</code></pre></div></td></tr></table></div>
+        </details>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h2 id="pyperscan._pyperscan.VectoredDatabase" class="doc doc-heading">
+        <span class="doc doc-object-name doc-class-name">VectoredDatabase</span>
+
+
+<a href="#pyperscan._pyperscan.VectoredDatabase" class="headerlink" title="Permanent link">#</a></h2>
+
+
+  <div class="doc doc-contents ">
+      <p class="doc doc-class-bases">
+        Bases: <code><a class="autorefs autorefs-internal" title="pyperscan._pyperscan.Database" href="#pyperscan._pyperscan.Database">Database</a>[<a class="autorefs autorefs-internal" title="pyperscan._pyperscan.VectoredScanner" href="#pyperscan._pyperscan.VectoredScanner">VectoredScanner</a>]</code></p>
+
+  
+      <p>A databes for vectored scanning.</p>
+
+
+        <details class="quote">
+          <summary>Source code in <code>python/pyperscan/_pyperscan.pyi</code></summary>
+          <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">222</span>
+<span class="normal">223</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">VectoredDatabase</span><span class="p">(</span><span class="n">Database</span><span class="p">[</span><span class="n">VectoredScanner</span><span class="p">]):</span>  <span class="c1"># noqa: F821</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;A databes for vectored scanning.&quot;&quot;&quot;</span>
+</code></pre></div></td></tr></table></div>
+        </details>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h2 id="pyperscan._pyperscan.StreamDatabase" class="doc doc-heading">
+        <span class="doc doc-object-name doc-class-name">StreamDatabase</span>
+
+
+<a href="#pyperscan._pyperscan.StreamDatabase" class="headerlink" title="Permanent link">#</a></h2>
+
+
+  <div class="doc doc-contents ">
+      <p class="doc doc-class-bases">
+        Bases: <code><a class="autorefs autorefs-internal" title="pyperscan._pyperscan.Database" href="#pyperscan._pyperscan.Database">Database</a>[<a class="autorefs autorefs-internal" title="pyperscan._pyperscan.StreamScanner" href="#pyperscan._pyperscan.StreamScanner">StreamScanner</a>]</code></p>
+
+  
+      <p>A database for stream scanning.</p>
+
+
+        <details class="quote">
+          <summary>Source code in <code>python/pyperscan/_pyperscan.pyi</code></summary>
+          <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">225</span>
+<span class="normal">226</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">StreamDatabase</span><span class="p">(</span><span class="n">Database</span><span class="p">[</span><span class="n">StreamScanner</span><span class="p">]):</span>  <span class="c1"># noqa: F821</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;A database for stream scanning.&quot;&quot;&quot;</span>
+</code></pre></div></td></tr></table></div>
+        </details>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h2 id="pyperscan._pyperscan.Scan" class="doc doc-heading">
+        <span class="doc doc-object-name doc-class-name">Scan</span>
+
+
+<a href="#pyperscan._pyperscan.Scan" class="headerlink" title="Permanent link">#</a></h2>
+
+
+  <div class="doc doc-contents ">
+
+  
+      <p>Match callback return value to instruct Hyperscan wether to contine or terminate scanning.</p>
+
+
+        <details class="quote">
+          <summary>Source code in <code>python/pyperscan/_pyperscan.pyi</code></summary>
+          <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">228</span>
+<span class="normal">229</span>
+<span class="normal">230</span>
+<span class="normal">231</span>
+<span class="normal">232</span>
+<span class="normal">233</span>
+<span class="normal">234</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">Scan</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Match callback return value to instruct Hyperscan wether to contine or terminate scanning.&quot;&quot;&quot;</span>
+
+    <span class="n">Continue</span><span class="p">:</span> <span class="n">Scan</span> <span class="o">=</span> <span class="o">...</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Continue scanning.&quot;&quot;&quot;</span>
+    <span class="n">Terminate</span><span class="p">:</span> <span class="n">Scan</span> <span class="o">=</span> <span class="o">...</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Terminate scanning.&quot;&quot;&quot;</span>
+</code></pre></div></td></tr></table></div>
+        </details>
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h3 id="pyperscan._pyperscan.Scan.Continue" class="doc doc-heading">
+        <span class="doc doc-object-name doc-attribute-name">Continue</span>
+
+  
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-class-attribute"><code>class-attribute</code></small>
+      <small class="doc doc-label doc-label-instance-attribute"><code>instance-attribute</code></small>
+  </span>
+
+<a href="#pyperscan._pyperscan.Scan.Continue" class="headerlink" title="Permanent link">#</a></h3>
+<div class="highlight"><pre><span></span><code><span class="n">Continue</span><span class="p">:</span> <span class="n">Scan</span> <span class="o">=</span> <span class="bp">Ellipsis</span>
+</code></pre></div>
+
+  <div class="doc doc-contents ">
+  
+      <p>Continue scanning.</p>
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h3 id="pyperscan._pyperscan.Scan.Terminate" class="doc doc-heading">
+        <span class="doc doc-object-name doc-attribute-name">Terminate</span>
+
+  
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-class-attribute"><code>class-attribute</code></small>
+      <small class="doc doc-label doc-label-instance-attribute"><code>instance-attribute</code></small>
+  </span>
+
+<a href="#pyperscan._pyperscan.Scan.Terminate" class="headerlink" title="Permanent link">#</a></h3>
+<div class="highlight"><pre><span></span><code><span class="n">Terminate</span><span class="p">:</span> <span class="n">Scan</span> <span class="o">=</span> <span class="bp">Ellipsis</span>
+</code></pre></div>
+
+  <div class="doc doc-contents ">
+  
+      <p>Terminate scanning.</p>
+  </div>
+
+</div>
+
+
+
+
+
+  </div>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h2 id="pyperscan._pyperscan.BlockScanner" class="doc doc-heading">
+        <span class="doc doc-object-name doc-class-name">BlockScanner</span>
+
+
+<a href="#pyperscan._pyperscan.BlockScanner" class="headerlink" title="Permanent link">#</a></h2>
+
+
+  <div class="doc doc-contents ">
+
+  
+      <p>Created from <code>BlockDatabase</code> for block scanning.</p>
+
+
+        <details class="quote">
+          <summary>Source code in <code>python/pyperscan/_pyperscan.pyi</code></summary>
+          <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">236</span>
+<span class="normal">237</span>
+<span class="normal">238</span>
+<span class="normal">239</span>
+<span class="normal">240</span>
+<span class="normal">241</span>
+<span class="normal">242</span>
+<span class="normal">243</span>
+<span class="normal">244</span>
+<span class="normal">245</span>
+<span class="normal">246</span>
+<span class="normal">247</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">BlockScanner</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Created from `BlockDatabase` for block scanning.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">scan</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">BufferType</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Scan</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Scan for matches in a single buffer (block).</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            data: buffer to search matches in. Can be any object implementing the buffer protocol.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Indicates if scanning is terminated from `OnMatch` callback.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+</code></pre></div></td></tr></table></div>
+        </details>
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h3 id="pyperscan._pyperscan.BlockScanner.scan" class="doc doc-heading">
+        <span class="doc doc-object-name doc-function-name">scan</span>
+
+
+<a href="#pyperscan._pyperscan.BlockScanner.scan" class="headerlink" title="Permanent link">#</a></h3>
+<div class="highlight"><pre><span></span><code><span class="n">scan</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+</code></pre></div>
+
+  <div class="doc doc-contents ">
+  
+      <p>Scan for matches in a single buffer (block).</p>
+
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>data</code></td>
+          <td>
+                <code><span title="pyperscan._pyperscan.BufferType">BufferType</span></code>
+          </td>
+          <td><p>buffer to search matches in. Can be any object implementing the buffer protocol.</p></td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+  <p><strong>Returns:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td>
+                <code><a class="autorefs autorefs-internal" title="pyperscan._pyperscan.Scan" href="#pyperscan._pyperscan.Scan">Scan</a></code>
+          </td>
+          <td><p>Indicates if scanning is terminated from <code>OnMatch</code> callback.</p></td>
+        </tr>
+    </tbody>
+  </table>
+
+      <details class="quote">
+        <summary>Source code in <code>python/pyperscan/_pyperscan.pyi</code></summary>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">239</span>
+<span class="normal">240</span>
+<span class="normal">241</span>
+<span class="normal">242</span>
+<span class="normal">243</span>
+<span class="normal">244</span>
+<span class="normal">245</span>
+<span class="normal">246</span>
+<span class="normal">247</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">scan</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">BufferType</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Scan</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Scan for matches in a single buffer (block).</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        data: buffer to search matches in. Can be any object implementing the buffer protocol.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Indicates if scanning is terminated from `OnMatch` callback.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+</code></pre></div></td></tr></table></div>
+      </details>
+  </div>
+
+</div>
+
+
+
+  </div>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h2 id="pyperscan._pyperscan.VectoredScanner" class="doc doc-heading">
+        <span class="doc doc-object-name doc-class-name">VectoredScanner</span>
+
+
+<a href="#pyperscan._pyperscan.VectoredScanner" class="headerlink" title="Permanent link">#</a></h2>
+
+
+  <div class="doc doc-contents ">
+
+  
+      <p>Created from <code>VectoredDatabase</code> for scanning.</p>
+
+
+        <details class="quote">
+          <summary>Source code in <code>python/pyperscan/_pyperscan.pyi</code></summary>
+          <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">249</span>
+<span class="normal">250</span>
+<span class="normal">251</span>
+<span class="normal">252</span>
+<span class="normal">253</span>
+<span class="normal">254</span>
+<span class="normal">255</span>
+<span class="normal">256</span>
+<span class="normal">257</span>
+<span class="normal">258</span>
+<span class="normal">259</span>
+<span class="normal">260</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">VectoredScanner</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Created from `VectoredDatabase` for scanning.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">scan</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">Collection</span><span class="p">[</span><span class="n">BufferType</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Scan</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Scan for matches in a multiple buffers (vector).</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            data: buffer to search matches in. Can be any object implementing the buffer protocol.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Indicates if scanning is terminated from `OnMatch` callback.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+</code></pre></div></td></tr></table></div>
+        </details>
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h3 id="pyperscan._pyperscan.VectoredScanner.scan" class="doc doc-heading">
+        <span class="doc doc-object-name doc-function-name">scan</span>
+
+
+<a href="#pyperscan._pyperscan.VectoredScanner.scan" class="headerlink" title="Permanent link">#</a></h3>
+<div class="highlight"><pre><span></span><code><span class="n">scan</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+</code></pre></div>
+
+  <div class="doc doc-contents ">
+  
+      <p>Scan for matches in a multiple buffers (vector).</p>
+
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>data</code></td>
+          <td>
+                <code><span title="collections.abc.Collection">Collection</span>[<span title="pyperscan._pyperscan.BufferType">BufferType</span>]</code>
+          </td>
+          <td><p>buffer to search matches in. Can be any object implementing the buffer protocol.</p></td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+  <p><strong>Returns:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td>
+                <code><a class="autorefs autorefs-internal" title="pyperscan._pyperscan.Scan" href="#pyperscan._pyperscan.Scan">Scan</a></code>
+          </td>
+          <td><p>Indicates if scanning is terminated from <code>OnMatch</code> callback.</p></td>
+        </tr>
+    </tbody>
+  </table>
+
+      <details class="quote">
+        <summary>Source code in <code>python/pyperscan/_pyperscan.pyi</code></summary>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">252</span>
+<span class="normal">253</span>
+<span class="normal">254</span>
+<span class="normal">255</span>
+<span class="normal">256</span>
+<span class="normal">257</span>
+<span class="normal">258</span>
+<span class="normal">259</span>
+<span class="normal">260</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">scan</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">Collection</span><span class="p">[</span><span class="n">BufferType</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Scan</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Scan for matches in a multiple buffers (vector).</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        data: buffer to search matches in. Can be any object implementing the buffer protocol.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Indicates if scanning is terminated from `OnMatch` callback.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+</code></pre></div></td></tr></table></div>
+      </details>
+  </div>
+
+</div>
+
+
+
+  </div>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h2 id="pyperscan._pyperscan.StreamScanner" class="doc doc-heading">
+        <span class="doc doc-object-name doc-class-name">StreamScanner</span>
+
+
+<a href="#pyperscan._pyperscan.StreamScanner" class="headerlink" title="Permanent link">#</a></h2>
+
+
+  <div class="doc doc-contents ">
+
+  
+      <p>Created from <code>StreamDatabase</code> for stream scanning.</p>
+
+
+        <details class="quote">
+          <summary>Source code in <code>python/pyperscan/_pyperscan.pyi</code></summary>
+          <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">262</span>
+<span class="normal">263</span>
+<span class="normal">264</span>
+<span class="normal">265</span>
+<span class="normal">266</span>
+<span class="normal">267</span>
+<span class="normal">268</span>
+<span class="normal">269</span>
+<span class="normal">270</span>
+<span class="normal">271</span>
+<span class="normal">272</span>
+<span class="normal">273</span>
+<span class="normal">274</span>
+<span class="normal">275</span>
+<span class="normal">276</span>
+<span class="normal">277</span>
+<span class="normal">278</span>
+<span class="normal">279</span>
+<span class="normal">280</span>
+<span class="normal">281</span>
+<span class="normal">282</span>
+<span class="normal">283</span>
+<span class="normal">284</span>
+<span class="normal">285</span>
+<span class="normal">286</span>
+<span class="normal">287</span>
+<span class="normal">288</span>
+<span class="normal">289</span>
+<span class="normal">290</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">StreamScanner</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Created from `StreamDatabase` for stream scanning.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">scan</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">BufferType</span><span class="p">,</span> <span class="n">chunk_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Scan</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Scan for matches in a stream.</span>
+
+<span class="sd">        Multiple calls constitute to the same scanning operation, matches can happen at</span>
+<span class="sd">        the edge of multiple `scan` calls, and match start/end offsets are counted from</span>
+<span class="sd">        the first scan call.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            data: buffer to search matches in. Can be any object implementing the buffer protocol.</span>
+<span class="sd">            chunk_size: when provided, `data` is scanned in `chunk_size` bits.</span>
+
+<span class="sd">        Tip:</span>
+<span class="sd">            Hyperscan can match only up-to the first `4 GiB` of buffers. Use an</span>
+<span class="sd">            arbitrary big buffer with a `chunk_size` less than `4 GiB` to overcome this</span>
+<span class="sd">            limitation.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Indicates if scanning is terminated from `OnMatch` callback.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Scan</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Reset stream scanning to its initial state.</span>
+
+<span class="sd">        After this method is called, all in-flight possible matches are discarded and</span>
+<span class="sd">        subsequent `scan` operation will act as the first call, counting match index</span>
+<span class="sd">        from zero.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+</code></pre></div></td></tr></table></div>
+        </details>
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h3 id="pyperscan._pyperscan.StreamScanner.scan" class="doc doc-heading">
+        <span class="doc doc-object-name doc-function-name">scan</span>
+
+
+<a href="#pyperscan._pyperscan.StreamScanner.scan" class="headerlink" title="Permanent link">#</a></h3>
+<div class="highlight"><pre><span></span><code><span class="n">scan</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">chunk_size</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+</code></pre></div>
+
+  <div class="doc doc-contents ">
+  
+      <p>Scan for matches in a stream.</p>
+<p>Multiple calls constitute to the same scanning operation, matches can happen at
+the edge of multiple <code>scan</code> calls, and match start/end offsets are counted from
+the first scan call.</p>
+
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>data</code></td>
+          <td>
+                <code><span title="pyperscan._pyperscan.BufferType">BufferType</span></code>
+          </td>
+          <td><p>buffer to search matches in. Can be any object implementing the buffer protocol.</p></td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr>
+          <td><code>chunk_size</code></td>
+          <td>
+                <code>int | None</code>
+          </td>
+          <td><p>when provided, <code>data</code> is scanned in <code>chunk_size</code> bits.</p></td>
+          <td>
+                <code>None</code>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+<details class="tip" open>
+  <summary>Tip</summary>
+  <p>Hyperscan can match only up-to the first <code>4 GiB</code> of buffers. Use an
+arbitrary big buffer with a <code>chunk_size</code> less than <code>4 GiB</code> to overcome this
+limitation.</p>
+</details>
+  <p><strong>Returns:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td>
+                <code><a class="autorefs autorefs-internal" title="pyperscan._pyperscan.Scan" href="#pyperscan._pyperscan.Scan">Scan</a></code>
+          </td>
+          <td><p>Indicates if scanning is terminated from <code>OnMatch</code> callback.</p></td>
+        </tr>
+    </tbody>
+  </table>
+
+      <details class="quote">
+        <summary>Source code in <code>python/pyperscan/_pyperscan.pyi</code></summary>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">265</span>
+<span class="normal">266</span>
+<span class="normal">267</span>
+<span class="normal">268</span>
+<span class="normal">269</span>
+<span class="normal">270</span>
+<span class="normal">271</span>
+<span class="normal">272</span>
+<span class="normal">273</span>
+<span class="normal">274</span>
+<span class="normal">275</span>
+<span class="normal">276</span>
+<span class="normal">277</span>
+<span class="normal">278</span>
+<span class="normal">279</span>
+<span class="normal">280</span>
+<span class="normal">281</span>
+<span class="normal">282</span>
+<span class="normal">283</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">scan</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">BufferType</span><span class="p">,</span> <span class="n">chunk_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Scan</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Scan for matches in a stream.</span>
+
+<span class="sd">    Multiple calls constitute to the same scanning operation, matches can happen at</span>
+<span class="sd">    the edge of multiple `scan` calls, and match start/end offsets are counted from</span>
+<span class="sd">    the first scan call.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        data: buffer to search matches in. Can be any object implementing the buffer protocol.</span>
+<span class="sd">        chunk_size: when provided, `data` is scanned in `chunk_size` bits.</span>
+
+<span class="sd">    Tip:</span>
+<span class="sd">        Hyperscan can match only up-to the first `4 GiB` of buffers. Use an</span>
+<span class="sd">        arbitrary big buffer with a `chunk_size` less than `4 GiB` to overcome this</span>
+<span class="sd">        limitation.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Indicates if scanning is terminated from `OnMatch` callback.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+</code></pre></div></td></tr></table></div>
+      </details>
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+
+<h3 id="pyperscan._pyperscan.StreamScanner.reset" class="doc doc-heading">
+        <span class="doc doc-object-name doc-function-name">reset</span>
+
+
+<a href="#pyperscan._pyperscan.StreamScanner.reset" class="headerlink" title="Permanent link">#</a></h3>
+<div class="highlight"><pre><span></span><code><span class="n">reset</span><span class="p">()</span>
+</code></pre></div>
+
+  <div class="doc doc-contents ">
+  
+      <p>Reset stream scanning to its initial state.</p>
+<p>After this method is called, all in-flight possible matches are discarded and
+subsequent <code>scan</code> operation will act as the first call, counting match index
+from zero.</p>
+
+      <details class="quote">
+        <summary>Source code in <code>python/pyperscan/_pyperscan.pyi</code></summary>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">284</span>
+<span class="normal">285</span>
+<span class="normal">286</span>
+<span class="normal">287</span>
+<span class="normal">288</span>
+<span class="normal">289</span>
+<span class="normal">290</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Scan</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Reset stream scanning to its initial state.</span>
+
+<span class="sd">    After this method is called, all in-flight possible matches are discarded and</span>
+<span class="sd">    subsequent `scan` operation will act as the first call, counting match index</span>
+<span class="sd">    from zero.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+</code></pre></div></td></tr></table></div>
+      </details>
+  </div>
+
+</div>
+
+
+
+  </div>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h2 id="pyperscan._pyperscan.HyperscanErrorCode" class="doc doc-heading">
+        <span class="doc doc-object-name doc-class-name">HyperscanErrorCode</span>
+
+
+<a href="#pyperscan._pyperscan.HyperscanErrorCode" class="headerlink" title="Permanent link">#</a></h2>
+
+
+  <div class="doc doc-contents ">
+
+  
+      <p>List of errors can be returned by the low level Hyperscan operations.</p>
+<p>Most error codes cannot appear in Pyperscan.</p>
+
+
+        <details class="quote">
+          <summary>Source code in <code>python/pyperscan/_pyperscan.pyi</code></summary>
+          <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">292</span>
+<span class="normal">293</span>
+<span class="normal">294</span>
+<span class="normal">295</span>
+<span class="normal">296</span>
+<span class="normal">297</span>
+<span class="normal">298</span>
+<span class="normal">299</span>
+<span class="normal">300</span>
+<span class="normal">301</span>
+<span class="normal">302</span>
+<span class="normal">303</span>
+<span class="normal">304</span>
+<span class="normal">305</span>
+<span class="normal">306</span>
+<span class="normal">307</span>
+<span class="normal">308</span>
+<span class="normal">309</span>
+<span class="normal">310</span>
+<span class="normal">311</span>
+<span class="normal">312</span>
+<span class="normal">313</span>
+<span class="normal">314</span>
+<span class="normal">315</span>
+<span class="normal">316</span>
+<span class="normal">317</span>
+<span class="normal">318</span>
+<span class="normal">319</span>
+<span class="normal">320</span>
+<span class="normal">321</span>
+<span class="normal">322</span>
+<span class="normal">323</span>
+<span class="normal">324</span>
+<span class="normal">325</span>
+<span class="normal">326</span>
+<span class="normal">327</span>
+<span class="normal">328</span>
+<span class="normal">329</span>
+<span class="normal">330</span>
+<span class="normal">331</span>
+<span class="normal">332</span>
+<span class="normal">333</span>
+<span class="normal">334</span>
+<span class="normal">335</span>
+<span class="normal">336</span>
+<span class="normal">337</span>
+<span class="normal">338</span>
+<span class="normal">339</span>
+<span class="normal">340</span>
+<span class="normal">341</span>
+<span class="normal">342</span>
+<span class="normal">343</span>
+<span class="normal">344</span>
+<span class="normal">345</span>
+<span class="normal">346</span>
+<span class="normal">347</span>
+<span class="normal">348</span>
+<span class="normal">349</span>
+<span class="normal">350</span>
+<span class="normal">351</span>
+<span class="normal">352</span>
+<span class="normal">353</span>
+<span class="normal">354</span>
+<span class="normal">355</span>
+<span class="normal">356</span>
+<span class="normal">357</span>
+<span class="normal">358</span>
+<span class="normal">359</span>
+<span class="normal">360</span>
+<span class="normal">361</span>
+<span class="normal">362</span>
+<span class="normal">363</span>
+<span class="normal">364</span>
+<span class="normal">365</span>
+<span class="normal">366</span>
+<span class="normal">367</span>
+<span class="normal">368</span>
+<span class="normal">369</span>
+<span class="normal">370</span>
+<span class="normal">371</span>
+<span class="normal">372</span>
+<span class="normal">373</span>
+<span class="normal">374</span>
+<span class="normal">375</span>
+<span class="normal">376</span>
+<span class="normal">377</span>
+<span class="normal">378</span>
+<span class="normal">379</span>
+<span class="normal">380</span>
+<span class="normal">381</span>
+<span class="normal">382</span>
+<span class="normal">383</span>
+<span class="normal">384</span>
+<span class="normal">385</span>
+<span class="normal">386</span>
+<span class="normal">387</span>
+<span class="normal">388</span>
+<span class="normal">389</span>
+<span class="normal">390</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">HyperscanErrorCode</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;List of errors can be returned by the low level Hyperscan operations.</span>
+
+<span class="sd">    Most error codes cannot appear in Pyperscan.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">Invalid</span><span class="p">:</span> <span class="n">HyperscanErrorCode</span> <span class="o">=</span> <span class="o">...</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;A parameter passed to this function was invalid.</span>
+
+<span class="sd">    This error is only returned in cases where the function can detect an invalid</span>
+<span class="sd">    parameter it cannot be relied upon to detect (for example) pointers to freed memory</span>
+<span class="sd">    or other invalid data.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">Nomem</span><span class="p">:</span> <span class="n">HyperscanErrorCode</span> <span class="o">=</span> <span class="o">...</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;A memory allocation failed.&quot;&quot;&quot;</span>
+
+    <span class="n">ScanTerminated</span><span class="p">:</span> <span class="n">HyperscanErrorCode</span> <span class="o">=</span> <span class="o">...</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The engine was terminated by callback.</span>
+
+<span class="sd">    This return value indicates that the target buffer was partially scanned, but that</span>
+<span class="sd">    the callback function requested that scanning cease after a match was located.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">CompilerError</span><span class="p">:</span> <span class="n">HyperscanErrorCode</span> <span class="o">=</span> <span class="o">...</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The pattern compiler failed, and the hs_compile_error_t should be inspected for</span>
+<span class="sd">    more detail.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">DbVersionError</span><span class="p">:</span> <span class="n">HyperscanErrorCode</span> <span class="o">=</span> <span class="o">...</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The given database was built for a different version of Hyperscan.&quot;&quot;&quot;</span>
+
+    <span class="n">DbPlatformError</span><span class="p">:</span> <span class="n">HyperscanErrorCode</span> <span class="o">=</span> <span class="o">...</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The given database was built for a different platform (i.e., CPU type).&quot;&quot;&quot;</span>
+
+    <span class="n">DbModeError</span><span class="p">:</span> <span class="n">HyperscanErrorCode</span> <span class="o">=</span> <span class="o">...</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The given database was built for a different mode of operation.</span>
+
+<span class="sd">    This error is returned when streaming calls are used with a block or vectored</span>
+<span class="sd">    database and vice versa.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">BadAlign</span><span class="p">:</span> <span class="n">HyperscanErrorCode</span> <span class="o">=</span> <span class="o">...</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;A parameter passed to this function was not correctly aligned.&quot;&quot;&quot;</span>
+
+    <span class="n">BadAlloc</span><span class="p">:</span> <span class="n">HyperscanErrorCode</span> <span class="o">=</span> <span class="o">...</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The memory allocator (either malloc() or the allocator set with</span>
+<span class="sd">    hs_set_allocator()) did not correctly return memory suitably aligned for the largest</span>
+<span class="sd">    representable data type on this platform.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">ScratchInUse</span><span class="p">:</span> <span class="n">HyperscanErrorCode</span> <span class="o">=</span> <span class="o">...</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The scratch region was already in use.</span>
+
+<span class="sd">    This error is returned when Hyperscan is able to detect that the scratch region</span>
+<span class="sd">    given is already in use by another Hyperscan API call.</span>
+
+<span class="sd">    A separate scratch region, allocated with hs_alloc_scratch() or hs_clone_scratch(),</span>
+<span class="sd">    is required for every concurrent caller of the Hyperscan API.</span>
+
+<span class="sd">    For example, this error might be returned when hs_scan() has been called inside a</span>
+<span class="sd">    callback delivered by a currently-executing hs_scan() call using the same scratch</span>
+<span class="sd">    region.</span>
+
+<span class="sd">    Note: Not all concurrent uses of scratch regions may be detected.  This error is</span>
+<span class="sd">    intended as a best-effort debugging tool, not a guarantee.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">ArchError</span><span class="p">:</span> <span class="n">HyperscanErrorCode</span> <span class="o">=</span> <span class="o">...</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Unsupported CPU architecture.</span>
+
+<span class="sd">    This error is returned when Hyperscan is able to detect that the current system does</span>
+<span class="sd">    not support the required instruction set.</span>
+
+<span class="sd">    At a minimum, Hyperscan requires Supplemental Streaming SIMD Extensions 3 (SSSE3).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">InsufficientSpace</span><span class="p">:</span> <span class="n">HyperscanErrorCode</span> <span class="o">=</span> <span class="o">...</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Provided buffer was too small.</span>
+
+<span class="sd">    This error indicates that there was insufficient space in the buffer.  The call</span>
+<span class="sd">    should be repeated with a larger provided buffer.</span>
+
+<span class="sd">    Note: in this situation, it is normal for the amount of space required to be</span>
+<span class="sd">    returned in the same manner as the used space would have been returned if the call</span>
+<span class="sd">    was successful.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">UnknownError</span><span class="p">:</span> <span class="n">HyperscanErrorCode</span> <span class="o">=</span> <span class="o">...</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Unexpected internal error.</span>
+
+<span class="sd">    This error indicates that there was unexpected matching behaviors.  This could be</span>
+<span class="sd">    related to invalid usage of stream and scratch space or invalid memory operations by</span>
+<span class="sd">    users.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">UnknownErrorCode</span><span class="p">:</span> <span class="n">HyperscanErrorCode</span> <span class="o">=</span> <span class="o">...</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;An error unknown to Pyperscan happened.&quot;&quot;&quot;</span>
+</code></pre></div></td></tr></table></div>
+        </details>
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h3 id="pyperscan._pyperscan.HyperscanErrorCode.Invalid" class="doc doc-heading">
+        <span class="doc doc-object-name doc-attribute-name">Invalid</span>
+
+  
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-class-attribute"><code>class-attribute</code></small>
+      <small class="doc doc-label doc-label-instance-attribute"><code>instance-attribute</code></small>
+  </span>
+
+<a href="#pyperscan._pyperscan.HyperscanErrorCode.Invalid" class="headerlink" title="Permanent link">#</a></h3>
+<div class="highlight"><pre><span></span><code><span class="n">Invalid</span><span class="p">:</span> <span class="n">HyperscanErrorCode</span> <span class="o">=</span> <span class="bp">Ellipsis</span>
+</code></pre></div>
+
+  <div class="doc doc-contents ">
+  
+      <p>A parameter passed to this function was invalid.</p>
+<p>This error is only returned in cases where the function can detect an invalid
+parameter it cannot be relied upon to detect (for example) pointers to freed memory
+or other invalid data.</p>
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h3 id="pyperscan._pyperscan.HyperscanErrorCode.Nomem" class="doc doc-heading">
+        <span class="doc doc-object-name doc-attribute-name">Nomem</span>
+
+  
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-class-attribute"><code>class-attribute</code></small>
+      <small class="doc doc-label doc-label-instance-attribute"><code>instance-attribute</code></small>
+  </span>
+
+<a href="#pyperscan._pyperscan.HyperscanErrorCode.Nomem" class="headerlink" title="Permanent link">#</a></h3>
+<div class="highlight"><pre><span></span><code><span class="n">Nomem</span><span class="p">:</span> <span class="n">HyperscanErrorCode</span> <span class="o">=</span> <span class="bp">Ellipsis</span>
+</code></pre></div>
+
+  <div class="doc doc-contents ">
+  
+      <p>A memory allocation failed.</p>
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h3 id="pyperscan._pyperscan.HyperscanErrorCode.ScanTerminated" class="doc doc-heading">
+        <span class="doc doc-object-name doc-attribute-name">ScanTerminated</span>
+
+  
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-class-attribute"><code>class-attribute</code></small>
+      <small class="doc doc-label doc-label-instance-attribute"><code>instance-attribute</code></small>
+  </span>
+
+<a href="#pyperscan._pyperscan.HyperscanErrorCode.ScanTerminated" class="headerlink" title="Permanent link">#</a></h3>
+<div class="highlight"><pre><span></span><code><span class="n">ScanTerminated</span><span class="p">:</span> <span class="n">HyperscanErrorCode</span> <span class="o">=</span> <span class="bp">Ellipsis</span>
+</code></pre></div>
+
+  <div class="doc doc-contents ">
+  
+      <p>The engine was terminated by callback.</p>
+<p>This return value indicates that the target buffer was partially scanned, but that
+the callback function requested that scanning cease after a match was located.</p>
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h3 id="pyperscan._pyperscan.HyperscanErrorCode.CompilerError" class="doc doc-heading">
+        <span class="doc doc-object-name doc-attribute-name">CompilerError</span>
+
+  
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-class-attribute"><code>class-attribute</code></small>
+      <small class="doc doc-label doc-label-instance-attribute"><code>instance-attribute</code></small>
+  </span>
+
+<a href="#pyperscan._pyperscan.HyperscanErrorCode.CompilerError" class="headerlink" title="Permanent link">#</a></h3>
+<div class="highlight"><pre><span></span><code><span class="n">CompilerError</span><span class="p">:</span> <span class="n">HyperscanErrorCode</span> <span class="o">=</span> <span class="bp">Ellipsis</span>
+</code></pre></div>
+
+  <div class="doc doc-contents ">
+  
+      <p>The pattern compiler failed, and the hs_compile_error_t should be inspected for
+more detail.</p>
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h3 id="pyperscan._pyperscan.HyperscanErrorCode.DbVersionError" class="doc doc-heading">
+        <span class="doc doc-object-name doc-attribute-name">DbVersionError</span>
+
+  
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-class-attribute"><code>class-attribute</code></small>
+      <small class="doc doc-label doc-label-instance-attribute"><code>instance-attribute</code></small>
+  </span>
+
+<a href="#pyperscan._pyperscan.HyperscanErrorCode.DbVersionError" class="headerlink" title="Permanent link">#</a></h3>
+<div class="highlight"><pre><span></span><code><span class="n">DbVersionError</span><span class="p">:</span> <span class="n">HyperscanErrorCode</span> <span class="o">=</span> <span class="bp">Ellipsis</span>
+</code></pre></div>
+
+  <div class="doc doc-contents ">
+  
+      <p>The given database was built for a different version of Hyperscan.</p>
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h3 id="pyperscan._pyperscan.HyperscanErrorCode.DbPlatformError" class="doc doc-heading">
+        <span class="doc doc-object-name doc-attribute-name">DbPlatformError</span>
+
+  
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-class-attribute"><code>class-attribute</code></small>
+      <small class="doc doc-label doc-label-instance-attribute"><code>instance-attribute</code></small>
+  </span>
+
+<a href="#pyperscan._pyperscan.HyperscanErrorCode.DbPlatformError" class="headerlink" title="Permanent link">#</a></h3>
+<div class="highlight"><pre><span></span><code><span class="n">DbPlatformError</span><span class="p">:</span> <span class="n">HyperscanErrorCode</span> <span class="o">=</span> <span class="bp">Ellipsis</span>
+</code></pre></div>
+
+  <div class="doc doc-contents ">
+  
+      <p>The given database was built for a different platform (i.e., CPU type).</p>
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h3 id="pyperscan._pyperscan.HyperscanErrorCode.DbModeError" class="doc doc-heading">
+        <span class="doc doc-object-name doc-attribute-name">DbModeError</span>
+
+  
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-class-attribute"><code>class-attribute</code></small>
+      <small class="doc doc-label doc-label-instance-attribute"><code>instance-attribute</code></small>
+  </span>
+
+<a href="#pyperscan._pyperscan.HyperscanErrorCode.DbModeError" class="headerlink" title="Permanent link">#</a></h3>
+<div class="highlight"><pre><span></span><code><span class="n">DbModeError</span><span class="p">:</span> <span class="n">HyperscanErrorCode</span> <span class="o">=</span> <span class="bp">Ellipsis</span>
+</code></pre></div>
+
+  <div class="doc doc-contents ">
+  
+      <p>The given database was built for a different mode of operation.</p>
+<p>This error is returned when streaming calls are used with a block or vectored
+database and vice versa.</p>
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h3 id="pyperscan._pyperscan.HyperscanErrorCode.BadAlign" class="doc doc-heading">
+        <span class="doc doc-object-name doc-attribute-name">BadAlign</span>
+
+  
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-class-attribute"><code>class-attribute</code></small>
+      <small class="doc doc-label doc-label-instance-attribute"><code>instance-attribute</code></small>
+  </span>
+
+<a href="#pyperscan._pyperscan.HyperscanErrorCode.BadAlign" class="headerlink" title="Permanent link">#</a></h3>
+<div class="highlight"><pre><span></span><code><span class="n">BadAlign</span><span class="p">:</span> <span class="n">HyperscanErrorCode</span> <span class="o">=</span> <span class="bp">Ellipsis</span>
+</code></pre></div>
+
+  <div class="doc doc-contents ">
+  
+      <p>A parameter passed to this function was not correctly aligned.</p>
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h3 id="pyperscan._pyperscan.HyperscanErrorCode.BadAlloc" class="doc doc-heading">
+        <span class="doc doc-object-name doc-attribute-name">BadAlloc</span>
+
+  
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-class-attribute"><code>class-attribute</code></small>
+      <small class="doc doc-label doc-label-instance-attribute"><code>instance-attribute</code></small>
+  </span>
+
+<a href="#pyperscan._pyperscan.HyperscanErrorCode.BadAlloc" class="headerlink" title="Permanent link">#</a></h3>
+<div class="highlight"><pre><span></span><code><span class="n">BadAlloc</span><span class="p">:</span> <span class="n">HyperscanErrorCode</span> <span class="o">=</span> <span class="bp">Ellipsis</span>
+</code></pre></div>
+
+  <div class="doc doc-contents ">
+  
+      <p>The memory allocator (either malloc() or the allocator set with
+hs_set_allocator()) did not correctly return memory suitably aligned for the largest
+representable data type on this platform.</p>
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h3 id="pyperscan._pyperscan.HyperscanErrorCode.ScratchInUse" class="doc doc-heading">
+        <span class="doc doc-object-name doc-attribute-name">ScratchInUse</span>
+
+  
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-class-attribute"><code>class-attribute</code></small>
+      <small class="doc doc-label doc-label-instance-attribute"><code>instance-attribute</code></small>
+  </span>
+
+<a href="#pyperscan._pyperscan.HyperscanErrorCode.ScratchInUse" class="headerlink" title="Permanent link">#</a></h3>
+<div class="highlight"><pre><span></span><code><span class="n">ScratchInUse</span><span class="p">:</span> <span class="n">HyperscanErrorCode</span> <span class="o">=</span> <span class="bp">Ellipsis</span>
+</code></pre></div>
+
+  <div class="doc doc-contents ">
+  
+      <p>The scratch region was already in use.</p>
+<p>This error is returned when Hyperscan is able to detect that the scratch region
+given is already in use by another Hyperscan API call.</p>
+<p>A separate scratch region, allocated with hs_alloc_scratch() or hs_clone_scratch(),
+is required for every concurrent caller of the Hyperscan API.</p>
+<p>For example, this error might be returned when hs_scan() has been called inside a
+callback delivered by a currently-executing hs_scan() call using the same scratch
+region.</p>
+<p>Note: Not all concurrent uses of scratch regions may be detected.  This error is
+intended as a best-effort debugging tool, not a guarantee.</p>
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h3 id="pyperscan._pyperscan.HyperscanErrorCode.ArchError" class="doc doc-heading">
+        <span class="doc doc-object-name doc-attribute-name">ArchError</span>
+
+  
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-class-attribute"><code>class-attribute</code></small>
+      <small class="doc doc-label doc-label-instance-attribute"><code>instance-attribute</code></small>
+  </span>
+
+<a href="#pyperscan._pyperscan.HyperscanErrorCode.ArchError" class="headerlink" title="Permanent link">#</a></h3>
+<div class="highlight"><pre><span></span><code><span class="n">ArchError</span><span class="p">:</span> <span class="n">HyperscanErrorCode</span> <span class="o">=</span> <span class="bp">Ellipsis</span>
+</code></pre></div>
+
+  <div class="doc doc-contents ">
+  
+      <p>Unsupported CPU architecture.</p>
+<p>This error is returned when Hyperscan is able to detect that the current system does
+not support the required instruction set.</p>
+<p>At a minimum, Hyperscan requires Supplemental Streaming SIMD Extensions 3 (SSSE3).</p>
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h3 id="pyperscan._pyperscan.HyperscanErrorCode.InsufficientSpace" class="doc doc-heading">
+        <span class="doc doc-object-name doc-attribute-name">InsufficientSpace</span>
+
+  
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-class-attribute"><code>class-attribute</code></small>
+      <small class="doc doc-label doc-label-instance-attribute"><code>instance-attribute</code></small>
+  </span>
+
+<a href="#pyperscan._pyperscan.HyperscanErrorCode.InsufficientSpace" class="headerlink" title="Permanent link">#</a></h3>
+<div class="highlight"><pre><span></span><code><span class="n">InsufficientSpace</span><span class="p">:</span> <span class="n">HyperscanErrorCode</span> <span class="o">=</span> <span class="bp">Ellipsis</span>
+</code></pre></div>
+
+  <div class="doc doc-contents ">
+  
+      <p>Provided buffer was too small.</p>
+<p>This error indicates that there was insufficient space in the buffer.  The call
+should be repeated with a larger provided buffer.</p>
+<p>Note: in this situation, it is normal for the amount of space required to be
+returned in the same manner as the used space would have been returned if the call
+was successful.</p>
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h3 id="pyperscan._pyperscan.HyperscanErrorCode.UnknownError" class="doc doc-heading">
+        <span class="doc doc-object-name doc-attribute-name">UnknownError</span>
+
+  
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-class-attribute"><code>class-attribute</code></small>
+      <small class="doc doc-label doc-label-instance-attribute"><code>instance-attribute</code></small>
+  </span>
+
+<a href="#pyperscan._pyperscan.HyperscanErrorCode.UnknownError" class="headerlink" title="Permanent link">#</a></h3>
+<div class="highlight"><pre><span></span><code><span class="n">UnknownError</span><span class="p">:</span> <span class="n">HyperscanErrorCode</span> <span class="o">=</span> <span class="bp">Ellipsis</span>
+</code></pre></div>
+
+  <div class="doc doc-contents ">
+  
+      <p>Unexpected internal error.</p>
+<p>This error indicates that there was unexpected matching behaviors.  This could be
+related to invalid usage of stream and scratch space or invalid memory operations by
+users.</p>
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h3 id="pyperscan._pyperscan.HyperscanErrorCode.UnknownErrorCode" class="doc doc-heading">
+        <span class="doc doc-object-name doc-attribute-name">UnknownErrorCode</span>
+
+  
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-class-attribute"><code>class-attribute</code></small>
+      <small class="doc doc-label doc-label-instance-attribute"><code>instance-attribute</code></small>
+  </span>
+
+<a href="#pyperscan._pyperscan.HyperscanErrorCode.UnknownErrorCode" class="headerlink" title="Permanent link">#</a></h3>
+<div class="highlight"><pre><span></span><code><span class="n">UnknownErrorCode</span><span class="p">:</span> <span class="n">HyperscanErrorCode</span> <span class="o">=</span> <span class="bp">Ellipsis</span>
+</code></pre></div>
+
+  <div class="doc doc-contents ">
+  
+      <p>An error unknown to Pyperscan happened.</p>
+  </div>
+
+</div>
+
+
+
+
+
+  </div>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h2 id="pyperscan._pyperscan.HyperscanError" class="doc doc-heading">
+        <span class="doc doc-object-name doc-class-name">HyperscanError</span>
+
+
+<a href="#pyperscan._pyperscan.HyperscanError" class="headerlink" title="Permanent link">#</a></h2>
+
+
+  <div class="doc doc-contents ">
+
+  
+      <p>An error happened while calling the low level Hyperscan API.</p>
+
+
+        <details class="quote">
+          <summary>Source code in <code>python/pyperscan/_pyperscan.pyi</code></summary>
+          <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">392</span>
+<span class="normal">393</span>
+<span class="normal">394</span>
+<span class="normal">395</span>
+<span class="normal">396</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">HyperscanError</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;An error happened while calling the low level Hyperscan API.&quot;&quot;&quot;</span>
+
+    <span class="n">args</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">HyperscanErrorCode</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;An error flag and low level error codes.&quot;&quot;&quot;</span>
+</code></pre></div></td></tr></table></div>
+        </details>
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h3 id="pyperscan._pyperscan.HyperscanError.args" class="doc doc-heading">
+        <span class="doc doc-object-name doc-attribute-name">args</span>
+
+  
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-instance-attribute"><code>instance-attribute</code></small>
+  </span>
+
+<a href="#pyperscan._pyperscan.HyperscanError.args" class="headerlink" title="Permanent link">#</a></h3>
+<div class="highlight"><pre><span></span><code><span class="n">args</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">HyperscanErrorCode</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span>
+</code></pre></div>
+
+  <div class="doc doc-contents ">
+  
+      <p>An error flag and low level error codes.</p>
+  </div>
+
+</div>
+
+
+
+
+
+  </div>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h2 id="pyperscan._pyperscan.HyperscanCompileError" class="doc doc-heading">
+        <span class="doc doc-object-name doc-class-name">HyperscanCompileError</span>
+
+
+<a href="#pyperscan._pyperscan.HyperscanCompileError" class="headerlink" title="Permanent link">#</a></h2>
+
+
+  <div class="doc doc-contents ">
+
+  
+      <p>One of the patterns to be compiled is invalid.</p>
+
+
+        <details class="quote">
+          <summary>Source code in <code>python/pyperscan/_pyperscan.pyi</code></summary>
+          <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">398</span>
+<span class="normal">399</span>
+<span class="normal">400</span>
+<span class="normal">401</span>
+<span class="normal">402</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">HyperscanCompileError</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;One of the patterns to be compiled is invalid.&quot;&quot;&quot;</span>
+
+    <span class="n">args</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Contains a human readable message and the index of the offending pattern.&quot;&quot;&quot;</span>
+</code></pre></div></td></tr></table></div>
+        </details>
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h3 id="pyperscan._pyperscan.HyperscanCompileError.args" class="doc doc-heading">
+        <span class="doc doc-object-name doc-attribute-name">args</span>
+
+  
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-instance-attribute"><code>instance-attribute</code></small>
+  </span>
+
+<a href="#pyperscan._pyperscan.HyperscanCompileError.args" class="headerlink" title="Permanent link">#</a></h3>
+<div class="highlight"><pre><span></span><code><span class="n">args</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span>
+</code></pre></div>
+
+  <div class="doc doc-contents ">
+  
+      <p>Contains a human readable message and the index of the offending pattern.</p>
+  </div>
+
+</div>
+
+
+
+
+
+  </div>
+
+  </div>
+
+</div>
+
+
+
+
+  </div>
+
+  </div>
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12Z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": "..", "features": ["content.code.annotate", "content.code.copy", "toc.integrate", "toc.follow", "navigation.instant", "navigation.top"], "search": "../assets/javascripts/workers/search.f886a092.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.d7c377c4.min.js"></script>
+      
+    
+  </body>
+</html>
