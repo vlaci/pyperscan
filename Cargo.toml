@@ -5,6 +5,10 @@ version.workspace = true
 edition.workspace = true
 rust-version.workspace = true
 license.workspace = true
+description.workspace = true
+homepage.workspace = true
+repository.workspace = true
+readme.workspace = true
 
 [lib]
 name = "pyperscan"
@@ -32,3 +36,7 @@ authors = ["László Vaskó <1771332+vlaci@users.noreply.github.com>"]
 license = "MIT OR Apache-2.0"
 edition = "2021"
 rust-version = "1.64"
+description = "An opinionated Python binding for Hyperscan focusing on easy of use and safety."
+repository = "https://github.com/vlaci/pyperscan"
+homepage = "https://github.com/vlaci/pyperscan"
+readme = "README.md"
