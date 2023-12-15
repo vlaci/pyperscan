@@ -1,16 +1,14 @@
-from __future__ import __annotations__
-
 from array import array
 from collections.abc import Collection
 from mmap import mmap
-from typing import Any, Generic, Protocol, Tuple, TypeAlias, TypeVar, Union
+from typing import Any, Generic, Protocol, TypeAlias, TypeVar, Union
 
 BufferType: TypeAlias = Union[array[int], bytes, bytearray, memoryview, mmap]
-TContext = TypeVar("TContext")
-TScanner = TypeVar("TScanner", BlockScanner, VectoredScanner, StreamScanner)
+_TContext_contra = TypeVar("_TContext_contra", contravariant=True)
+_TScanner = TypeVar("_TScanner", BlockScanner, VectoredScanner, StreamScanner)
 
 class Pattern:
-    "Pattern to search matches for."
+    """Pattern to search matches for."""
 
     def __new__(cls, expression: bytes, *flags: Flag, tag: Any = None):
         """Construct a new search pattern.
@@ -23,9 +21,9 @@ class Pattern:
         """
 
 class Flag:
-    "Pattern compile flags"
+    """Pattern compile flags."""
 
-    CASELESS = ...
+    CASELESS: Flag = ...
     """Set case-insensitive matching.
 
     This flag sets the expression to be matched case-insensitively by default.  The
@@ -35,7 +33,7 @@ class Flag:
     See
     [HS_FLAGS_CASELESS](https://intel.github.io/hyperscan/dev-reference/api_files.html#c.HS_FLAG_CASELESS)
     """
-    DOTALL = ...
+    DOTALL: Flag = ...
     """Matching a `.` will not exclude newlines.
 
     This flag sets any instances of the `.` token to match newline characters as well as
@@ -46,7 +44,7 @@ class Flag:
     See
     [HS_FLAGS_DOTALL](https://intel.github.io/hyperscan/dev-reference/api_files.html#c.HS_FLAG_DOTALL)
     """
-    MULTILINE = ...
+    MULTILINE: Flag = ...
     """Set multi-line anchoring.
 
     This flag instructs the expression to make the `^` and `$` tokens match newline
@@ -58,10 +56,10 @@ class Flag:
     See
     [HS_FLAGS_MULTILINE](https://intel.github.io/hyperscan/dev-reference/api_files.html#c.HS_FLAG_MULTILINE)
     """
-    SINGLEMATCH = ...
+    SINGLEMATCH: Flag = ...
     """Set single-match only mode.
 
-    This flag sets the expression’s match ID to match at most once.  In streaming mode,
+    This flag sets the expression's match ID to match at most once.  In streaming mode,
     this means that the expression will return only a single match over the lifetime of
     the stream, rather than reporting every match as per standard Hyperscan semantics.
     In block mode or vectored mode, only the first match for each invocation of
@@ -78,7 +76,7 @@ class Flag:
     See
     [HS_FLAGS_SINGLEMATCH](https://intel.github.io/hyperscan/dev-reference/api_files.html#c.HS_FLAG_SINGLEMATCH)
     """
-    ALLOWEMPTY = ...
+    ALLOWEMPTY: Flag = ...
     """Allow expressions that can match against empty buffers.
 
     This flag instructs the compiler to allow expressions that can match against empty
@@ -90,7 +88,7 @@ class Flag:
     See
     [HS_FLAGS_ALLOWEMPTY](https://intel.github.io/hyperscan/dev-reference/api_files.html#c.HS_FLAG_ALLOWEMPTY)
     """
-    UTF8 = ...
+    UTF8: Flag = ...
     """Enable UTF-8 mode for this expression.
 
     This flag instructs Hyperscan to treat the pattern as a sequence of UTF-8
@@ -101,7 +99,7 @@ class Flag:
     See
     [HS_FLAGS_UTF8](https://intel.github.io/hyperscan/dev-reference/api_files.html#c.HS_FLAG_UTF8)
     """
-    UCP = ...
+    UCP: Flag = ...
     """Enable Unicode property support for this expression.
 
     This flag instructs Hyperscan to use Unicode properties, rather than the default
@@ -112,7 +110,7 @@ class Flag:
     See
     [HS_FLAGS_UCP](https://intel.github.io/hyperscan/dev-reference/api_files.html#c.HS_FLAG_UCP)
     """
-    PREFILTER = ...
+    PREFILTER: Flag = ...
     """Enable prefiltering mode for this expression.
 
     This flag instructs Hyperscan to compile an “approximate” version of this pattern
@@ -140,7 +138,7 @@ class Flag:
     See
     [HS_FLAGS_PREFILTER](https://intel.github.io/hyperscan/dev-reference/api_files.html#c.HS_FLAG_PREFILTER)
     """
-    SOM_LEFTMOST = ...
+    SOM_LEFTMOST: Flag = ...
     """Enable leftmost start of match reporting.
 
     This flag instructs Hyperscan to report the leftmost possible start of match offset
@@ -153,7 +151,7 @@ class Flag:
     See
     [HS_FLAGS_LEFTMOST](https://intel.github.io/hyperscan/dev-reference/api_files.html#c.HS_FLAG_LEFTMOST)
     """
-    COMBINATION = ...
+    COMBINATION: Flag = ...
     """Logical combination.
 
     This flag instructs Hyperscan to parse this expression as logical combination
@@ -164,8 +162,8 @@ class Flag:
     See
     [HS_FLAGS_COMBINATION](https://intel.github.io/hyperscan/dev-reference/api_files.html#c.HS_FLAG_COMBINATION)
     """
-    QUIET = ...
-    """Don’t do any match reporting.
+    QUIET: Flag = ...
+    """Don't do any match reporting.
 
     This flag instructs Hyperscan to ignore match reporting for this expression.  It is
     designed to be used on the sub-expressions in logical combinations.
@@ -174,10 +172,12 @@ class Flag:
     [HS_FLAGS_QUIET](https://intel.github.io/hyperscan/dev-reference/api_files.html#c.HS_FLAG_QUIET)
     """
 
-class OnMatch(Protocol, Generic[TContext]):
-    """Callback called on match"""
+class OnMatch(Protocol, Generic[_TContext_contra]):
+    """Callback called on match."""
 
-    def __call__(self, context: TContext, tag: Any, start: int, end: Any) -> Scan:
+    def __call__(
+        self, context: _TContext_contra, tag: Any, start: int, end: Any
+    ) -> Scan:
         """Called when a match happens.
 
         Note:
@@ -193,7 +193,7 @@ class OnMatch(Protocol, Generic[TContext]):
             Instructs Hyperscan wether to continue or stop searching for subsequent matches.
         """
 
-class Database(Generic[TScanner]):
+class Database(Generic[_TScanner]):
     """A Hyperscan pattern database."""
 
     def __new__(cls, *patterns: Pattern):
@@ -206,32 +206,35 @@ class Database(Generic[TScanner]):
             Calls [hs_compile_ext_multi](https://intel.github.io/hyperscan/dev-reference/api_files.html#c.hs_compile_ext_multi)
             internally.
         """
-    def build(self, context: TContext, on_match: OnMatch[TContext]) -> TScanner:
-        """Builds a scanner object that is usable to search for pattern procurances.
+    def build(
+        self, context: _TContext_contra, on_match: OnMatch[_TContext_contra]
+    ) -> _TScanner:
+        """Build a scanner object that is usable to search for pattern procurances.
 
         Args:
             context: arbitrary object which is passed as a first parameter to `on_match`.
             on_match: callable to call when a match happens upon `scan` call.
         """
 
-class BlockDatabase(Database[BlockScanner]):
+class BlockDatabase(Database[BlockScanner]):  # noqa: F821
     """A database for block (non-streaming) scanning."""
 
-class VectoredDatabase(Database[VectoredScanner]):
+class VectoredDatabase(Database[VectoredScanner]):  # noqa: F821
     """A databes for vectored scanning."""
 
-class StreamDatabase(Database[StreamScanner]):
-    """A database for stream scanning"""
+class StreamDatabase(Database[StreamScanner]):  # noqa: F821
+    """A database for stream scanning."""
 
 class Scan:
-    "Match callback return value to instruct Hyperscan wether to contine or terminate scanning."
-    Continue = ...
-    "Continue scanning."
-    Terminate = ...
-    "Terminate scanning."
+    """Match callback return value to instruct Hyperscan wether to contine or terminate scanning."""
+
+    Continue: Scan = ...
+    """Continue scanning."""
+    Terminate: Scan = ...
+    """Terminate scanning."""
 
 class BlockScanner:
-    """Created from `BlockDatabase` for block scanning"""
+    """Created from `BlockDatabase` for block scanning."""
 
     def scan(self, data: BufferType) -> Scan:
         """Scan for matches in a single buffer (block).
@@ -244,7 +247,7 @@ class BlockScanner:
         """
 
 class VectoredScanner:
-    """Created from `VectoredDatabase` for scanning"""
+    """Created from `VectoredDatabase` for scanning."""
 
     def scan(self, data: Collection[BufferType]) -> Scan:
         """Scan for matches in a multiple buffers (vector).
@@ -257,7 +260,7 @@ class VectoredScanner:
         """
 
 class StreamScanner:
-    """Created from `StreamDatabase` for stream scanning"""
+    """Created from `StreamDatabase` for stream scanning."""
 
     def scan(self, data: BufferType, chunk_size: int | None = None) -> Scan:
         """Scan for matches in a stream.
@@ -292,7 +295,7 @@ class HyperscanErrorCode:
     Most error codes cannot appear in Pyperscan.
     """
 
-    Invalid = ...
+    Invalid: HyperscanErrorCode = ...
     """A parameter passed to this function was invalid.
 
     This error is only returned in cases where the function can detect an invalid
@@ -300,44 +303,44 @@ class HyperscanErrorCode:
     or other invalid data.
     """
 
-    Nomem = ...
+    Nomem: HyperscanErrorCode = ...
     """A memory allocation failed."""
 
-    ScanTerminated = ...
+    ScanTerminated: HyperscanErrorCode = ...
     """The engine was terminated by callback.
 
     This return value indicates that the target buffer was partially scanned, but that
     the callback function requested that scanning cease after a match was located.
     """
 
-    CompilerError = ...
+    CompilerError: HyperscanErrorCode = ...
     """The pattern compiler failed, and the hs_compile_error_t should be inspected for
     more detail.
     """
 
-    DbVersionError = ...
+    DbVersionError: HyperscanErrorCode = ...
     """The given database was built for a different version of Hyperscan."""
 
-    DbPlatformError = ...
+    DbPlatformError: HyperscanErrorCode = ...
     """The given database was built for a different platform (i.e., CPU type)."""
 
-    DbModeError = ...
+    DbModeError: HyperscanErrorCode = ...
     """The given database was built for a different mode of operation.
 
     This error is returned when streaming calls are used with a block or vectored
     database and vice versa.
     """
 
-    BadAlign = ...
+    BadAlign: HyperscanErrorCode = ...
     """A parameter passed to this function was not correctly aligned."""
 
-    BadAlloc = ...
+    BadAlloc: HyperscanErrorCode = ...
     """The memory allocator (either malloc() or the allocator set with
     hs_set_allocator()) did not correctly return memory suitably aligned for the largest
     representable data type on this platform.
     """
 
-    ScratchInUse = ...
+    ScratchInUse: HyperscanErrorCode = ...
     """The scratch region was already in use.
 
     This error is returned when Hyperscan is able to detect that the scratch region
@@ -354,7 +357,7 @@ class HyperscanErrorCode:
     intended as a best-effort debugging tool, not a guarantee.
     """
 
-    ArchError = ...
+    ArchError: HyperscanErrorCode = ...
     """Unsupported CPU architecture.
 
     This error is returned when Hyperscan is able to detect that the current system does
@@ -363,7 +366,7 @@ class HyperscanErrorCode:
     At a minimum, Hyperscan requires Supplemental Streaming SIMD Extensions 3 (SSSE3).
     """
 
-    InsufficientSpace = ...
+    InsufficientSpace: HyperscanErrorCode = ...
     """
     Provided buffer was too small.
 
@@ -375,7 +378,7 @@ class HyperscanErrorCode:
     was successful.
     """
 
-    UnknownError = ...
+    UnknownError: HyperscanErrorCode = ...
     """Unexpected internal error.
 
     This error indicates that there was unexpected matching behaviors.  This could be
@@ -383,15 +386,17 @@ class HyperscanErrorCode:
     users.
     """
 
-    UnknownErrorCode = ...
+    UnknownErrorCode: HyperscanErrorCode = ...
     """An error unknown to Pyperscan happened."""
 
 class HyperscanError:
-    "An error happened while calling the low level Hyperscan API."
-    args: Tuple[HyperscanErrorCode, int]
-    "An error flag and low level error codes."
+    """An error happened while calling the low level Hyperscan API."""
+
+    args: tuple[HyperscanErrorCode, int]
+    """An error flag and low level error codes."""
 
 class HyperscanCompileError:
-    "One of the patterns to be compiled is invalid"
-    args: Tuple[str, int]
-    "Contains a human readable message and the index of the offending pattern."
+    """One of the patterns to be compiled is invalid."""
+
+    args: tuple[str, int]
+    """Contains a human readable message and the index of the offending pattern."""

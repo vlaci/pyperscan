@@ -30,7 +30,6 @@ jobs:
               --print-build-logs
       - name: Code coverage
         run: |
-          nix build .#checks.x86_64-linux.libpyperscan-coverage -o cargo-test.codecov
           nix build .#checks.x86_64-linux.coverage -o pytest.codecov
       - uses: codecov/codecov-action@v3
         with:
