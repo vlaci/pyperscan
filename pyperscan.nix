@@ -18,7 +18,6 @@ inputs:
 , vendorHyperscan ? false
 , vendorVectorscan ? false
 , coverage ? false
-, pyperscan
 }:
 
 assert vendorHyperscan -> !vendorVectorscan;
@@ -117,7 +116,7 @@ let
       vectorscan = drv.override { vendorVectorscan = true; };
 
       tests = import ./tests.nix {
-        inherit lib stdenv system makeRustPlatform rustPlatform pyFilter testFilter cargo-llvm-cov python3 ruff pyperscan;
+        inherit lib stdenv system makeRustPlatform rustPlatform pyFilter testFilter cargo-llvm-cov python3 ruff;
         inherit (inputs) fenix;
       };
     };
