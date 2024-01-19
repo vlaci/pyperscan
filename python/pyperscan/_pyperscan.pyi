@@ -176,12 +176,12 @@ class OnMatch(Protocol, Generic[_TContext_contra]):
     """Callback called on match."""
 
     def __call__(
-        self, context: _TContext_contra, tag: Any, start: int, end: Any
+        self, context: _TContext_contra, tag: Any, start: int, end: int, /
     ) -> Scan:
         """Called when a match happens.
 
         Note:
-            Call parameters are passed positonally.
+            Call parameters are passed positionally.
 
         Args:
             context: Object passed to [Database.build][pyperscan._pyperscan.Database.build]
