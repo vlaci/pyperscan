@@ -1,6 +1,7 @@
 inputs:
 
 { lib
+, callPackage
 , stdenv
 , makeRustPlatform
 , rustPlatform
@@ -14,6 +15,7 @@ inputs:
 , hyperscan
 , vectorscan
 , python3
+, util-linux
 , ruff
 , vendorHyperscan ? false
 , vendorVectorscan ? false
@@ -98,12 +100,16 @@ let
       (optionals vendorHyperscan [ "-F hyperscan" ])
       ++ (optionals (vendorVectorscan) [ "-F vectorscan" ]);
 
-    nativeBuildInputs = with rustPlatform; [
-      bindgenHook
-      cargoSetupHook
-      (maturinBuildHook.override { pkgsHostTarget = { inherit maturin cargo rustc; }; })
-    ] ++ optional (vendor && stdenv.isLinux) util-linux
-    ++ optional coverage cargo-llvm-cov;
+    nativeBuildInputs =
+      let
+        rustHooks = callPackage "${inputs.nixpkgs}/pkgs/build-support/rust/hooks" { };
+      in
+      [
+        rustPlatform.cargoSetupHook
+        rustPlatform.bindgenHook
+        (rustHooks.maturinBuildHook.override { pkgsHostTarget = { inherit maturin cargo rustc; }; })
+      ] ++ optional (vendor && stdenv.isLinux) util-linux
+      ++ optional coverage cargo-llvm-cov;
 
     preConfigure = optionalString coverage ''
       source <(cargo llvm-cov show-env --export-prefix)
