@@ -35,7 +35,7 @@ unsafe fn stream_drop(stream: *mut hs::hs_stream_t) {
 }
 
 bitflags! {
-    #[derive(Default)]
+    #[derive(Clone,Copy,Default)]
     pub struct Flag: u32 {
         const CASELESS = hs::HS_FLAG_CASELESS;
         const DOTALL = hs::HS_FLAG_DOTALL;
