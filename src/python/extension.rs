@@ -293,7 +293,7 @@ impl From<Error> for PyErr {
             Error::Nul(_) => PyValueError::new_err(format!("{err}")),
             Error::Hyperscan(e, c) => HyperscanError::new_err((e, c)),
             Error::HypercanCompile(msg, expr) => HyperscanCompileError::new_err((msg, expr)),
-            Error::PythonError(exc) => exc,
+            Error::Python(exc) => exc,
         }
     }
 }
