@@ -36,6 +36,29 @@
         "type": "github"
       }
     },
+    "crane-maturin": {
+      "inputs": {
+        "crane": [
+          "crane"
+        ],
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1721995893,
+        "narHash": "sha256-AlVA79ubr+MuNOuAQl4BTAbIN0au49AJgzv6S/PrCQo=",
+        "owner": "~vlaci",
+        "repo": "crane-maturin",
+        "rev": "467907d442a95409dbc3b06d2a90483ca9054057",
+        "type": "sourcehut"
+      },
+      "original": {
+        "owner": "~vlaci",
+        "repo": "crane-maturin",
+        "type": "sourcehut"
+      }
+    },
     "fenix": {
       "inputs": {
         "nixpkgs": [
@@ -77,6 +100,7 @@
       "inputs": {
         "advisory-db": "advisory-db",
         "crane": "crane",
+        "crane-maturin": "crane-maturin",
         "fenix": "fenix",
         "nixpkgs": "nixpkgs"
       }

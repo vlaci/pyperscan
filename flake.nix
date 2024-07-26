@@ -7,6 +7,12 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    crane-maturin = {
+      url = "sourcehut:~vlaci/crane-maturin";
+      inputs.crane.follows = "crane";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     fenix = {
       url = "github:nix-community/fenix";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -19,7 +25,7 @@
     };
   };
 
-  outputs = { self, nixpkgs, crane, fenix, advisory-db, ... }@inputs:
+  outputs = { self, nixpkgs, crane-maturin, fenix, advisory-db, ... }@inputs:
     let
       supportedSystems = [ "x86_64-linux" "x86_64-darwin" "aarch64-linux" "aarch64-darwin" ];
       forAllSystems = nixpkgs.lib.genAttrs supportedSystems;
@@ -42,43 +48,9 @@
         };
       checks = forAllSystems (system:
         let
-          inherit (nixpkgsFor.${system}) rustPlatform;
           inherit (nixpkgsFor.${system}.python3Packages) pyperscan;
-          nativeBuildInputs = with rustPlatform; [
-            bindgenHook
-          ];
-          inherit (pyperscan) cargoArtifacts craneLib commonArgs libpyperscan src;
         in
-        pyperscan.passthru.tests // {
-          # Build the crate as part of `nix flake check` for convenience
-          inherit libpyperscan;
-
-          # Run clippy (and deny all warnings) on the crate source,
-          # again, resuing the dependency artifacts from above.
-          #
-          # Note that this is done as a separate derivation so that
-          # we can block the CI if there are issues here, but not
-          # prevent downstream consumers from building our crate by itself.
-          libpyperscan-clippy = craneLib.cargoClippy (commonArgs // {
-            inherit nativeBuildInputs cargoArtifacts;
-            cargoClippyExtraArgs = "--all-targets -- --deny warnings";
-          });
-
-          libpyperscan-doc = craneLib.cargoDoc (commonArgs // {
-            inherit nativeBuildInputs cargoArtifacts;
-          });
-
-          # Check formatting
-          libpyperscan-fmt = craneLib.cargoFmt {
-            inherit src;
-          };
-
-          # Audit dependencies
-          libpyperscan-audit = craneLib.cargoAudit {
-            inherit src advisory-db;
-          };
-        }
-      );
+        pyperscan.passthru.tests);
 
       formatter = forAllSystems (system: nixpkgsFor.${system}.nixpkgs-fmt);
 
@@ -97,7 +69,7 @@
         in
         {
           default = with pkgs; mkShell {
-            inputsFrom = [ python3Packages.pyperscan.libpyperscan ];
+            inputsFrom = [ python3Packages.pyperscan.crate ];
             buildInputs = [
               just
               maturin
