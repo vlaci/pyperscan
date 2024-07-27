@@ -5,7 +5,12 @@ use crate::hyperscan::{
     BlockDatabase, BlockScanner, Context, Error, Flag, HyperscanErrorCode, Pattern, Scan,
     StreamDatabase, StreamScanner, VectoredDatabase, VectoredScanner,
 };
-use pyo3::{create_exception, exceptions::PyValueError, prelude::*, types::PyTuple};
+use pyo3::{
+    create_exception,
+    exceptions::PyValueError,
+    prelude::*,
+    types::{PyList, PyTuple},
+};
 
 #[pyclass(name = "Pattern", module = "pyperscan._pyperscan", unsendable)]
 struct PyPattern {
@@ -79,7 +84,11 @@ impl From<&PyFlag> for Flag {
 impl PyPattern {
     #[new]
     #[pyo3(signature = (expression, *flags, tag = None))]
-    fn py_new(expression: &[u8], flags: &PyTuple, tag: Option<PyObject>) -> PyResult<Self> {
+    fn py_new(
+        expression: &[u8],
+        flags: &Bound<'_, PyTuple>,
+        tag: Option<PyObject>,
+    ) -> PyResult<Self> {
         let flags = flags
             .iter()
             .map(|f| f.extract::<PyFlag>())
@@ -96,20 +105,20 @@ impl PyPattern {
 
 struct PyContext {
     user_data: PyObject,
-    tag_mapping: Vec<Option<PyObject>>,
+    tag_mapping: PyList,
 }
 
 #[pyclass(name = "BlockDatabase", module = "pyperscan._pyperscan")]
 struct PyBlockDatabase {
     db: BlockDatabase,
-    tag_mapping: Vec<Option<PyObject>>,
+    tag_mapping: PyList,
 }
 
 #[pymethods]
 impl PyBlockDatabase {
     #[new]
     #[pyo3(signature = (*patterns))]
-    fn py_new(py: Python<'_>, patterns: &PyTuple) -> PyResult<Self> {
+    fn py_new(py: Python<'_>, patterns: &Bound<'_, PyTuple>) -> PyResult<Self> {
         let (patterns, tag_mapping) = to_tag_mapping(py, patterns)?;
         Ok(Self {
             db: BlockDatabase::new(patterns)?,
@@ -148,7 +157,7 @@ struct PyVectoredDatabase {
 impl PyVectoredDatabase {
     #[new]
     #[pyo3(signature = (*patterns))]
-    fn py_new(py: Python<'_>, patterns: &PyTuple) -> PyResult<Self> {
+    fn py_new(py: Python<'_>, patterns: &Bound<'_, PyTuple>) -> PyResult<Self> {
         let (patterns, tag_mapping) = to_tag_mapping(py, patterns)?;
         Ok(Self {
             db: VectoredDatabase::new(patterns)?,
@@ -189,7 +198,7 @@ struct PyStreamDatabase {
 impl PyStreamDatabase {
     #[new]
     #[pyo3(signature=(*patterns))]
-    fn py_new(py: Python<'_>, patterns: &PyTuple) -> PyResult<Self> {
+    fn py_new(py: Python<'_>, patterns: &Bound<'_, PyTuple>) -> PyResult<Self> {
         let (patterns, tag_mapping) = to_tag_mapping(py, patterns)?;
         Ok(Self {
             db: StreamDatabase::new(patterns)?,
@@ -239,16 +248,13 @@ impl PyStreamScanner {
 
 fn to_tag_mapping(
     py: Python<'_>,
-    patterns: &PyTuple,
-) -> PyResult<(Vec<Pattern>, Vec<Option<PyObject>>)> {
+    patterns: &'_ Bound<'_, PyTuple>,
+) -> PyResult<(Vec<Pattern>, Py<PyList>)> {
     Ok(patterns
-        .iter()
-        .map(|p| p.extract::<Py<PyPattern>>())
-        .collect::<PyResult<Vec<_>>>()?
         .iter()
         .enumerate()
         .map(|(id, p)| {
-            let pat = p.borrow(py);
+            let pat: PyRef<'_, PyPattern> = p.downcast()?.borrow();
             (
                 Pattern::new(
                     pat.expression.clone(),
@@ -310,7 +316,7 @@ create_exception!(
 );
 
 #[pymodule]
-pub fn _pyperscan(py: Python, m: &PyModule) -> PyResult<()> {
+pub fn _pyperscan(py: Python, m: &Bound<'_, PyModule>) -> PyResult<()> {
     m.add_class::<PyFlag>()?;
     m.add_class::<PyScan>()?;
     m.add_class::<PyBlockDatabase>()?;
@@ -322,10 +328,10 @@ pub fn _pyperscan(py: Python, m: &PyModule) -> PyResult<()> {
     m.add_class::<PyPattern>()?;
     m.add_class::<HyperscanErrorCode>()?;
 
-    m.add("HyperscanError", py.get_type::<HyperscanError>())?;
+    m.add("HyperscanError", py.get_type_bound::<HyperscanError>())?;
     m.add(
         "HyperscanCompileError",
-        py.get_type::<HyperscanCompileError>(),
+        py.get_type_bound::<HyperscanCompileError>(),
     )?;
     Ok(())
 }

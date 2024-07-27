@@ -17,7 +17,7 @@ crate-type = ["cdylib"]
 [dependencies]
 bitflags = "2.6.0"
 foreign-types = "0.5.0"
-pyo3 = { version = "0.18.1", features = ["extension-module", "abi3-py38"] }
+pyo3 = { version = "0.22.2", features = ["extension-module", "abi3-py38"] }
 thiserror = "1.0.37"
 hyperscan-sys = { path = "./hyperscan-sys" }
 libc = "0.2.142"
