@@ -3,11 +3,11 @@ use std::ops::Deref;
 use std::ptr;
 use std::slice;
 
-use pyo3::{ffi, prelude::*, AsPyPointer};
+use pyo3::{ffi, prelude::*};
 
 pub struct Buffer<'a>(&'a [u8]);
 
-impl<'a> Deref for Buffer<'a> {
+impl Deref for Buffer<'_> {
     type Target = [u8];
 
     fn deref(&self) -> &Self::Target {

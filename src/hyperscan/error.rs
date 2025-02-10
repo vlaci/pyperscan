@@ -18,8 +18,8 @@ pub enum Error {
     PythonError(#[from] PyErr),
 }
 
-#[derive(Debug, PartialEq, Eq)]
-#[pyclass]
+#[pyclass(eq)]
+#[derive(Debug, PartialEq)]
 pub enum HyperscanErrorCode {
     /// A parameter passed to this function was invalid.
     ///

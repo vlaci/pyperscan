@@ -18,8 +18,8 @@ struct PyPattern {
 
 #[allow(non_camel_case_types)]
 #[allow(clippy::upper_case_acronyms)]
-#[pyclass(name = "Flag")]
-#[derive(Clone)]
+#[pyclass(eq, name = "Flag")]
+#[derive(Clone, PartialEq)]
 enum PyFlag {
     CASELESS,
     DOTALL,
@@ -34,8 +34,8 @@ enum PyFlag {
     QUIET,
 }
 
-#[pyclass(name = "Scan", module = "pyperscan._pyperscan")]
-#[derive(Clone)]
+#[pyclass(eq, name = "Scan", module = "pyperscan._pyperscan")]
+#[derive(Clone, PartialEq)]
 enum PyScan {
     Continue,
     Terminate,
@@ -221,6 +221,7 @@ struct PyStreamScanner(StreamScanner<PyContext>);
 
 #[pymethods]
 impl PyStreamScanner {
+    #[pyo3(signature = (data, chunk_size = None))]
     fn scan(&mut self, py: Python, data: Buffer, chunk_size: Option<usize>) -> PyResult<PyScan> {
         py.allow_threads(|| {
             let mut rv = Scan::default();
