@@ -15,7 +15,7 @@ pub enum Error {
     HypercanCompile(String, i32),
 
     #[error("Exception raised from Python callback")]
-    PythonError(#[from] PyErr),
+    Python(#[from] PyErr),
 }
 
 #[pyclass(eq)]
