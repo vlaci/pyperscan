@@ -23,8 +23,13 @@
     let
       supportedSystems = [ "x86_64-linux" "x86_64-darwin" "aarch64-linux" "aarch64-darwin" ];
       forAllSystems = nixpkgs.lib.genAttrs supportedSystems;
-      nixpkgsFor = forAllSystems (system: import nixpkgs { inherit system; overlays = [ self.overlays.default ]; });
-
+      nixpkgsFor = forAllSystems (system: import nixpkgs {
+        inherit system;
+        overlays = [
+          self.overlays.default
+          fenix.overlays.default
+        ];
+      });
     in
     {
       overlays.default = final: prev:
@@ -97,7 +102,6 @@
         in
         {
           default = with pkgs; mkShell {
-            inputsFrom = [ python3Packages.pyperscan.libpyperscan ];
             buildInputs = [
               just
               maturin
@@ -108,14 +112,15 @@
               cmake
               ragel
               rustPlatform.bindgenHook
-              (fenix.packages.${system}.complete.withComponents [
+              hyperscan
+              (pkgs.fenix.complete.withComponents [
                 "cargo"
                 "clippy"
                 "rust-src"
                 "rustc"
                 "rustfmt"
               ])
-              fenix.packages.${system}.complete.rust-analyzer
+              rust-analyzer-nightly
             ];
           };
         });
