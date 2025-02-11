@@ -4,10 +4,9 @@
 
     crane.url = "github:ipetkov/crane";
 
-    fenix = {
-      url = "github:nix-community/fenix";
+    rust-overlay = {
+      url = "github:oxalica/rust-overlay";
       inputs.nixpkgs.follows = "nixpkgs";
-      inputs.rust-analyzer-src.follows = "";
     };
 
     advisory-db = {
@@ -21,7 +20,7 @@
       self,
       nixpkgs,
       crane,
-      fenix,
+      rust-overlay,
       advisory-db,
       ...
     }@inputs:
@@ -39,7 +38,7 @@
           inherit system;
           overlays = [
             self.overlays.default
-            fenix.overlays.default
+            rust-overlay.overlays.default
           ];
         }
       );
@@ -156,14 +155,18 @@
                 ragel
                 rustPlatform.bindgenHook
                 hyperscan
-                (pkgs.fenix.complete.withComponents [
-                  "cargo"
-                  "clippy"
-                  "rust-src"
-                  "rustc"
-                  "rustfmt"
-                ])
-                rust-analyzer-nightly
+                (rust-bin.selectLatestNightlyWith (
+                  toolchain:
+                  toolchain.default.override {
+                    extensions = [
+                      "cargo"
+                      "clippy"
+                      "rust-src"
+                      "rustc"
+                      "rustfmt"
+                    ];
+                  }
+                ))
               ];
             };
         }
