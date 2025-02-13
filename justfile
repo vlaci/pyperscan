@@ -38,6 +38,7 @@ _build_container target:
     podman tag $image:$cache_tag $image:latest
 
 _build_in_container target:
+    mkdir -p ~/.cargo/registry
     podman run -v .:/usr/src/pyperscan -v ~/.cargo/registry:/root/.cargo/registry {{ builder_image_prefix }}-{{ target }}
 
 _test_in_container target:
