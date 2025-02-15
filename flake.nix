@@ -166,7 +166,7 @@
                 cmake
                 ragel
                 rustPlatform.bindgenHook
-                hyperscan
+                vectorscan
                 (rust-bin.selectLatestNightlyWith (
                   toolchain:
                   toolchain.default.override {

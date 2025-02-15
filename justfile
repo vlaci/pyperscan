@@ -59,7 +59,7 @@ _test_in_container target:
 ensure-foreign-emulation target:
     #! /usr/bin/env bash
     set -xeuo pipefail
-    if [[ "{{ target }}" == aarch64-* ]] \
+    if [[ "{{ target }}" != "$(uname -m)"* ]] \
         && ! [[ -f /proc/sys/fs/binfmt_misc/qemu-aarch64  &&
         $(head -n 1 /proc/sys/fs/binfmt_misc/qemu-aarch64) == "enabled" ]]
     then
