@@ -159,7 +159,7 @@
                 just
                 maturin
                 nodejs
-                pdm
+                uv
                 podman
                 pre-commit
                 openssl
@@ -182,6 +182,52 @@
                   }
                 ))
               ];
+              env = {
+                UV_SYSTEM_PYTHON = "true";
+              };
+              shellHook =
+                let
+                  drv = pkgs.buildEnv {
+                    name = "patchelf";
+                    paths = [
+                      pkgs.patchelf
+                      pkgs.auto-patchelf
+                    ];
+                  };
+                  venv = ".venv";
+                in
+                ''
+                  uv sync --no-install-project
+                  source ${venv}/bin/activate
+
+                  _venv_checksum() {
+                    ${pkgs.nix}/bin/nix-hash --type sha256 "${venv}"/bin
+                  }
+
+                  _patchelf() {
+                    local VENV_CHECKSUM="$(_venv_checksum)"
+                    local VENV_CHECKSUM_FILE="${venv}/venv.checksum"
+                    local EXPECTED_VENV_CHECKSUM=
+
+                    if [[ -f "$VENV_CHECKSUM_FILE" ]]; then
+                      EXPECTED_VENV_CHECKSUM=$(<"$VENV_CHECKSUM_FILE")
+                    fi
+
+                    if [[ "$(_venv_checksum)" != "$EXPECTED_VENV_CHECKSUM" ]]; then
+                      ${drv}/bin/auto-patchelf \
+                        --paths ${venv}/bin \
+                        --libs ${pkgs.lib.makeLibraryPath [ pkgs.stdenv.cc.cc.lib ]} \
+                        --runtime-dependencies \
+                        --append-rpaths \
+                        --ignore-missing \
+                        --extra-args
+
+                      # patchelf may change the checksum
+                      echo "$(_venv_checksum)" > "$VENV_CHECKSUM_FILE"
+                    fi
+                  }
+                  _patchelf
+                '';
             };
         }
       );
