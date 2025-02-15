@@ -21,12 +21,6 @@ repos:
     hooks:
       - id: check-github-workflows
 
-  - repo: https://github.com/psf/black
-    rev: 22.10.0
-    hooks:
-      - id: black
-        name: Check black
-
   - repo: https://github.com/asottile/pyupgrade
     rev: v3.2.2
     hooks:
@@ -34,9 +28,10 @@ repos:
         args: [--py38-plus]
 
   - repo: https://github.com/charliermarsh/ruff-pre-commit
-    rev: "v0.0.267"
+    rev: "v0.9.6"
     hooks:
       - id: ruff
+      - id: ruff-format
 
   - repo: https://github.com/pre-commit/mirrors-mypy
     rev: "v0.991"
@@ -54,11 +49,6 @@ repos:
       - id: fmt
       - id: clippy
         args: ["--no-default-features", "--", "-D", "warnings"]
-
-  - repo: https://github.com/nix-community/nixpkgs-fmt
-    rev: v1.3.0
-    hooks:
-      - id: nixpkgs-fmt
 
   - repo: https://github.com/renovatebot/pre-commit-hooks
     rev: 39.170.1
