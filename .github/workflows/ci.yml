@@ -18,7 +18,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - uses: cachix/install-nix-action@v22
+      - uses: cachix/install-nix-action@v30
       - uses: cachix/cachix-action@v12
         with:
           name: pyperscan
@@ -30,11 +30,7 @@ jobs:
               --print-build-logs
       - name: Code coverage
         run: |
-          nix build .#checks.x86_64-linux.coverage -o pytest.codecov
-      - uses: codecov/codecov-action@v3
-        with:
-          flags: cargo-test
-          files: cargo-test.codecov
+          nix build .#checks.x86_64-linux.pytest-coverage -o pytest.codecov
       - uses: codecov/codecov-action@v3
         with:
           flags: pytest
@@ -54,7 +50,7 @@ jobs:
           - os: ubuntu-latest
             arch: x86_64-linux
             drv: "vectorscan"
-          - os: ubuntu-latest
+          - os: ubuntu-24.04-arm
             arch: aarch64-linux
             drv: "vectorscan"
           - os: macos-latest
@@ -66,18 +62,11 @@ jobs:
       - uses: actions/checkout@v3
         with:
           submodules: true
-      - uses: cachix/install-nix-action@v22
+      - uses: cachix/install-nix-action@v30
       - uses: cachix/cachix-action@v12
         with:
           name: pyperscan
           authToken: "${{ secrets.CACHIX_AUTH_TOKEN }}"
-      - name: setup emulation
-        if: ${{ matrix.arch == 'aarch64-linux' }}
-        run: |
-          sudo apt update
-          sudo apt install -q -y qemu-system-aarch64 qemu-efi binfmt-support qemu-user-static
-          mkdir -p ~/.config/nix
-          echo "system-features = aarch64-linux arm-linux" | sudo tee -a /etc/nix/nix.conf
       - name: Build nix shell
         run: |
           nix build -L .#devShells.${{ matrix.arch }}.default --option system ${{ matrix.arch }} --extra-platforms ${{ matrix.arch }}
@@ -97,7 +86,7 @@ jobs:
           command: sdist
           args: -o dist
       - name: Upload sdist
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: sdist
           path: dist
@@ -106,20 +95,20 @@ jobs:
     strategy:
       matrix:
         include:
-          - target: x86_64-unknown-linux-gnu
-            arch: amd64
-          - target: x86_64-unknown-linux-musl
-            arch: amd64
-          - target: aarch64-unknown-linux-gnu
-            arch: arm64
-          - target: aarch64-unknown-linux-musl
-            arch: arm64
-    name: Build wheel - ${{ matrix.target }}
+          - os: ubuntu-24.04
+            arch: x86_64-unknown-linux-gnu
+          - os: ubuntu-24.04
+            arch: x86_64-unknown-linux-musl
+          - os: ubuntu-24.04-arm
+            arch: aarch64-unknown-linux-gnu
+          - os: ubuntu-24.04-arm
+            arch: aarch64-unknown-linux-musl
+    name: Build wheel - ${{ matrix.arch }}
     needs:
       - checks
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
     env:
-      image: ghcr.io/vlaci/pyperscan-builder-${{ matrix.target }}
+      image: ghcr.io/vlaci/pyperscan-builder-${{ matrix.arch }}
     permissions:
       packages: write
     steps:
@@ -129,13 +118,17 @@ jobs:
       - name: Cache rust
         uses: Swatinem/rust-cache@v2
         with:
-          key: wheel-linux-${{ matrix.target }}-${{ matrix.tag }}
+          key: wheel-linux-${{ matrix.arch }}-${{ matrix.tag }}
       - name: Install dependencies
         uses: extractions/setup-crate@v1
         with:
           owner: casey
           name: just
           version: 1.9.0
+      - name: Ensure Podman is installed
+        run: |
+          sudo apt update
+          sudo apt install -q -y podman
       - name: Log in to the GitHub Container registry
         uses: redhat-actions/podman-login@v1
         with:
@@ -144,23 +137,23 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
       - name: Check cached build image
         run: |
-          TAG=${{hashFiles(format('Containerfile.{0}', matrix.target)) }}
+          TAG=${{hashFiles(format('Containerfile.{0}', matrix.arch)) }}
           echo tag=$TAG >> $GITHUB_ENV
-      - run: just wheel ${{ matrix.target }}
+      - run: just wheel ${{ matrix.arch }}
       - run: podman push $image:$tag
       - run: podman push $image:latest
         if: github.ref_name == 'main'
       - name: Upload wheels
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
-          name: wheels-${{ matrix.target }}
+          name: wheels-${{ matrix.arch }}
           path: dist
 
   macos-wheel:
     needs:
       - checks
     name: Build wheel - ${{ matrix.target }}-apple-darwin
-    runs-on: macos-latest
+    runs-on: macos-13
     env:
       MACOSX_DEPLOYMENT_TARGET: "10.9"
     strategy:
@@ -187,7 +180,7 @@ jobs:
           args: --release --out dist -F vectorscan
           sccache: "true"
       - name: Upload wheels
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: wheels-${{ matrix.target }}-darwin
           path: dist
@@ -209,9 +202,10 @@ jobs:
       - linux-wheels
       - macos-wheel
     steps:
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           path: dist
+          merge-multiple: true
       - name: Publish to PyPI
         uses: messense/maturin-action@v1
         env:

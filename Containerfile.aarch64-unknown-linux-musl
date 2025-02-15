@@ -25,7 +25,7 @@ ENV PATH="${PATH}:/opt/python/cp38-cp38/bin:/root/.cargo/bin"
 ENV CARGO_NET_GIT_FETCH_WITH_CLI=true
 
 RUN pip install maturin \
-    && curl https://sh.rustup.rs -sSf | sh -s -- -y --default-toolchain 1.65.0
+    && curl https://sh.rustup.rs -sSf | sh -s -- -y --default-toolchain 1.81.0
 
 WORKDIR /usr/src/pyperscan
 

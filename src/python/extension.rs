@@ -16,8 +16,8 @@ struct PyPattern {
 
 #[allow(non_camel_case_types)]
 #[allow(clippy::upper_case_acronyms)]
-#[pyclass(name = "Flag")]
-#[derive(Clone)]
+#[pyclass(eq, name = "Flag")]
+#[derive(Clone, PartialEq)]
 enum PyFlag {
     CASELESS,
     DOTALL,
@@ -32,8 +32,8 @@ enum PyFlag {
     QUIET,
 }
 
-#[pyclass(name = "Scan", module = "pyperscan._pyperscan")]
-#[derive(Clone)]
+#[pyclass(eq, name = "Scan", module = "pyperscan._pyperscan")]
+#[derive(Clone, PartialEq)]
 enum PyScan {
     Continue,
     Terminate,
@@ -79,7 +79,11 @@ impl From<&PyFlag> for Flag {
 impl PyPattern {
     #[new]
     #[pyo3(signature = (expression, *flags, tag = None))]
-    fn py_new(expression: &[u8], flags: &PyTuple, tag: Option<PyObject>) -> PyResult<Self> {
+    fn py_new(
+        expression: &'_ [u8],
+        flags: &Bound<'_, PyTuple>,
+        tag: Option<PyObject>,
+    ) -> PyResult<Self> {
         let flags = flags
             .iter()
             .map(|f| f.extract::<PyFlag>())
@@ -94,22 +98,24 @@ impl PyPattern {
     }
 }
 
+type TagMapping = Vec<Option<PyObject>>;
+
 struct PyContext {
     user_data: PyObject,
-    tag_mapping: Vec<Option<PyObject>>,
+    tag_mapping: TagMapping,
 }
 
 #[pyclass(name = "BlockDatabase", module = "pyperscan._pyperscan")]
 struct PyBlockDatabase {
     db: BlockDatabase,
-    tag_mapping: Vec<Option<PyObject>>,
+    tag_mapping: TagMapping,
 }
 
 #[pymethods]
 impl PyBlockDatabase {
     #[new]
     #[pyo3(signature = (*patterns))]
-    fn py_new(py: Python<'_>, patterns: &PyTuple) -> PyResult<Self> {
+    fn py_new(py: Python<'_>, patterns: &Bound<'_, PyTuple>) -> PyResult<Self> {
         let (patterns, tag_mapping) = to_tag_mapping(py, patterns)?;
         Ok(Self {
             db: BlockDatabase::new(patterns)?,
@@ -119,10 +125,11 @@ impl PyBlockDatabase {
 
     fn build(
         &self,
+        py: Python<'_>,
         user_data: PyObject,
         match_event_handler: PyObject,
     ) -> PyResult<PyBlockScanner> {
-        let context = create_context(self.tag_mapping.clone(), user_data, match_event_handler)?;
+        let context = create_context(py, &self.tag_mapping, user_data, match_event_handler)?;
         let scanner = self.db.create_scanner(context)?;
         Ok(PyBlockScanner(scanner))
     }
@@ -141,14 +148,14 @@ impl PyBlockScanner {
 #[pyclass(name = "VectoredDatabase", module = "pyperscan._pyperscan")]
 struct PyVectoredDatabase {
     db: VectoredDatabase,
-    tag_mapping: Vec<Option<PyObject>>,
+    tag_mapping: TagMapping,
 }
 
 #[pymethods]
 impl PyVectoredDatabase {
     #[new]
     #[pyo3(signature = (*patterns))]
-    fn py_new(py: Python<'_>, patterns: &PyTuple) -> PyResult<Self> {
+    fn py_new(py: Python<'_>, patterns: &Bound<'_, PyTuple>) -> PyResult<Self> {
         let (patterns, tag_mapping) = to_tag_mapping(py, patterns)?;
         Ok(Self {
             db: VectoredDatabase::new(patterns)?,
@@ -158,10 +165,11 @@ impl PyVectoredDatabase {
 
     fn build(
         &self,
+        py: Python<'_>,
         user_data: PyObject,
         match_event_handler: PyObject,
     ) -> PyResult<PyVectoredScanner> {
-        let context = create_context(self.tag_mapping.clone(), user_data, match_event_handler)?;
+        let context = create_context(py, &self.tag_mapping, user_data, match_event_handler)?;
         let scanner = self.db.create_scanner(context)?;
         Ok(PyVectoredScanner(scanner))
     }
@@ -182,14 +190,14 @@ impl PyVectoredScanner {
 #[pyclass(name = "StreamDatabase", module = "pyperscan._pyperscan")]
 struct PyStreamDatabase {
     db: StreamDatabase,
-    tag_mapping: Vec<Option<PyObject>>,
+    tag_mapping: TagMapping,
 }
 
 #[pymethods]
 impl PyStreamDatabase {
     #[new]
     #[pyo3(signature=(*patterns))]
-    fn py_new(py: Python<'_>, patterns: &PyTuple) -> PyResult<Self> {
+    fn py_new(py: Python<'_>, patterns: &Bound<'_, PyTuple>) -> PyResult<Self> {
         let (patterns, tag_mapping) = to_tag_mapping(py, patterns)?;
         Ok(Self {
             db: StreamDatabase::new(patterns)?,
@@ -199,10 +207,11 @@ impl PyStreamDatabase {
 
     fn build(
         &self,
+        py: Python<'_>,
         user_data: PyObject,
         match_event_handler: PyObject,
     ) -> PyResult<PyStreamScanner> {
-        let context = create_context(self.tag_mapping.clone(), user_data, match_event_handler)?;
+        let context = create_context(py, &self.tag_mapping, user_data, match_event_handler)?;
         let scanner = self.db.create_scanner(context)?;
         Ok(PyStreamScanner(scanner))
     }
@@ -213,6 +222,7 @@ struct PyStreamScanner(StreamScanner<PyContext>);
 
 #[pymethods]
 impl PyStreamScanner {
+    #[pyo3(signature = (data, chunk_size = None))]
     fn scan(&mut self, py: Python, data: Buffer, chunk_size: Option<usize>) -> PyResult<PyScan> {
         py.allow_threads(|| {
             let mut rv = Scan::default();
@@ -239,30 +249,33 @@ impl PyStreamScanner {
 
 fn to_tag_mapping(
     py: Python<'_>,
-    patterns: &PyTuple,
-) -> PyResult<(Vec<Pattern>, Vec<Option<PyObject>>)> {
+    patterns: &Bound<'_, PyTuple>,
+) -> PyResult<(Vec<Pattern>, TagMapping)> {
     Ok(patterns
-        .iter()
+        .into_iter()
         .map(|p| p.extract::<Py<PyPattern>>())
         .collect::<PyResult<Vec<_>>>()?
         .iter()
         .enumerate()
-        .map(|(id, p)| {
-            let pat = p.borrow(py);
+        .map(move |(id, p)| {
+            let pat = p.borrow_mut(py);
+            let tag = pat.tag.as_ref().map(|t| t.clone_ref(py));
             (
                 Pattern::new(
                     pat.expression.clone(),
                     pat.flags,
                     Some(id.try_into().unwrap()),
                 ),
-                pat.tag.as_ref().map(|t| t.to_object(py)),
+                tag,
             )
         })
+        //.collect::<PyResult<(Pattern, Option<Arc<PyObject>>)>>()?
         .unzip())
 }
 
 fn create_context(
-    tag_mapping: Vec<Option<PyObject>>,
+    py: Python<'_>,
+    tag_mapping: &TagMapping,
     user_data: PyObject,
     match_event_handler: PyObject,
 ) -> PyResult<Context<PyContext>> {
@@ -280,6 +293,11 @@ fn create_context(
         })
         .map_err(|exc| exc.into())
     };
+
+    let tag_mapping = tag_mapping
+        .iter()
+        .map(|ot| ot.as_ref().map(|t| t.clone_ref(py)))
+        .collect();
     let py_user_data = PyContext {
         user_data,
         tag_mapping,
@@ -293,7 +311,7 @@ impl From<Error> for PyErr {
             Error::Nul(_) => PyValueError::new_err(format!("{err}")),
             Error::Hyperscan(e, c) => HyperscanError::new_err((e, c)),
             Error::HypercanCompile(msg, expr) => HyperscanCompileError::new_err((msg, expr)),
-            Error::PythonError(exc) => exc,
+            Error::Python(exc) => exc,
         }
     }
 }
@@ -310,7 +328,7 @@ create_exception!(
 );
 
 #[pymodule]
-pub fn _pyperscan(py: Python, m: &PyModule) -> PyResult<()> {
+pub fn _pyperscan(py: Python<'_>, m: &Bound<'_, PyModule>) -> PyResult<()> {
     m.add_class::<PyFlag>()?;
     m.add_class::<PyScan>()?;
     m.add_class::<PyBlockDatabase>()?;

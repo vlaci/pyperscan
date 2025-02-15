@@ -14,7 +14,7 @@ foreign_type! {
         fn drop = hs::hs_free_compile_error;
     }
 
-    pub unsafe type Database: Send {
+    pub unsafe type Database: Sync+Send {
         type CType = hs::hs_database_t;
         fn drop = hs::hs_free_database;
     }
