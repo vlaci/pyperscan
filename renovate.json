@@ -1,0 +1,32 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": ["config:recommended", "schedule:weekly"],
+  "labels": ["dependencies"],
+  "packageRules": [
+    {
+      "matchUpdateTypes": ["minor", "patch"],
+      "autoApprove": true,
+      "automerge": true
+    }
+  ],
+  "nix": {
+    "enabled": true
+  },
+  "pre-commit": {
+    "enabled": true
+  },
+  "lockFileMaintenance": {
+    "enabled": true,
+    "additionalBranchPrefix": "{{manager}}-",
+    "packageRules": [
+      {
+        "matchManagers": ["nix"],
+        "extends": ["schedule:weekly"]
+      },
+      {
+        "matchManagers": ["pep621"],
+        "extends": ["schedule:monthly"]
+      }
+    ]
+  }
+}

@@ -158,6 +158,7 @@
               buildInputs = [
                 just
                 maturin
+                nodejs
                 pdm
                 podman
                 pre-commit
