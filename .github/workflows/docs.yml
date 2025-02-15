@@ -25,11 +25,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - uses: pdm-project/setup-pdm@v3
-        name: Setup PDM
+      - name: Setup uv
+        uses: astral-sh/setup-uv@v5
         with:
-          python-version: "3.10"
-          cache: true
+          python-version-file: ".python-version"
       - run: |
-          pdm sync -d -G docs --no-self
-          pdm run mkdocs gh-deploy --force
+          uv sync --no-install-project --group docs
+          uv run mkdocs gh-deploy --force

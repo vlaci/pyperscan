@@ -12,6 +12,22 @@ dynamic = [
     'version'
 ]
 
+[dependency-groups]
+dev = [
+    "mypy       ~= 1.7",
+    "pre-commit ~= 3.5",
+    "ruff       ~= 0.9.6",
+    "towncrier  ~= 23.11.0",
+]
+test = [
+  "pytest ~= 7.4",
+]
+docs = [
+    "mkdocs               ~= 1.5",
+    "mkdocstrings[python] ~= 0.24.0",
+    "mkdocs-material      ~= 9.5",
+]
+
 [project.urls]
 Homepage = "https://vlaci.github.io/pyperscan"
 Repository = "https://github.com/vlaci/pyperscan"
@@ -54,32 +70,6 @@ showcontent = true
 directory = "fixed"
 name = "Fixed"
 showcontent = true
-
-[tool.pdm.scripts]
-changelog = "towncrier"
-venv = "pdm sync -d"
-mypy = "mypy ."
-ruff = "ruff . --show-source --fix --show-fixes"
-ruff-format = "ruff format ."
-pytest = "python -m pytest tests"
-clippy = "cargo clippy --all-targets -- --deny warnings"
-all = { composite = ["clippy", "venv", "ruff", "ruff-format", "mypy", "pytest"] }
-
-[tool.pdm.dev-dependencies]
-dev = [
-    "mypy       ~= 1.7",
-    "pre-commit ~= 3.5",
-    "ruff       ~=0.9.6",
-    "towncrier  ~= 23.11.0",
-]
-test = [
-  "pytest ~= 7.4",
-]
-docs = [
-    "mkdocs               ~= 1.5",
-    "mkdocstrings[python] ~= 0.24.0",
-    "mkdocs-material      ~= 9.5",
-]
 
 [tool.ruff]
 target-version = "py38"
