@@ -184,6 +184,7 @@
               ];
               env = {
                 UV_PYTHON_PREFERENCE = "only-system";
+                UV_LINK_MODE = "copy";
               };
               shellHook =
                 let
