@@ -23,7 +23,7 @@ test = [
 ]
 docs = [
     "mkdocs               ~= 1.5",
-    "mkdocstrings[python] ~= 0.24.0",
+    "mkdocstrings[python] ~=0.28.1",
     "mkdocs-material      ~= 9.5",
 ]
 
