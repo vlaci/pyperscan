@@ -1,6 +1,6 @@
 use foreign_types::ForeignType;
 use hyperscan_sys as hs;
-use std::ffi::c_void;
+use std::{ffi::c_void, sync::Arc};
 
 use super::{wrapper, AsResult, Error, HyperscanErrorCode, Pattern, ScanMode};
 
@@ -16,18 +16,18 @@ pub trait MatchEventHandler<T>: Fn(&mut T, u32, u64, u64) -> Result<Scan, Error>
 impl<T, F: Fn(&mut T, u32, u64, u64) -> Result<Scan, Error>> MatchEventHandler<T> for F {}
 
 pub struct BlockDatabase {
-    db: wrapper::Database,
+    db: Arc<wrapper::Database>,
 }
 
 pub struct BlockScanner<U> {
     scratch: wrapper::Scratch,
-    database: wrapper::Database,
+    database: Arc<wrapper::Database>,
     context: Context<U>,
 }
 
 impl BlockDatabase {
     pub fn new(patterns: Vec<Pattern>) -> Result<Self, Error> {
-        let db = wrapper::Database::new(patterns, ScanMode::BLOCK)?;
+        let db = Arc::new(wrapper::Database::new(patterns, ScanMode::BLOCK)?);
         Ok(Self { db })
     }
 
@@ -40,18 +40,18 @@ impl BlockDatabase {
 }
 
 pub struct VectoredDatabase {
-    db: wrapper::Database,
+    db: Arc<wrapper::Database>,
 }
 
 pub struct VectoredScanner<U> {
     scratch: wrapper::Scratch,
-    database: wrapper::Database,
+    database: Arc<wrapper::Database>,
     context: Context<U>,
 }
 
 impl VectoredDatabase {
     pub fn new(patterns: Vec<Pattern>) -> Result<Self, Error> {
-        let db = wrapper::Database::new(patterns, ScanMode::VECTORED)?;
+        let db = Arc::new(wrapper::Database::new(patterns, ScanMode::VECTORED)?);
         Ok(Self { db })
     }
 
@@ -64,7 +64,7 @@ impl VectoredDatabase {
 }
 
 pub struct StreamDatabase {
-    db: wrapper::Database,
+    db: Arc<wrapper::Database>,
 }
 
 pub struct StreamScanner<U> {
@@ -75,7 +75,10 @@ pub struct StreamScanner<U> {
 
 impl StreamDatabase {
     pub fn new(patterns: Vec<Pattern>) -> Result<Self, Error> {
-        let db = wrapper::Database::new(patterns, ScanMode::STREAM | ScanMode::SOM_LARGE)?;
+        let db = Arc::new(wrapper::Database::new(
+            patterns,
+            ScanMode::STREAM | ScanMode::SOM_LARGE,
+        )?);
         Ok(Self { db })
     }
 
@@ -111,7 +114,7 @@ impl<U> BlockScanner<U> {
         let scratch = wrapper::Scratch::new(&db.db)?;
 
         Ok(Self {
-            database: db.db.try_clone()?,
+            database: db.db.clone(),
             scratch,
             context,
         })
@@ -123,7 +126,7 @@ impl<U> VectoredScanner<U> {
         let scratch = wrapper::Scratch::new(&db.db)?;
 
         Ok(Self {
-            database: db.db.try_clone()?,
+            database: db.db.clone(),
             scratch,
             context,
         })

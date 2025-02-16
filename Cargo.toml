@@ -20,7 +20,6 @@ foreign-types = "0.5.0"
 pyo3 = { version = "0.23.0", features = ["extension-module", "abi3-py38"] }
 thiserror = "2.0.11"
 hyperscan-sys = { path = "./hyperscan-sys" }
-libc = "0.2.142"
 
 [features]
 hyperscan = ["hyperscan-sys/hyperscan"]
