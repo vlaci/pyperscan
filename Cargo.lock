@@ -162,7 +162,7 @@ dependencies = [
 
 [[package]]
 name = "hyperscan-sys"
-version = "0.3.0"
+version = "0.0.0"
 dependencies = [
  "bindgen",
  "cmake",
@@ -350,7 +350,7 @@ dependencies = [
 
 [[package]]
 name = "pyperscan"
-version = "0.3.0"
+version = "0.0.0"
 dependencies = [
  "bitflags 1.3.2",
  "foreign-types",

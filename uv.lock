@@ -901,6 +901,7 @@ wheels = [
 
 [[package]]
 name = "pyperscan"
+version = "0.3.0"
 source = { editable = "." }
 
 [package.dev-dependencies]

@@ -1,16 +1,15 @@
 [project]
 name = "pyperscan"
-authors = [
-    {name = "László Vaskó", email = "1771332+vlaci@users.noreply.github.com"},
-]
-dependencies = []
-requires-python = ">=3.8"
+version = "0.3.0"
 dynamic = [
+    'author',
     'description',
     'license',
     'readme',
-    'version'
 ]
+requires-python = ">=3.8"
+
+dependencies = []
 
 [dependency-groups]
 dev = [

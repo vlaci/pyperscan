@@ -31,7 +31,7 @@ resolver = "2"
 members = [".", "hyperscan-sys"]
 
 [workspace.package]
-version = "0.3.0"
+version = "0.0.0"
 authors = ["László Vaskó <1771332+vlaci@users.noreply.github.com>"]
 license = "MIT OR Apache-2.0"
 edition = "2021"
