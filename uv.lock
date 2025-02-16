@@ -1,4 +1,5 @@
 version = 1
+revision = 1
 requires-python = ">=3.9"
 
 [[package]]
@@ -426,23 +427,22 @@ wheels = [
 
 [[package]]
 name = "mkdocstrings"
-version = "0.24.3"
+version = "0.28.1"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
-    { name = "click" },
     { name = "importlib-metadata", marker = "python_full_version < '3.10'" },
     { name = "jinja2" },
     { name = "markdown" },
     { name = "markupsafe" },
     { name = "mkdocs" },
     { name = "mkdocs-autorefs" },
-    { name = "platformdirs" },
+    { name = "mkdocs-get-deps" },
     { name = "pymdown-extensions" },
     { name = "typing-extensions", marker = "python_full_version < '3.10'" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/6d/0b/424efa5498ede474a8104f57dc35666b7e2f0025c370e469b9ea00ab23d9/mkdocstrings-0.24.3.tar.gz", hash = "sha256:f327b234eb8d2551a306735436e157d0a22d45f79963c60a8b585d5f7a94c1d2", size = 31936 }
+sdist = { url = "https://files.pythonhosted.org/packages/82/6a/3980e05d7522423dc4ca547771d16d399fc3f4266df652f624f4f4dd7890/mkdocstrings-0.28.1.tar.gz", hash = "sha256:fb64576906771b7701e8e962fd90073650ff689e95eb86e86751a66d65ab4489", size = 4551690 }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/a8/c2/5d2fa50f67b270d67f867fe2c8814ffa910c2d49fda1910428a55cb6df54/mkdocstrings-0.24.3-py3-none-any.whl", hash = "sha256:5c9cf2a32958cd161d5428699b79c8b0988856b0d4a8c5baf8395fc1bf4087c3", size = 28478 },
+    { url = "https://files.pythonhosted.org/packages/6f/5d/8580b426396d8cbbe98df364ef891487c4942e36356d56bb5a6dd91f51a9/mkdocstrings-0.28.1-py3-none-any.whl", hash = "sha256:a5878ae5cd1e26f491ff084c1f9ab995687d52d39a5c558e9b7023d0e4e0b740", size = 6426938 },
 ]
 
 [package.optional-dependencies]
@@ -641,7 +641,7 @@ dev = [
 docs = [
     { name = "mkdocs", specifier = "~=1.5" },
     { name = "mkdocs-material", specifier = "~=9.5" },
-    { name = "mkdocstrings", extras = ["python"], specifier = "~=0.24.0" },
+    { name = "mkdocstrings", extras = ["python"], specifier = "~=0.28.1" },
 ]
 test = [{ name = "pytest", specifier = "~=7.4" }]
 
