@@ -198,8 +198,13 @@
                   venv = ".venv";
                 in
                 ''
-                  uv sync --no-install-project
+                  uv sync --group test
                   source ${venv}/bin/activate
+
+                  python -m maturin_import_hook site install --detect-uv
+                  cat <<EOF > "${venv}"/${pkgs.python3.sitePackages}/addsite.pth
+                  import sys; exec(open(sys.prefix + "/${pkgs.python3.sitePackages}/sitecustomize.py").read())
+                  EOF
 
                   _venv_checksum() {
                     ${pkgs.nix}/bin/nix-hash --type sha256 "${venv}"/bin

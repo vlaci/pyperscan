@@ -332,6 +332,19 @@ wheels = [
 ]
 
 [[package]]
+name = "maturin-import-hook"
+version = "0.2.0"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "filelock" },
+    { name = "tomli", marker = "python_full_version < '3.11'" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/93/5f/9d426545c49926f4212fbe6244bc397508a29f65e35fe307835c07c0be7b/maturin_import_hook-0.2.0.tar.gz", hash = "sha256:e8a81333179faf7b5f413e44c2a1c89604fefff433679275f724950b0a632adf", size = 31071 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/44/48/1e88f90750a66825a5ea8fd2e26908e4e4acade0fe5a378c36d14bc0138d/maturin_import_hook-0.2.0-py3-none-any.whl", hash = "sha256:742d882213d6aa24bacf6775ce26ab96bd4ee26ceafbbbad69d60fdc98d95ec8", size = 31134 },
+]
+
+[[package]]
 name = "mergedeep"
 version = "1.3.4"
 source = { registry = "https://pypi.org/simple" }
@@ -615,6 +628,7 @@ source = { editable = "." }
 
 [package.dev-dependencies]
 dev = [
+    { name = "maturin-import-hook" },
     { name = "mypy" },
     { name = "pre-commit" },
     { name = "ruff" },
@@ -633,6 +647,7 @@ test = [
 
 [package.metadata.requires-dev]
 dev = [
+    { name = "maturin-import-hook", specifier = ">=0.2.0" },
     { name = "mypy", specifier = "~=1.7" },
     { name = "pre-commit", specifier = "~=3.5" },
     { name = "ruff", specifier = "~=0.9.6" },
