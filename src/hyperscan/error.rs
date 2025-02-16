@@ -12,7 +12,7 @@ pub enum Error {
     Hyperscan(HyperscanErrorCode, i32),
 
     #[error("Pattern compilation failed, {0} at {1}")]
-    HypercanCompile(String, i32),
+    HyperscanCompile(String, i32),
 
     #[error("Exception raised from Python callback")]
     Python(#[from] PyErr),

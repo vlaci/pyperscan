@@ -310,7 +310,7 @@ impl From<Error> for PyErr {
         match err {
             Error::Nul(_) => PyValueError::new_err(format!("{err}")),
             Error::Hyperscan(e, c) => HyperscanError::new_err((e, c)),
-            Error::HypercanCompile(msg, expr) => HyperscanCompileError::new_err((msg, expr)),
+            Error::HyperscanCompile(msg, expr) => HyperscanCompileError::new_err((msg, expr)),
             Error::Python(exc) => exc,
         }
     }

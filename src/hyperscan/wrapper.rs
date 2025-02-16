@@ -147,7 +147,7 @@ impl From<*mut hs::hs_compile_error> for Error {
     fn from(err: *mut hs::hs_compile_error) -> Self {
         unsafe {
             let err = CompileError::from_ptr(err);
-            Self::HypercanCompile(err.message(), err.expression())
+            Self::HyperscanCompile(err.message(), err.expression())
         }
     }
 }
