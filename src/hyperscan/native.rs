@@ -5,33 +5,36 @@ use std::{ffi::c_void, sync::Arc};
 use super::{wrapper, AsResult, Error, HyperscanErrorCode, Pattern, ScanMode};
 
 #[derive(Default, Eq, PartialEq)]
-pub enum Scan {
+pub(crate) enum Scan {
     #[default]
     Continue,
     Terminate,
 }
 
-pub trait MatchEventHandler<T>: Fn(&mut T, u32, u64, u64) -> Result<Scan, Error> {}
+pub(crate) trait MatchEventHandler<T>:
+    Fn(&mut T, u32, u64, u64) -> Result<Scan, Error>
+{
+}
 
 impl<T, F: Fn(&mut T, u32, u64, u64) -> Result<Scan, Error>> MatchEventHandler<T> for F {}
 
-pub struct BlockDatabase {
+pub(crate) struct BlockDatabase {
     db: Arc<wrapper::Database>,
 }
 
-pub struct BlockScanner<U> {
+pub(crate) struct BlockScanner<U> {
     scratch: wrapper::Scratch,
     database: Arc<wrapper::Database>,
     context: Context<U>,
 }
 
 impl BlockDatabase {
-    pub fn new(patterns: Vec<Pattern>) -> Result<Self, Error> {
+    pub(crate) fn new(patterns: Vec<Pattern>) -> Result<Self, Error> {
         let db = Arc::new(wrapper::Database::new(patterns, ScanMode::BLOCK)?);
         Ok(Self { db })
     }
 
-    pub fn create_scanner<U: 'static>(
+    pub(crate) fn create_scanner<U: 'static>(
         &self,
         context: Context<U>,
     ) -> Result<BlockScanner<U>, Error> {
@@ -39,23 +42,23 @@ impl BlockDatabase {
     }
 }
 
-pub struct VectoredDatabase {
+pub(crate) struct VectoredDatabase {
     db: Arc<wrapper::Database>,
 }
 
-pub struct VectoredScanner<U> {
+pub(crate) struct VectoredScanner<U> {
     scratch: wrapper::Scratch,
     database: Arc<wrapper::Database>,
     context: Context<U>,
 }
 
 impl VectoredDatabase {
-    pub fn new(patterns: Vec<Pattern>) -> Result<Self, Error> {
+    pub(crate) fn new(patterns: Vec<Pattern>) -> Result<Self, Error> {
         let db = Arc::new(wrapper::Database::new(patterns, ScanMode::VECTORED)?);
         Ok(Self { db })
     }
 
-    pub fn create_scanner<U: 'static>(
+    pub(crate) fn create_scanner<U: 'static>(
         &self,
         context: Context<U>,
     ) -> Result<VectoredScanner<U>, Error> {
@@ -63,18 +66,18 @@ impl VectoredDatabase {
     }
 }
 
-pub struct StreamDatabase {
+pub(crate) struct StreamDatabase {
     db: Arc<wrapper::Database>,
 }
 
-pub struct StreamScanner<U> {
+pub(crate) struct StreamScanner<U> {
     scratch: wrapper::Scratch,
     stream: wrapper::Stream,
     context: Context<U>,
 }
 
 impl StreamDatabase {
-    pub fn new(patterns: Vec<Pattern>) -> Result<Self, Error> {
+    pub(crate) fn new(patterns: Vec<Pattern>) -> Result<Self, Error> {
         let db = Arc::new(wrapper::Database::new(
             patterns,
             ScanMode::STREAM | ScanMode::SOM_LARGE,
@@ -82,7 +85,7 @@ impl StreamDatabase {
         Ok(Self { db })
     }
 
-    pub fn create_scanner<U: 'static>(
+    pub(crate) fn create_scanner<U: 'static>(
         &self,
         context: Context<U>,
     ) -> Result<StreamScanner<U>, Error> {
@@ -90,14 +93,14 @@ impl StreamDatabase {
     }
 }
 
-pub struct Context<U> {
+pub(crate) struct Context<U> {
     user_data: U,
     match_error: Option<Error>,
     match_event_handler: Box<dyn MatchEventHandler<U> + Send>,
 }
 
 impl<U> Context<U> {
-    pub fn new(
+    pub(crate) fn new(
         user_data: U,
         match_event_handler: impl MatchEventHandler<U> + Send + 'static,
     ) -> Self {
@@ -110,7 +113,7 @@ impl<U> Context<U> {
 }
 
 impl<U> BlockScanner<U> {
-    pub fn new(db: &BlockDatabase, context: Context<U>) -> Result<Self, Error> {
+    pub(crate) fn new(db: &BlockDatabase, context: Context<U>) -> Result<Self, Error> {
         let scratch = wrapper::Scratch::new(&db.db)?;
 
         Ok(Self {
@@ -122,7 +125,7 @@ impl<U> BlockScanner<U> {
 }
 
 impl<U> VectoredScanner<U> {
-    pub fn new(db: &VectoredDatabase, context: Context<U>) -> Result<Self, Error> {
+    pub(crate) fn new(db: &VectoredDatabase, context: Context<U>) -> Result<Self, Error> {
         let scratch = wrapper::Scratch::new(&db.db)?;
 
         Ok(Self {
@@ -134,7 +137,7 @@ impl<U> VectoredScanner<U> {
 }
 
 impl<U> StreamScanner<U> {
-    pub fn new(db: &StreamDatabase, context: Context<U>) -> Result<Self, Error> {
+    pub(crate) fn new(db: &StreamDatabase, context: Context<U>) -> Result<Self, Error> {
         let scratch = wrapper::Scratch::new(&db.db)?;
         let stream = wrapper::Stream::new(&db.db)?;
 
@@ -147,7 +150,7 @@ impl<U> StreamScanner<U> {
 }
 
 impl<U> StreamScanner<U> {
-    pub fn scan(&mut self, data: &[u8]) -> Result<Scan, Error> {
+    pub(crate) fn scan(&mut self, data: &[u8]) -> Result<Scan, Error> {
         unsafe {
             hs::hs_scan_stream(
                 self.stream.as_ptr(),
@@ -163,7 +166,7 @@ impl<U> StreamScanner<U> {
         }
     }
 
-    pub fn reset(&mut self) -> Result<Scan, Error> {
+    pub(crate) fn reset(&mut self) -> Result<Scan, Error> {
         unsafe {
             hs::hs_reset_stream(
                 self.stream.as_ptr(),
@@ -179,7 +182,7 @@ impl<U> StreamScanner<U> {
 }
 
 impl<U> BlockScanner<U> {
-    pub fn scan(&mut self, data: &[u8]) -> Result<Scan, Error> {
+    pub(crate) fn scan(&mut self, data: &[u8]) -> Result<Scan, Error> {
         unsafe {
             hs::hs_scan(
                 self.database.as_ptr(),
@@ -197,7 +200,7 @@ impl<U> BlockScanner<U> {
 }
 
 impl<U> VectoredScanner<U> {
-    pub fn scan(&mut self, data: Vec<&[u8]>) -> Result<Scan, Error> {
+    pub(crate) fn scan(&mut self, data: Vec<&[u8]>) -> Result<Scan, Error> {
         let (len, data): (Vec<_>, Vec<_>) =
             data.iter().map(|d| (d.len() as u32, d.as_ptr())).unzip();
         unsafe {

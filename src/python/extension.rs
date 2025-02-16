@@ -328,7 +328,7 @@ create_exception!(
 );
 
 #[pymodule]
-pub fn _pyperscan(py: Python<'_>, m: &Bound<'_, PyModule>) -> PyResult<()> {
+fn _pyperscan(py: Python<'_>, m: &Bound<'_, PyModule>) -> PyResult<()> {
     m.add_class::<PyFlag>()?;
     m.add_class::<PyScan>()?;
     m.add_class::<PyBlockDatabase>()?;

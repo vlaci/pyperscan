@@ -5,7 +5,7 @@ use std::slice;
 
 use pyo3::{ffi, prelude::*};
 
-pub struct Buffer<'a>(&'a [u8]);
+pub(crate) struct Buffer<'a>(&'a [u8]);
 
 impl Deref for Buffer<'_> {
     type Target = [u8];

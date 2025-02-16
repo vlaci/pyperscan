@@ -2,6 +2,6 @@ mod error;
 mod native;
 mod wrapper;
 
-pub use error::{AsResult, Error, HyperscanErrorCode};
-pub use native::*;
-pub use wrapper::{Flag, Pattern, ScanMode};
+pub(crate) use error::{AsResult, Error, HyperscanErrorCode};
+pub(crate) use native::*;
+pub(crate) use wrapper::{Flag, Pattern, ScanMode};

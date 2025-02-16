@@ -4,7 +4,7 @@ use thiserror::Error;
 
 /// Hyperscan Error Codes
 #[derive(Debug, Error)]
-pub enum Error {
+pub(crate) enum Error {
     #[error("Pattern expression contains NULL byte")]
     Nul(#[from] std::ffi::NulError),
 
@@ -20,7 +20,7 @@ pub enum Error {
 
 #[pyclass(eq)]
 #[derive(Debug, PartialEq)]
-pub enum HyperscanErrorCode {
+pub(crate) enum HyperscanErrorCode {
     /// A parameter passed to this function was invalid.
     ///
     /// This error is only returned in cases where the function can
@@ -139,7 +139,7 @@ impl From<ffi::hs_error_t> for Error {
         Error::Hyperscan(err.into(), err)
     }
 }
-pub trait AsResult: Sized {
+pub(crate) trait AsResult: Sized {
     fn ok(self) -> Result<(), Error>;
 }
 

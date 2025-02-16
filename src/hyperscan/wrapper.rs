@@ -10,17 +10,17 @@ foreign_type! {
         fn drop = hs::hs_free_compile_error;
     }
 
-    pub unsafe type Database: Sync+Send {
+    pub(crate) unsafe type Database: Sync+Send {
         type CType = hs::hs_database_t;
         fn drop = hs::hs_free_database;
     }
 
-    pub unsafe type Scratch: Send {
+    pub(crate) unsafe type Scratch: Send {
         type CType = hs::hs_scratch_t;
         fn drop = hs::hs_free_scratch;
     }
 
-    pub unsafe type Stream: Send {
+    pub(crate) unsafe type Stream: Send {
         type CType = hs::hs_stream_t;
         fn drop = stream_drop;
     }
@@ -32,7 +32,7 @@ unsafe fn stream_drop(stream: *mut hs::hs_stream_t) {
 
 bitflags! {
     #[derive(Default)]
-    pub struct Flag: u32 {
+    pub(crate) struct Flag: u32 {
         const CASELESS = hs::HS_FLAG_CASELESS;
         const DOTALL = hs::HS_FLAG_DOTALL;
         const MULTILINE = hs::HS_FLAG_MULTILINE;
@@ -47,14 +47,14 @@ bitflags! {
     }
 }
 
-pub struct Pattern {
+pub(crate) struct Pattern {
     expression: Vec<u8>,
     flags: Flag,
     id: Option<u32>,
 }
 
 impl Pattern {
-    pub fn new(expression: Vec<u8>, flags: Flag, id: Option<u32>) -> Self {
+    pub(crate) fn new(expression: Vec<u8>, flags: Flag, id: Option<u32>) -> Self {
         Self {
             expression,
             flags,
@@ -64,7 +64,7 @@ impl Pattern {
 }
 
 impl Database {
-    pub fn new(patterns: Vec<Pattern>, mode: ScanMode) -> Result<Self, Error> {
+    pub(crate) fn new(patterns: Vec<Pattern>, mode: ScanMode) -> Result<Self, Error> {
         let mut c_exprs = Vec::with_capacity(patterns.len());
         let mut c_flags = Vec::with_capacity(patterns.len());
         let mut c_ids = Vec::with_capacity(patterns.len());
@@ -107,7 +107,7 @@ impl Database {
 }
 
 impl Scratch {
-    pub fn new(database: &Database) -> Result<Self, Error> {
+    pub(crate) fn new(database: &Database) -> Result<Self, Error> {
         let mut scratch = MaybeUninit::zeroed();
         unsafe {
             hs::hs_alloc_scratch(database.as_ptr(), scratch.as_mut_ptr())
@@ -117,7 +117,7 @@ impl Scratch {
     }
 }
 impl Stream {
-    pub fn new(database: &Database) -> Result<Self, Error> {
+    pub(crate) fn new(database: &Database) -> Result<Self, Error> {
         let mut stream = MaybeUninit::uninit();
         unsafe {
             hs::hs_open_stream(database.as_ptr(), 0, stream.as_mut_ptr())
@@ -153,7 +153,7 @@ impl From<*mut hs::hs_compile_error> for Error {
 }
 
 bitflags! {
-pub struct ScanMode: u32 {
+pub(crate) struct ScanMode: u32 {
     const BLOCK = hs::HS_MODE_BLOCK;
     const VECTORED = hs::HS_MODE_VECTORED;
     const STREAM = hs::HS_MODE_STREAM;
