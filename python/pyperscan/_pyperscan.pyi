@@ -1,9 +1,9 @@
 from array import array
 from collections.abc import Collection
 from mmap import mmap
-from typing import Any, Generic, Protocol, TypeAlias, TypeVar, Union
+from typing import Any, Generic, Protocol, TypeAlias, TypeVar
 
-BufferType: TypeAlias = Union[array[int], bytes, bytearray, memoryview, mmap]
+BufferType: TypeAlias = array[int] | bytes | bytearray | memoryview | mmap
 _TContext_contra = TypeVar("_TContext_contra", contravariant=True)
 _TScanner = TypeVar("_TScanner", BlockScanner, VectoredScanner, StreamScanner)
 
@@ -216,13 +216,13 @@ class Database(Generic[_TScanner]):
             on_match: callable to call when a match happens upon `scan` call.
         """
 
-class BlockDatabase(Database[BlockScanner]):  # noqa: F821
+class BlockDatabase(Database[BlockScanner]):
     """A database for block (non-streaming) scanning."""
 
-class VectoredDatabase(Database[VectoredScanner]):  # noqa: F821
+class VectoredDatabase(Database[VectoredScanner]):
     """A databes for vectored scanning."""
 
-class StreamDatabase(Database[StreamScanner]):  # noqa: F821
+class StreamDatabase(Database[StreamScanner]):
     """A database for stream scanning."""
 
 class Scan:
