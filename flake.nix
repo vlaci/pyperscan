@@ -183,7 +183,7 @@
                 ))
               ];
               env = {
-                UV_SYSTEM_PYTHON = "true";
+                UV_PYTHON_PREFERENCE = "only-system";
               };
               shellHook =
                 let
