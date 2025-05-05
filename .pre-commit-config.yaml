@@ -51,7 +51,7 @@ repos:
         args: ["--no-default-features", "--", "-D", "warnings"]
 
   - repo: https://github.com/renovatebot/pre-commit-hooks
-    rev: 39.262.1
+    rev: 39.264.0
     hooks:
       - id: renovate-config-validator
         args: [--strict]
