@@ -17,7 +17,7 @@ jobs:
     name: Checks
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - uses: cachix/install-nix-action@v30
       - uses: cachix/cachix-action@v12
         with:
@@ -59,7 +59,7 @@ jobs:
     name: Nix - ${{ matrix.arch }}.${{ matrix.drv }}
     runs-on: ${{ matrix.os }}
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           submodules: true
       - uses: cachix/install-nix-action@v30
@@ -79,7 +79,7 @@ jobs:
       - checks
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - uses: PyO3/maturin-action@v1
         with:
           container: off
@@ -112,7 +112,7 @@ jobs:
     permissions:
       packages: write
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           submodules: true
       - name: Cache rust
@@ -160,7 +160,7 @@ jobs:
       matrix:
         target: [x86_64, aarch64]
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           submodules: true
       - name: Cache rust
