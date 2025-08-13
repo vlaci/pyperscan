@@ -204,7 +204,7 @@ jobs:
       - linux-wheels
       - macos-wheel
     steps:
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v5
         with:
           path: dist
           merge-multiple: true
