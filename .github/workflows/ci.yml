@@ -86,7 +86,7 @@ jobs:
           command: sdist
           args: -o dist
       - name: Upload sdist
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: sdist
           path: dist
@@ -144,7 +144,7 @@ jobs:
       - run: podman push $image:latest
         if: github.ref_name == 'main'
       - name: Upload wheels
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: wheels-${{ matrix.arch }}
           path: dist
@@ -180,7 +180,7 @@ jobs:
           args: --release --out dist -F vectorscan
           sccache: "true"
       - name: Upload wheels
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: wheels-${{ matrix.target }}-darwin
           path: dist
@@ -204,7 +204,7 @@ jobs:
       - linux-wheels
       - macos-wheel
     steps:
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v8
         with:
           path: dist
           merge-multiple: true
