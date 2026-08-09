@@ -17,7 +17,7 @@ repos:
         exclude: "CHANGELOG.md|changelog.d/.*"
 
   - repo: https://github.com/python-jsonschema/check-jsonschema
-    rev: 0.33.3
+    rev: 0.38.0
     hooks:
       - id: check-github-workflows
 
