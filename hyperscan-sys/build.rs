@@ -99,6 +99,12 @@ fn main() {
             .define("CMAKE_POLICY_VERSION_MINIMUM", "3.5")
             .define("FAT_RUNTIME", toggle)
             .define("BUILD_AVX512", toggle)
+            // only the library is needed; unit tests also fail on macOS < 10.13 (aligned new)
+            .define("BUILD_UNIT", "OFF")
+            .define("BUILD_TOOLS", "OFF")
+            .define("BUILD_EXAMPLES", "OFF")
+            .define("BUILD_BENCHMARKS", "OFF")
+            .define("BUILD_DOC", "OFF")
             .build();
 
         println!("cargo:rerun-if-changed={}", file!());
