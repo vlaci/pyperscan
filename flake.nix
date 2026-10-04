@@ -32,7 +32,6 @@
     let
       supportedSystems = [
         "x86_64-linux"
-        "x86_64-darwin"
         "aarch64-linux"
         "aarch64-darwin"
       ];
@@ -52,13 +51,6 @@
     {
       overlays.default =
         final: prev:
-        let
-          stdenv =
-            if prev.stdenv.isDarwin then
-              final.overrideLibcxx final.darwin.apple_sdk_11_0.llvmPackages_14.stdenv
-            else
-              prev.stdenv;
-        in
         {
           pythonPackagesExtensions = prev.pythonPackagesExtensions ++ [
             (python-final: python-prev: {
@@ -124,7 +116,6 @@
               ) { };
             })
           ];
-          vectorscan = prev.vectorscan.override { inherit stdenv; };
         };
       checks = forAllSystems (
         system:
@@ -137,7 +128,7 @@
         ]
       );
 
-      formatter = forAllSystems (system: nixpkgsFor.${system}.nixpkgs-fmt);
+      formatter = forAllSystems (system: nixpkgsFor.${system}.nixfmt);
 
       packages = forAllSystems (
         system:
@@ -160,9 +151,9 @@
             with pkgs;
             mkShell {
               buildInputs = [
-                python3Packages.uvVenvShellHook
-                python3Packages.maturinImportShellHook
-                python3Packages.autoPatchelfVenvShellHook
+                python314
+                python314Packages.uvVenvShellHook
+                python314Packages.maturinImportShellHook
                 just
                 maturin
                 nodejs
@@ -188,11 +179,12 @@
                     ];
                   }
                 ))
+              ] ++ lib.optionals stdenv.hostPlatform.isLinux [ python314Packages.autoPatchelfVenvShellHook ];
+              uvExtraArgs = [
+                "--group"
+                "test"
               ];
-              env = {
-                UV_LINK_MODE = "copy";
-              };
-              libraries = lib.makeLibraryPath [
+              libraries = [
                 stdenv.cc.cc.lib
                 file
               ];

@@ -42,7 +42,7 @@ def test_pattern_expression_argument_is_required():
 def test_pattern_expression_argument_must_be_str():
     with pytest.raises(
         TypeError,
-        match="argument 'expression': 'str' object cannot be converted to 'PyBytes'",
+        match="'str' object is not an instance of 'bytes'",
     ):
         ps.Pattern("foo")  # type: ignore
 
@@ -50,7 +50,7 @@ def test_pattern_expression_argument_must_be_str():
 def test_pattern_flags_argument_must_be_flags():
     with pytest.raises(
         TypeError,
-        match="'int' object cannot be converted to 'Flag'",
+        match="'int' object is not an instance of 'Flag'",
     ):
         ps.Pattern(b"foo", 123)  # type: ignore
 

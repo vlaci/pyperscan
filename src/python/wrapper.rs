@@ -15,8 +15,10 @@ impl Deref for Buffer<'_> {
     }
 }
 
-impl<'a> FromPyObject<'a> for Buffer<'a> {
-    fn extract_bound(ob: &Bound<'a, PyAny>) -> PyResult<Self> {
+impl<'a, 'py> FromPyObject<'a, 'py> for Buffer<'a> {
+    type Error = PyErr;
+
+    fn extract(ob: Borrowed<'a, 'py, PyAny>) -> PyResult<Self> {
         let mut buf = ptr::null::<u8>();
         let mut len = 0usize;
         let buf = unsafe {

@@ -95,6 +95,8 @@ fn main() {
         let dst = cmake::Config::new(&src_dir)
             .profile("release")
             .define("CMAKE_INSTALL_INCLUDEDIR", &include_dir)
+            // CMake 4 rejects the vendored sources' cmake_minimum_required < 3.5
+            .define("CMAKE_POLICY_VERSION_MINIMUM", "3.5")
             .define("FAT_RUNTIME", toggle)
             .define("BUILD_AVX512", toggle)
             .build();
