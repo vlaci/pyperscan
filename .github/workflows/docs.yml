@@ -24,11 +24,9 @@ jobs:
     name: Documentation
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - name: Setup uv
-        uses: astral-sh/setup-uv@v6
-        with:
-          python-version-file: ".python-version"
+        uses: astral-sh/setup-uv@v10.2.0
       - run: |
           uv sync --no-install-project --group docs
           uv run mkdocs gh-deploy --force

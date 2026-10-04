@@ -17,9 +17,9 @@ jobs:
     name: Checks
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: cachix/install-nix-action@v30
-      - uses: cachix/cachix-action@v16
+      - uses: actions/checkout@v7
+      - uses: cachix/install-nix-action@v31
+      - uses: cachix/cachix-action@v17
         with:
           name: pyperscan
           authToken: "${{ secrets.CACHIX_AUTH_TOKEN }}"
@@ -31,8 +31,9 @@ jobs:
       - name: Code coverage
         run: |
           nix build .#checks.x86_64-linux.pytest-coverage -o pytest.codecov
-      - uses: codecov/codecov-action@v3
+      - uses: codecov/codecov-action@v7
         with:
+          token: ${{ secrets.CODECOV_TOKEN }}
           flags: pytest
           files: pytest.codecov
   build:
@@ -59,11 +60,11 @@ jobs:
     name: Nix - ${{ matrix.arch }}.${{ matrix.drv }}
     runs-on: ${{ matrix.os }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           submodules: true
-      - uses: cachix/install-nix-action@v30
-      - uses: cachix/cachix-action@v16
+      - uses: cachix/install-nix-action@v31
+      - uses: cachix/cachix-action@v17
         with:
           name: pyperscan
           authToken: "${{ secrets.CACHIX_AUTH_TOKEN }}"
@@ -79,14 +80,14 @@ jobs:
       - checks
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - uses: PyO3/maturin-action@v1
         with:
           container: off
           command: sdist
           args: -o dist
       - name: Upload sdist
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: sdist
           path: dist
@@ -112,7 +113,7 @@ jobs:
     permissions:
       packages: write
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           submodules: true
       - name: Cache rust
@@ -120,7 +121,7 @@ jobs:
         with:
           key: wheel-linux-${{ matrix.arch }}-${{ matrix.tag }}
       - name: Install dependencies
-        uses: extractions/setup-crate@v1
+        uses: extractions/setup-crate@v2
         with:
           owner: casey
           name: just
@@ -130,7 +131,7 @@ jobs:
           sudo apt update
           sudo apt install -q -y podman
       - name: Log in to the GitHub Container registry
-        uses: redhat-actions/podman-login@v1
+        uses: redhat-actions/podman-login@v2
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
@@ -144,7 +145,7 @@ jobs:
       - run: podman push $image:latest
         if: github.ref_name == 'main'
       - name: Upload wheels
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: wheels-${{ matrix.arch }}
           path: dist
@@ -153,14 +154,21 @@ jobs:
     needs:
       - checks
     name: Build wheel - ${{ matrix.target }}-apple-darwin
-    runs-on: macos-13
+    runs-on: ${{ matrix.os }}
     env:
-      MACOSX_DEPLOYMENT_TARGET: "10.9"
+      MACOSX_DEPLOYMENT_TARGET: "10.12"
+      # runner CMake 4 rejects the vendored cmake_minimum_required < 3.5
+      CMAKE_POLICY_VERSION_MINIMUM: "3.5"
     strategy:
+      fail-fast: false
       matrix:
-        target: [x86_64, aarch64]
+        include:
+          - target: x86_64
+            os: macos-15-intel
+          - target: aarch64
+            os: macos-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           submodules: true
       - name: Cache rust
@@ -180,16 +188,13 @@ jobs:
           args: --release --out dist -F vectorscan
           sccache: "true"
       - name: Upload wheels
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: wheels-${{ matrix.target }}-darwin
           path: dist
       - name: Setup uv
-        uses: astral-sh/setup-uv@v6
-        with:
-          python-version-file: ".python-version"
+        uses: astral-sh/setup-uv@v10.2.0
       - name: Test wheels
-        if: ${{ matrix.target == 'x86_64' }}
         run: |
           uv sync --no-install-project --group test
           uv pip install dist/*.whl
@@ -204,7 +209,7 @@ jobs:
       - linux-wheels
       - macos-wheel
     steps:
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v8
         with:
           path: dist
           merge-multiple: true
