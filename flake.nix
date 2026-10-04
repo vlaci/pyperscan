@@ -57,36 +57,31 @@
               pyperscan = final.callPackage (
                 {
                   lib,
-                  system,
                   rustPlatform,
                   boost,
-                  hyperscan,
+                  cmake,
+                  ragel,
+                  util-linux,
                   vectorscan,
-                  vendorHyperscan ? false,
-                  vendorVectorscan ? false,
                 }:
 
-                assert vendorHyperscan -> !vendorVectorscan;
-                assert vendorVectorscan -> !vendorHyperscan;
-
                 let
-                  inherit (lib) optional optionalString;
-                  vendor = vendorHyperscan || vendorVectorscan;
+                  inherit (lib) optionalString;
                   cmLib = crane-maturin.mkLib crane final;
 
                   cppFilter =
-                    path: _type: builtins.match ".*/hyperscan-sys/(wrapper.h|hyperscan|vectorscan).*$" path != null;
+                    path: _type: builtins.match ".*/hyperscan-sys/(wrapper.h|vectorscan).*$" path != null;
 
                   pyFilter =
                     path: _type:
                     builtins.match ".*pyi?$|.*/py.typed$|.*/pyproject.toml|.*/README.md$|.*/LICENSE" path != null;
                   testFilter = p: t: builtins.match ".*/(tests|tests/.*\.py|examples|examples/.*\.py)$" p != null;
                   sourceFilter = path: type: (cppFilter path type) || (cmLib.filterCargoSources path type);
-                  drv = cmLib.buildMaturinPackage {
+                  # vendored = statically build the bundled vectorscan submodule; otherwise link nixpkgs vectorscan
+                  drvFor = vendored: cmLib.buildMaturinPackage {
                     pname =
                       "pyperscan"
-                      + optionalString vendorHyperscan "-hyperscan"
-                      + optionalString vendorVectorscan "-vectorscan";
+                      + optionalString vendored "-vectorscan";
                     src = lib.cleanSourceWith {
                       src = cmLib.path ./.;
                       filter = p: t: (pyFilter p t) || (sourceFilter p t);
@@ -97,22 +92,29 @@
                     };
                     inherit advisory-db;
 
-                    nativeBuildInputs = with rustPlatform; [
-                      bindgenHook
+                    nativeBuildInputs = [
+                      rustPlatform.bindgenHook
+                    ] ++ lib.optionals vendored [
+                      cmake
+                      ragel
+                      util-linux # `rev`, used by vectorscan's fat-runtime build_wrapper.sh
                     ];
+                    # cmake is only used by the build script, not as a setup hook
+                    dontUseCmakeConfigure = true;
                     buildInputs =
-                      optional vendor boost
-                      ++ optional (system == "x86_64-linux") hyperscan
-                      ++ optional (system != "x86_64-linux") vectorscan;
+                      if vendored then [ boost ] else [ vectorscan ];
+                    maturinBuildFlags = lib.optionals vendored [
+                      "-F"
+                      "vectorscan"
+                    ];
 
                     passthru = {
-                      shared = drv;
-                      hyperscan = drv.override { vendorHyperscan = true; };
-                      vectorscan = drv.override { vendorVectorscan = true; };
+                      shared = drvFor false;
+                      vectorscan = drvFor true;
                     };
                   };
                 in
-                drv
+                drvFor false
               ) { };
             })
           ];

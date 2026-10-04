@@ -20,7 +20,6 @@ test *args="--":
     .venv/bin/pytest "$@"
 
 build-shared: _build
-build-static-hyperscan: (_build "-F" "hyperscan")
 build-static-vectorscan: (_build "-F" "vectorscan")
 
 wheel target: (ensure-foreign-emulation target) (_build_container target) (_build_in_container target) (_test_in_container target)

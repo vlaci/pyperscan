@@ -13,7 +13,6 @@ readme.workspace = true
 build = "build.rs"
 
 [features]
-hyperscan = ["cmake"]
 vectorscan = ["cmake"]
 
 [build-dependencies]
