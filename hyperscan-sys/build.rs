@@ -1,12 +1,6 @@
 use std::env;
 use std::path;
 
-#[cfg(feature = "hyperscan")]
-const SOURCE: &str = "hyperscan";
-
-#[cfg(feature = "vectorscan")]
-const SOURCE: &str = "vectorscan";
-
 fn main() {
     let out_path = path::PathBuf::from(env::var("OUT_DIR").unwrap());
     #[allow(unused_mut)]
@@ -16,12 +10,12 @@ fn main() {
         .allowlist_var("HS_.*")
         .header("wrapper.h");
 
-    #[cfg(any(feature = "hyperscan", feature = "vectorscan"))]
+    #[cfg(feature = "vectorscan")]
     {
-        let src_dir = path::Path::new(env!("CARGO_MANIFEST_DIR")).join(SOURCE);
+        let src_dir = path::Path::new(env!("CARGO_MANIFEST_DIR")).join("vectorscan");
         src_dir
             .try_exists()
-            .expect("Hyperscan source directory doesn't exist");
+            .expect("vectorscan source directory doesn't exist");
         let include_dir = out_path
             .join("include")
             .into_os_string()
@@ -121,7 +115,7 @@ fn main() {
 
         config = config.clang_arg(format!("-I{}", &include_dir));
     }
-    #[cfg(not(any(feature = "hyperscan", feature = "vectorscan")))]
+    #[cfg(not(feature = "vectorscan"))]
     {
         println!("cargo:rustc-link-lib=hs");
     }

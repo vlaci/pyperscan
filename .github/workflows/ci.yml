@@ -47,9 +47,6 @@ jobs:
             drv: "shared"
           - os: ubuntu-latest
             arch: x86_64-linux
-            drv: "hyperscan"
-          - os: ubuntu-latest
-            arch: x86_64-linux
             drv: "vectorscan"
           - os: ubuntu-24.04-arm
             arch: aarch64-linux

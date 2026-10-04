@@ -1,6 +1,3 @@
 [submodule "hyperscan-src/vectorscan"]
 	path = hyperscan-sys/vectorscan
 	url = https://github.com/VectorCamp/vectorscan
-[submodule "hyperscan-src/hyperscan"]
-	path = hyperscan-sys/hyperscan
-	url = https://github.com/intel/hyperscan
