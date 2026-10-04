@@ -50,7 +50,7 @@ _test_in_container target:
         whl=(dist/pyperscan-*$ARCH*.whl)
         curl -LsSf https://astral.sh/uv/install.sh | sh
         export PATH=/root/.local/bin:$PATH
-        uv sync --no-install-project --group test
+        uv sync --no-install-project --only-group test
         uv pip install $whl
         .venv/bin/pytest
     EOF

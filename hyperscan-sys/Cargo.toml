@@ -17,5 +17,5 @@ hyperscan = ["cmake"]
 vectorscan = ["cmake"]
 
 [build-dependencies]
-bindgen = "0.72.0"
-cmake = { version = "0.1", optional = true }
+bindgen = "0.73.2"
+cmake = { version = "0.1.58", optional = true }

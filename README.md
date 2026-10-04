@@ -6,7 +6,6 @@ use and safety.
 See [Usage](docs/usage.md) to get started and [API Documentation](docs/api.md) for a comprehensive
 overview.
 
-
 ## License
 
 Licensed under either of

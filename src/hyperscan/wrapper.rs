@@ -31,7 +31,7 @@ unsafe fn stream_drop(stream: *mut hs::hs_stream_t) {
 }
 
 bitflags! {
-    #[derive(Default)]
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
     pub(crate) struct Flag: u32 {
         const CASELESS = hs::HS_FLAG_CASELESS;
         const DOTALL = hs::HS_FLAG_DOTALL;
@@ -153,6 +153,7 @@ impl From<*mut hs::hs_compile_error> for Error {
 }
 
 bitflags! {
+#[derive(Clone, Copy, Debug, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub(crate) struct ScanMode: u32 {
     const BLOCK = hs::HS_MODE_BLOCK;
     const VECTORED = hs::HS_MODE_VECTORED;

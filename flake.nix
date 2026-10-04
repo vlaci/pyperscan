@@ -180,6 +180,8 @@
                   }
                 ))
               ] ++ lib.optionals stdenv.hostPlatform.isLinux [ python314Packages.autoPatchelfVenvShellHook ];
+              # nix python deps leak onto PYTHONPATH and shadow the uv-managed venv
+              shellHook = "unset PYTHONPATH";
               uvExtraArgs = [
                 "--group"
                 "test"
