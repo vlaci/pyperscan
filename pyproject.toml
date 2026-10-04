@@ -23,9 +23,8 @@ test = [
   "pytest ~= 9.1",
 ]
 docs = [
-    "mkdocs               ~= 1.5",
-    "mkdocstrings[python] ~=1.0",
-    "mkdocs-material      ~= 9.5",
+    "zensical>=0.0.67",
+    "mkdocstrings-python>=2.0.9",
 ]
 
 [project.urls]
