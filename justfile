@@ -45,6 +45,7 @@ _test_in_container target:
     #! /usr/bin/env bash
     set -xeuo pipefail
     cat <<"EOF" | podman run -v .:/usr/src/pyperscan -i {{ builder_image_prefix }}-{{ target }} bash -
+        set -euo pipefail
         cd /usr/src/pyperscan
         ARCH=$(echo "{{ target }}" | cut -d- -f1)
         whl=(dist/pyperscan-*$ARCH*.whl)
