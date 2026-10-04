@@ -30,12 +30,12 @@ jobs:
               --print-build-logs
       - name: Code coverage
         run: |
-          nix build .#checks.x86_64-linux.pytest-coverage -o pytest.codecov
+          nix build .#checks.x86_64-linux.pytest-coverage -o pytest
       - uses: codecov/codecov-action@v7
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           flags: pytest
-          files: pytest.codecov
+          files: pytest/coverage.codecov
   build:
     needs:
       - checks
