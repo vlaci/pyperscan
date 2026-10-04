@@ -101,7 +101,8 @@
         "crane": "crane",
         "crane-maturin": "crane-maturin",
         "nixpkgs": "nixpkgs",
-        "rust-overlay": "rust-overlay"
+        "rust-overlay": "rust-overlay",
+        "shell-hooks": "shell-hooks"
       }
     },
     "rust-overlay": {
@@ -121,6 +122,21 @@
       "original": {
         "owner": "oxalica",
         "repo": "rust-overlay",
+        "type": "github"
+      }
+    },
+    "shell-hooks": {
+      "locked": {
+        "lastModified": 1740336380,
+        "narHash": "sha256-99eCQ6BQt81ZFbPMo9m6ZQoN/tMgcprK227KDbQlg2o=",
+        "owner": "vlaci",
+        "repo": "nix-shell-hooks",
+        "rev": "60deffbc14de35d950d2625aee5d1cf8948f5967",
+        "type": "github"
+      },
+      "original": {
+        "owner": "vlaci",
+        "repo": "nix-shell-hooks",
         "type": "github"
       }
     }
