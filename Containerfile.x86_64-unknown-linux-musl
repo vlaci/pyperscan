@@ -1,7 +1,7 @@
 FROM quay.io/pypa/musllinux_1_1_x86_64:latest AS ragel
 
 WORKDIR /usr/src/colm
-RUN curl -L https://github.com/adrian-thurston/colm/archive/refs/tags/0.14.7.tar.gz | tar -xz --strip-components 1 \
+RUN curl -fsSL https://github.com/adrian-thurston/colm-suite/archive/refs/tags/colm-0.14.7.tar.gz | tar -xz --strip-components 1 \
     && ./autogen.sh \
     && ./configure --disable-manual \
     && make MAKEFLAGS=-j$(cat /proc/cpuinfo | grep processor | wc -l) \
@@ -9,7 +9,7 @@ RUN curl -L https://github.com/adrian-thurston/colm/archive/refs/tags/0.14.7.tar
     && make install
 
 WORKDIR /usr/src/ragel
-RUN curl -L https://github.com/adrian-thurston/ragel/archive/refs/tags/7.0.4.tar.gz | tar -xz --strip-components 1 \
+RUN curl -fsSL https://github.com/adrian-thurston/ragel/archive/refs/tags/7.0.4.tar.gz | tar -xz --strip-components 1 \
     && ./autogen.sh \
     && ./configure --disable-manual --with-colm=/usr/local \
     && make MAKEFLAGS=-j$(cat /proc/cpuinfo | grep processor | wc -l) \
