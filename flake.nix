@@ -14,6 +14,8 @@
       url = "github:rustsec/advisory-db";
       flake = false;
     };
+
+    shell-hooks.url = "github:vlaci/nix-shell-hooks";
   };
 
   outputs =
@@ -24,6 +26,7 @@
       crane-maturin,
       rust-overlay,
       advisory-db,
+      shell-hooks,
       ...
     }:
     let
@@ -41,6 +44,7 @@
           overlays = [
             self.overlays.default
             rust-overlay.overlays.default
+            shell-hooks.overlays.default
           ];
         }
       );
@@ -156,6 +160,9 @@
             with pkgs;
             mkShell {
               buildInputs = [
+                python3Packages.uvVenvShellHook
+                python3Packages.maturinImportShellHook
+                python3Packages.autoPatchelfVenvShellHook
                 just
                 maturin
                 nodejs
@@ -183,57 +190,12 @@
                 ))
               ];
               env = {
-                UV_PYTHON_PREFERENCE = "only-system";
                 UV_LINK_MODE = "copy";
               };
-              shellHook =
-                let
-                  drv = pkgs.buildEnv {
-                    name = "patchelf";
-                    paths = [
-                      pkgs.patchelf
-                      pkgs.auto-patchelf
-                    ];
-                  };
-                  venv = ".venv";
-                in
-                ''
-                  uv sync --group test
-                  source ${venv}/bin/activate
-
-                  python -m maturin_import_hook site install --detect-uv
-                  cat <<EOF > "${venv}"/${pkgs.python3.sitePackages}/addsite.pth
-                  import sys; exec(open(sys.prefix + "/${pkgs.python3.sitePackages}/sitecustomize.py").read())
-                  EOF
-
-                  _venv_checksum() {
-                    ${pkgs.nix}/bin/nix-hash --type sha256 "${venv}"/bin
-                  }
-
-                  _patchelf() {
-                    local VENV_CHECKSUM="$(_venv_checksum)"
-                    local VENV_CHECKSUM_FILE="${venv}/venv.checksum"
-                    local EXPECTED_VENV_CHECKSUM=
-
-                    if [[ -f "$VENV_CHECKSUM_FILE" ]]; then
-                      EXPECTED_VENV_CHECKSUM=$(<"$VENV_CHECKSUM_FILE")
-                    fi
-
-                    if [[ "$(_venv_checksum)" != "$EXPECTED_VENV_CHECKSUM" ]]; then
-                      ${drv}/bin/auto-patchelf \
-                        --paths ${venv}/bin \
-                        --libs ${pkgs.lib.makeLibraryPath [ pkgs.stdenv.cc.cc.lib ]} \
-                        --runtime-dependencies \
-                        --append-rpaths \
-                        --ignore-missing \
-                        --extra-args
-
-                      # patchelf may change the checksum
-                      echo "$(_venv_checksum)" > "$VENV_CHECKSUM_FILE"
-                    fi
-                  }
-                  _patchelf
-                '';
+              libraries = lib.makeLibraryPath [
+                stdenv.cc.cc.lib
+                file
+              ];
             };
         }
       );
