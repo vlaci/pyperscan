@@ -55,7 +55,7 @@ jobs:
             arch: aarch64-linux
             drv: "vectorscan"
           - os: macos-latest
-            arch: x86_64-darwin
+            arch: aarch64-darwin
             drv: vectorscan
     name: Nix - ${{ matrix.arch }}.${{ matrix.drv }}
     runs-on: ${{ matrix.os }}

@@ -21,7 +21,7 @@ COPY --from=ragel /build/ /
 
 RUN apk add boost-dev clang-libs
 
-ENV PATH="${PATH}:/opt/python/cp38-cp38/bin:/root/.cargo/bin"
+ENV PATH="${PATH}:/opt/python/cp311-cp311/bin:/root/.cargo/bin"
 ENV CARGO_NET_GIT_FETCH_WITH_CLI=true
 
 RUN pip install maturin \

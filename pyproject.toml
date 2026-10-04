@@ -7,7 +7,7 @@ dynamic = [
     'license',
     'readme',
 ]
-requires-python = ">=3.9"
+requires-python = ">=3.11"
 
 dependencies = []
 
@@ -72,7 +72,7 @@ name = "Fixed"
 showcontent = true
 
 [tool.ruff]
-target-version = "py39"
+target-version = "py311"
 
 exclude = [
   "hyperscan-sys/hyperscan",

@@ -24,7 +24,7 @@ RUN curl -L https://archives.boost.io/release/1.87.0/source/boost_1_87_0.tar.gz 
     && tar --strip-components 1 -xf boost.tar.gz -C /usr/include \
     && rm boost.tar.gz
 
-ENV PATH="${PATH}:/opt/python/cp38-cp38/bin:/root/.cargo/bin"
+ENV PATH="${PATH}:/opt/python/cp311-cp311/bin:/root/.cargo/bin"
 ENV CARGO_NET_GIT_FETCH_WITH_CLI=true
 
 RUN pip install maturin \
