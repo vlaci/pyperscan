@@ -19,7 +19,9 @@ FROM quay.io/pypa/musllinux_1_1_x86_64:latest
 
 COPY --from=ragel /build/ /
 
-RUN apk add boost-dev clang-libs
+# vectorscan's fat-runtime build_wrapper.sh needs GNU mktemp and a libc.so.6 to read libc symbols from
+RUN apk add boost-dev clang-libs coreutils \
+    && ln -s "$(readlink -f /usr/lib/libc.so)" /usr/lib/libc.so.6
 
 ENV PATH="${PATH}:/opt/python/cp311-cp311/bin:/root/.cargo/bin"
 ENV CARGO_NET_GIT_FETCH_WITH_CLI=true
