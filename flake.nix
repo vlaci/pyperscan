@@ -49,39 +49,36 @@
       );
     in
     {
-      overlays.default =
-        final: prev:
-        {
-          pythonPackagesExtensions = prev.pythonPackagesExtensions ++ [
-            (python-final: python-prev: {
-              pyperscan = final.callPackage (
-                {
-                  lib,
-                  rustPlatform,
-                  boost,
-                  cmake,
-                  ragel,
-                  util-linux,
-                  vectorscan,
-                }:
+      overlays.default = final: prev: {
+        pythonPackagesExtensions = prev.pythonPackagesExtensions ++ [
+          (python-final: python-prev: {
+            pyperscan = final.callPackage (
+              {
+                lib,
+                rustPlatform,
+                boost,
+                cmake,
+                ragel,
+                util-linux,
+                vectorscan,
+              }:
 
-                let
-                  inherit (lib) optionalString;
-                  cmLib = crane-maturin.mkLib crane final;
+              let
+                inherit (lib) optionalString;
+                cmLib = crane-maturin.mkLib crane final;
 
-                  cppFilter =
-                    path: _type: builtins.match ".*/hyperscan-sys/(wrapper.h|vectorscan).*$" path != null;
+                cppFilter = path: _type: builtins.match ".*/hyperscan-sys/(wrapper.h|vectorscan).*$" path != null;
 
-                  pyFilter =
-                    path: _type:
-                    builtins.match ".*pyi?$|.*/py.typed$|.*/pyproject.toml|.*/README.md$|.*/LICENSE" path != null;
-                  testFilter = p: t: builtins.match ".*/(tests|tests/.*\.py|examples|examples/.*\.py)$" p != null;
-                  sourceFilter = path: type: (cppFilter path type) || (cmLib.filterCargoSources path type);
-                  # vendored = statically build the bundled vectorscan submodule; otherwise link nixpkgs vectorscan
-                  drvFor = vendored: cmLib.buildMaturinPackage {
-                    pname =
-                      "pyperscan"
-                      + optionalString vendored "-vectorscan";
+                pyFilter =
+                  path: _type:
+                  builtins.match ".*pyi?$|.*/py.typed$|.*/pyproject.toml|.*/README.md$|.*/LICENSE" path != null;
+                testFilter = p: t: builtins.match ".*/(tests|tests/.*\.py|examples|examples/.*\.py)$" p != null;
+                sourceFilter = path: type: (cppFilter path type) || (cmLib.filterCargoSources path type);
+                # vendored = statically build the bundled vectorscan submodule; otherwise link nixpkgs vectorscan
+                drvFor =
+                  vendored:
+                  cmLib.buildMaturinPackage {
+                    pname = "pyperscan" + optionalString vendored "-vectorscan";
                     src = lib.cleanSourceWith {
                       src = cmLib.path ./.;
                       filter = p: t: (pyFilter p t) || (sourceFilter p t);
@@ -94,15 +91,15 @@
 
                     nativeBuildInputs = [
                       rustPlatform.bindgenHook
-                    ] ++ lib.optionals vendored [
+                    ]
+                    ++ lib.optionals vendored [
                       cmake
                       ragel
                       util-linux # `rev`, used by vectorscan's fat-runtime build_wrapper.sh
                     ];
                     # cmake is only used by the build script, not as a setup hook
                     dontUseCmakeConfigure = true;
-                    buildInputs =
-                      if vendored then [ boost ] else [ vectorscan ];
+                    buildInputs = if vendored then [ boost ] else [ vectorscan ];
                     maturinBuildFlags = lib.optionals vendored [
                       "-F"
                       "vectorscan"
@@ -113,12 +110,12 @@
                       vectorscan = drvFor true;
                     };
                   };
-                in
-                drvFor false
-              ) { };
-            })
-          ];
-        };
+              in
+              drvFor false
+            ) { };
+          })
+        ];
+      };
       checks = forAllSystems (
         system:
         let
@@ -181,10 +178,13 @@
                     ];
                   }
                 ))
-              ] ++ lib.optionals stdenv.hostPlatform.isLinux [ python314Packages.autoPatchelfVenvShellHook ];
+              ]
+              ++ lib.optionals stdenv.hostPlatform.isLinux [ python314Packages.autoPatchelfVenvShellHook ];
               # nix python deps leak onto PYTHONPATH and shadow the uv-managed venv
               shellHook = "unset PYTHONPATH";
               uvExtraArgs = [
+                "--group"
+                "docs"
                 "--group"
                 "test"
               ];

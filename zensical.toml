@@ -1,0 +1,58 @@
+[project]
+site_name = "pyperscan"
+site_url = "https://vlaci.github.io/pyperscan"
+repo_name = "vlaci/pyperscan"
+repo_url = "https://github.com/vlaci/pyperscan"
+nav = [
+  { "Home" = "index.md" },
+  { "Usage" = "usage.md" },
+  { "API Documentation" = "api.md" },
+  { "Changelog" = "changelog.md" },
+  { "License" = [
+    { "Apache" = "LICENSE-APACHE.md" },
+    { "MIT" = "LICENSE-MIT.md" },
+  ] },
+]
+
+[project.theme]
+features = ["content.code.annotate", "content.code.copy", "toc.integrate", "toc.follow", "navigation.instant", "navigation.top"]
+
+[project.theme.font]
+text = "Open Sans"
+code = "Fira Code"
+
+[[project.theme.palette]]
+media = "(prefers-color-scheme: light)"
+scheme = "default"
+primary = "deep purple"
+toggle.icon = "lucide/sun"
+toggle.name = "Switch to dark mode"
+
+[[project.theme.palette]]
+media = "(prefers-color-scheme: dark)"
+scheme = "slate"
+primary = "deep purple"
+toggle.icon = "lucide/moon"
+toggle.name = "Switch to light mode"
+
+[project.plugins.mkdocstrings.handlers.python]
+paths = ["python"]
+
+[project.plugins.mkdocstrings.handlers.python.options]
+allow_inspection = false
+separate_signature = true
+members_order = "source"
+
+[project.markdown_extensions.pymdownx.highlight]
+
+[project.markdown_extensions.pymdownx.snippets]
+
+[project.markdown_extensions.pymdownx.superfences]
+
+[project.markdown_extensions.attr_list]
+
+[project.markdown_extensions.md_in_html]
+
+[project.markdown_extensions.toc]
+permalink = "#"
+toc_depth = 2
