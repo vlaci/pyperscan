@@ -29,4 +29,4 @@ RUN pip install maturin \
 
 WORKDIR /usr/src/pyperscan
 
-CMD [ "maturin", "build", "-r", "-o", "dist", "--compatibility", "musllinux_1_1", "-F", "vectorscan" ]
+CMD [ "maturin", "build", "-r", "-o", "dist", "-i", "python3.11", "-i", "/opt/python/cp314-cp314t/bin/python3.14t", "--compatibility", "musllinux_1_1", "-F", "vectorscan" ]

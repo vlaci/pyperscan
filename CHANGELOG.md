@@ -8,6 +8,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## Unreleased
 
+### Added
+
+- Free-threaded (no-GIL) CPython 3.14t support. `Pattern` and scanner objects can be passed between threads
+
 ### Changed
 
 - Dropped the Intel Hyperscan backend (the `hyperscan` Cargo feature, `just build-static-hyperscan` and the `hyperscan` Nix package)

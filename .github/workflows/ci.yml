@@ -174,10 +174,27 @@ jobs:
         run: |
           brew install boost ragel
           echo container= > $GITHUB_ENV
-      - uses: PyO3/maturin-action@v1
+      - name: Setup Python
+        id: python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.14"
+      - name: Setup free-threaded Python
+        id: python-nogil
+        uses: actions/setup-python@v6
+        with:
+          python-version: 3.14t
+      - name: Build wheels
+        uses: PyO3/maturin-action@v1
         with:
           target: ${{ matrix.target }}
-          args: --release --out dist -F vectorscan
+          args: --release --out dist -F vectorscan -i "${{ steps.python.outputs.python-path }}"
+          sccache: "true"
+      - name: Build free-threaded wheels
+        uses: PyO3/maturin-action@v1
+        with:
+          target: ${{ matrix.target }}
+          args: --release --out dist -F vectorscan -i "${{ steps.python-nogil.outputs.python-path }}"
           sccache: "true"
       - name: Upload wheels
         uses: actions/upload-artifact@v7
@@ -188,8 +205,14 @@ jobs:
         uses: astral-sh/setup-uv@v10.2.0
       - name: Test wheels
         run: |
-          uv sync --no-install-project --only-group test
-          uv pip install dist/*.whl
+          uv sync --no-install-project --only-group test --python "${{ steps.python.outputs.python-path }}"
+          uv pip install dist/*-abi3-*.whl
+          .venv/bin/pytest
+      - name: Test free-threaded wheels
+        run: |
+          rm -rf .venv
+          uv sync --no-install-project --only-group test --python "${{ steps.python-nogil.outputs.python-path }}"
+          uv pip install dist/*-cp314t-*.whl
           .venv/bin/pytest
 
   release:

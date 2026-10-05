@@ -88,6 +88,7 @@
                       filter = p: t: (sourceFilter p t) || (testFilter p t);
                     };
                     inherit advisory-db;
+                    inherit (python-final) python;
 
                     nativeBuildInputs = [
                       rustPlatform.bindgenHook
@@ -119,12 +120,16 @@
       checks = forAllSystems (
         system:
         let
-          inherit (nixpkgsFor.${system}.python3Packages) pyperscan;
+          pkgs = nixpkgsFor.${system};
+          inherit (pkgs.python3Packages) pyperscan;
         in
         builtins.removeAttrs pyperscan.passthru.tests [
           "test"
           "test-coverage"
         ]
+        // {
+          pytest-freethreading = pkgs.python314FreeThreading.pkgs.pyperscan.passthru.tests.pytest;
+        }
       );
 
       formatter = forAllSystems (system: nixpkgsFor.${system}.nixfmt);
