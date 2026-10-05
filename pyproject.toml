@@ -17,7 +17,6 @@ dev = [
     "mypy       ~= 2.4",
     "pre-commit ~= 4.6",
     "ruff       ~=0.16.10",
-    "towncrier  ~= 26.9",
 ]
 test = [
   "pytest ~= 9.1",
@@ -40,35 +39,6 @@ build-backend = "maturin"
 include = ["CHANGELOG.md"]
 python-source = "python"
 module-name = "pyperscan._pyperscan"
-
-[tool.towncrier]
-directory = "changelog.d"
-filename = "CHANGELOG.md"
-start_string = "<!-- towncrier release notes start -->\n"
-underlines = ["", "", ""]
-template = "changelog.d/changelog_template.jinja"
-title_format = "## [{version}](https://github.com/vlaci/pyperscan/tree/{version}) - {project_date}"
-issue_format = "[#{issue}](https://github.com/vlaci/pyperscan/issues/{issue})"
-
-[[tool.towncrier.type]]
-directory = "deprecated"
-name = "Deprecated"
-showcontent = true
-
-[[tool.towncrier.type]]
-directory = "added"
-name = "Added"
-showcontent = true
-
-[[tool.towncrier.type]]
-directory = "changed"
-name = "Changed"
-showcontent = true
-
-[[tool.towncrier.type]]
-directory = "fixed"
-name = "Fixed"
-showcontent = true
 
 [tool.ruff]
 target-version = "py311"

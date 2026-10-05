@@ -5,7 +5,7 @@ repos:
       - id: trailing-whitespace
         exclude: ".*\\.md"
       - id: end-of-file-fixer
-        exclude: "CHANGELOG.md|changelog.d/.*"
+        exclude: "CHANGELOG.md"
       - id: check-toml
       - id: check-yaml
       - id: check-added-large-files
@@ -14,7 +14,7 @@ repos:
     rev: v3.1.0
     hooks:
       - id: prettier
-        exclude: "CHANGELOG.md|changelog.d/.*|docs/.*|flake.lock"
+        exclude: "CHANGELOG.md|docs/.*|flake.lock"
 
   - repo: https://github.com/python-jsonschema/check-jsonschema
     rev: 0.38.2
