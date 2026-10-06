@@ -4,11 +4,23 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-This project uses [_towncrier_](https://towncrier.readthedocs.io/) and the changes for the upcoming release can be found in <https://github.com/twisted/my-project/tree/main/changelog.d/>.
-
 <!-- --8<-- [start:changelog] -->
 
-<!-- towncrier release notes start -->
+## Unreleased
+
+### Added
+
+- Free-threaded (no-GIL) CPython 3.14t support. `Pattern` and scanner objects can be passed between threads
+
+### Changed
+
+- Dropped the Intel Hyperscan backend (the `hyperscan` Cargo feature, `just build-static-hyperscan` and the `hyperscan` Nix package)
+- Switched to uv project manager from PDM [#43](https://github.com/vlaci/pyperscan/issues/43)
+- Updated codebase to support PyO3 0.23 [#39](https://github.com/vlaci/pyperscan/issues/39)
+
+### Fixed
+
+- `StreamScanner` no longer allows its `StreamDatabase` to be garbage-collected why the it is in use
 
 ## [0.3.0](https://github.com/vlaci/pyperscan/tree/0.3.0) - 2023-12-12
 

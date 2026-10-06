@@ -1,4 +1,5 @@
 import mmap
+from concurrent.futures import ThreadPoolExecutor
 from unittest import mock
 
 import pyperscan as ps
@@ -209,3 +210,19 @@ def test_scanning_can_be_aborted(database, data, ctx, on_match):
     on_match.return_value = ps.Scan.Terminate
     assert scan.scan(data) == ps.Scan.Terminate
     assert on_match.call_count == 1
+
+
+@pytest.mark.parametrize(
+    "db_cls,data",
+    [
+        (ps.BlockDatabase, b"foo"),
+        (ps.VectoredDatabase, (b"foo",)),
+        (ps.StreamDatabase, b"foo"),
+    ],
+)
+def test_objects_can_be_used_from_other_threads(db_cls, data, ctx, tag, on_match):
+    pat = ps.Pattern(b"foo", ps.Flag.SOM_LEFTMOST, tag=tag)
+    with ThreadPoolExecutor(1) as ex:
+        scan = ex.submit(lambda: db_cls(pat).build(ctx, on_match)).result()
+    scan.scan(data)
+    on_match.assert_called_once_with(ctx, tag, 0, 3)

@@ -1,4 +1,5 @@
 use std::ops::Deref;
+use std::sync::Mutex;
 
 use super::Buffer;
 use crate::hyperscan::{
@@ -7,7 +8,7 @@ use crate::hyperscan::{
 };
 use pyo3::{create_exception, exceptions::PyValueError, prelude::*, types::PyTuple};
 
-#[pyclass(name = "Pattern", module = "pyperscan._pyperscan", unsendable)]
+#[pyclass(name = "Pattern", module = "pyperscan._pyperscan", frozen)]
 struct PyPattern {
     expression: Vec<u8>,
     tag: Option<Py<PyAny>>,
@@ -131,17 +132,21 @@ impl PyBlockDatabase {
     ) -> PyResult<PyBlockScanner> {
         let context = create_context(py, &self.tag_mapping, user_data, match_event_handler)?;
         let scanner = self.db.create_scanner(context)?;
-        Ok(PyBlockScanner(scanner))
+        Ok(PyBlockScanner(Mutex::new(scanner)))
     }
 }
 
-#[pyclass(unsendable, name = "BlockScanner", module = "pyperscan._pyperscan")]
-struct PyBlockScanner(BlockScanner<PyContext>);
+#[pyclass(name = "BlockScanner", module = "pyperscan._pyperscan")]
+struct PyBlockScanner(Mutex<BlockScanner<PyContext>>);
 
 #[pymethods]
 impl PyBlockScanner {
     fn scan(&mut self, py: Python, data: Buffer) -> PyResult<PyScan> {
-        py.detach(|| Ok(self.0.scan(&data)?.into()))
+        let scanner = self
+            .0
+            .get_mut()
+            .expect("mutex is never locked, it is used only to implement Sync");
+        py.detach(|| Ok(scanner.scan(&data)?.into()))
     }
 }
 
@@ -171,12 +176,12 @@ impl PyVectoredDatabase {
     ) -> PyResult<PyVectoredScanner> {
         let context = create_context(py, &self.tag_mapping, user_data, match_event_handler)?;
         let scanner = self.db.create_scanner(context)?;
-        Ok(PyVectoredScanner(scanner))
+        Ok(PyVectoredScanner(Mutex::new(scanner)))
     }
 }
 
-#[pyclass(unsendable, name = "VectoredScanner", module = "pyperscan._pyperscan")]
-struct PyVectoredScanner(VectoredScanner<PyContext>);
+#[pyclass(name = "VectoredScanner", module = "pyperscan._pyperscan")]
+struct PyVectoredScanner(Mutex<VectoredScanner<PyContext>>);
 
 #[pymethods]
 impl PyVectoredScanner {
@@ -185,9 +190,13 @@ impl PyVectoredScanner {
             .iter()
             .map(|d| d.extract::<Buffer>())
             .collect::<PyResult<Vec<_>>>()?;
+        let scanner = self
+            .0
+            .get_mut()
+            .expect("mutex is never locked, it is used only to implement Sync");
         py.detach(|| {
             let data = data.iter().map(|d| d.deref()).collect();
-            Ok(self.0.scan(data)?.into())
+            Ok(scanner.scan(data)?.into())
         })
     }
 }
@@ -217,24 +226,28 @@ impl PyStreamDatabase {
     ) -> PyResult<PyStreamScanner> {
         let context = create_context(py, &self.tag_mapping, user_data, match_event_handler)?;
         let scanner = self.db.create_scanner(context)?;
-        Ok(PyStreamScanner(scanner))
+        Ok(PyStreamScanner(Mutex::new(scanner)))
     }
 }
 
-#[pyclass(name = "StreamScanner", module = "pyperscan._pyperscan", unsendable)]
-struct PyStreamScanner(StreamScanner<PyContext>);
+#[pyclass(name = "StreamScanner", module = "pyperscan._pyperscan")]
+struct PyStreamScanner(Mutex<StreamScanner<PyContext>>);
 
 #[pymethods]
 impl PyStreamScanner {
     #[pyo3(signature = (data, chunk_size = None))]
     fn scan(&mut self, py: Python, data: Buffer, chunk_size: Option<usize>) -> PyResult<PyScan> {
+        let scanner = self
+            .0
+            .get_mut()
+            .expect("mutex is never locked, it is used only to implement Sync");
         py.detach(|| {
             let mut rv = Scan::default();
             match chunk_size {
-                None => rv = self.0.scan(&data)?,
+                None => rv = scanner.scan(&data)?,
                 Some(length) => {
                     for slice in data.chunks(length) {
-                        rv = self.0.scan(slice)?;
+                        rv = scanner.scan(slice)?;
                         if rv == Scan::Terminate {
                             break;
                         }
@@ -247,7 +260,11 @@ impl PyStreamScanner {
     }
 
     fn reset(&mut self) -> PyResult<PyScan> {
-        Ok(self.0.reset()?.into())
+        let scanner = self
+            .0
+            .get_mut()
+            .expect("mutex is never locked, it is used only to implement Sync");
+        Ok(scanner.reset()?.into())
     }
 }
 
@@ -262,7 +279,7 @@ fn to_tag_mapping(
         .iter()
         .enumerate()
         .map(move |(id, p)| {
-            let pat = p.borrow_mut(py);
+            let pat = p.get();
             let tag = pat.tag.as_ref().map(|t| t.clone_ref(py));
             (
                 Pattern::new(
@@ -334,7 +351,7 @@ create_exception!(
     pyo3::exceptions::PyException
 );
 
-#[pymodule]
+#[pymodule(gil_used = false)]
 fn _pyperscan(py: Python<'_>, m: &Bound<'_, PyModule>) -> PyResult<()> {
     m.add_class::<PyFlag>()?;
     m.add_class::<PyScan>()?;
