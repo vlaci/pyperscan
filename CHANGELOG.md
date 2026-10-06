@@ -6,7 +6,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 <!-- --8<-- [start:changelog] -->
 
-## Unreleased
+## [0.4.0](https://github.com/vlaci/pyperscan/tree/0.4.0) - 2026-10-06
 
 ### Added
 
