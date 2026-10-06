@@ -16,7 +16,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 - Dropped the Intel Hyperscan backend (the `hyperscan` Cargo feature, `just build-static-hyperscan` and the `hyperscan` Nix package)
 - Switched to uv project manager from PDM [#43](https://github.com/vlaci/pyperscan/issues/43)
-- Updated codebase to support PyO3 0.23 [#39](https://github.com/vlaci/pyperscan/issues/39)
+- Code is now requires Python 3.11 or newer to work [#118](https://github.com/vlaci/pyperscan/pull/118)
 
 ### Fixed
 
