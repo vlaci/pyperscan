@@ -18,6 +18,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - Switched to uv project manager from PDM [#43](https://github.com/vlaci/pyperscan/issues/43)
 - Updated codebase to support PyO3 0.23 [#39](https://github.com/vlaci/pyperscan/issues/39)
 
+### Fixed
+
+- `StreamScanner` no longer allows its `StreamDatabase` to be garbage-collected why the it is in use
+
 ## [0.3.0](https://github.com/vlaci/pyperscan/tree/0.3.0) - 2023-12-12
 
 

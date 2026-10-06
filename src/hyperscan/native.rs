@@ -73,6 +73,8 @@ pub(crate) struct StreamDatabase {
 pub(crate) struct StreamScanner<U> {
     scratch: wrapper::Scratch,
     stream: wrapper::Stream,
+    // needed only to keep the db alive, and cannot use explicit lifetimes in PyO3 code
+    _database: Arc<wrapper::Database>,
     context: Context<U>,
 }
 
@@ -144,6 +146,7 @@ impl<U> StreamScanner<U> {
         Ok(Self {
             scratch,
             stream,
+            _database: db.db.clone(),
             context,
         })
     }
