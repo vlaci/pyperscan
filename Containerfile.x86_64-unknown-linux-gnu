@@ -16,5 +16,5 @@ RUN pip install maturin \
 RUN mkdir -p /usr/src/pyperscan
 WORKDIR /usr/src/pyperscan
 RUN echo -e '#!/usr/bin/env bash\nsource scl_source enable llvm-toolset-7\nexec "$@"' > /entrypoint.sh && chmod +x /entrypoint.sh
-CMD [ "maturin", "build", "-r", "-o", "dist", "-i", "python3.11", "-i", "/opt/python/cp314-cp314t/bin/python3.14t", "-F", "vectorscan" ]
+CMD [ "bash", "-c", "maturin build -r -o dist -i python3.11 -i /opt/python/cp314-cp314t/bin/python3.14t -F vectorscan && maturin build -r -o dist -i /opt/python/cp315-cp315t/bin/python3.15t -F vectorscan" ]
 ENTRYPOINT ["/entrypoint.sh"]

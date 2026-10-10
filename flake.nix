@@ -128,7 +128,8 @@
           "test-coverage"
         ]
         // {
-          pytest-freethreading = pkgs.python314FreeThreading.pkgs.pyperscan.passthru.tests.pytest;
+          pytest-py314t = pkgs.python314FreeThreading.pkgs.pyperscan.passthru.tests.pytest;
+          pytest-py315t = pkgs.python315FreeThreading.pkgs.pyperscan.passthru.tests.pytest;
         }
       );
 
