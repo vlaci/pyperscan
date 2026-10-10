@@ -6,6 +6,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 <!-- --8<-- [start:changelog] -->
 
+## Unreleased
+
+### Added
+
+- Built `abi3t` wheels, supporting the stable ABI for free-threaded wheels compatible with Python 3.15t and future versions https://peps.python.org/pep-0803/
+
+### Changed
+
+- musllinux wheels target `musllinux_1_2` instead of `musllinux_1_1`
+
 ## [0.4.0](https://github.com/vlaci/pyperscan/tree/0.4.0) - 2026-10-06
 
 ### Added
