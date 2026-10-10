@@ -1,4 +1,4 @@
-FROM quay.io/pypa/musllinux_1_1_x86_64:latest AS ragel
+FROM quay.io/pypa/musllinux_1_2_x86_64:latest AS ragel
 
 WORKDIR /usr/src/colm
 RUN curl -fsSL https://github.com/adrian-thurston/colm-suite/archive/refs/tags/colm-0.14.7.tar.gz | tar -xz --strip-components 1 \
@@ -15,12 +15,12 @@ RUN curl -fsSL https://github.com/adrian-thurston/ragel/archive/refs/tags/7.0.4.
     && make MAKEFLAGS=-j$(cat /proc/cpuinfo | grep processor | wc -l) \
     && make DESTDIR=/build install
 
-FROM quay.io/pypa/musllinux_1_1_x86_64:latest
+FROM quay.io/pypa/musllinux_1_2_x86_64:latest
 
 COPY --from=ragel /build/ /
 
 # vectorscan's fat-runtime build_wrapper.sh needs GNU mktemp and a libc.so.6 to read libc symbols from
-RUN apk add boost-dev clang-libs coreutils \
+RUN apk add boost-dev clang-libclang coreutils \
     && ln -s "$(readlink -f /usr/lib/libc.so)" /usr/lib/libc.so.6
 
 ENV PATH="${PATH}:/opt/python/cp311-cp311/bin:/root/.cargo/bin"
@@ -31,4 +31,4 @@ RUN pip install maturin \
 
 WORKDIR /usr/src/pyperscan
 
-CMD [ "maturin", "build", "-r", "-o", "dist", "-i", "python3.11", "-i", "/opt/python/cp314-cp314t/bin/python3.14t", "--compatibility", "musllinux_1_1", "-F", "vectorscan" ]
+CMD [ "maturin", "build", "-r", "-o", "dist", "-i", "python3.11", "-i", "/opt/python/cp314-cp314t/bin/python3.14t", "--compatibility", "musllinux_1_2", "-F", "vectorscan" ]
