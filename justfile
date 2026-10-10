@@ -46,13 +46,14 @@ _test_in_container target:
     cat <<"EOF" | podman run -v .:/usr/src/pyperscan -i {{ builder_image_prefix }}-{{ target }} bash -
         set -euo pipefail
         cd /usr/src/pyperscan
-        ARCH=$(echo "{{ target }}" | cut -d- -f1)
-        whl=(dist/pyperscan-*$ARCH*.whl)
         curl -LsSf https://astral.sh/uv/install.sh | sh
         export PATH=/root/.local/bin:$PATH
-        uv sync --no-install-project --only-group test
-        uv pip install $whl
-        .venv/bin/pytest
+        for py in cp311-cp311 cp314-cp314t cp315-cp315 cp315-cp315t; do
+            export VIRTUAL_ENV=/tmp/venv-$py UV_PROJECT_ENVIRONMENT=/tmp/venv-$py
+            uv sync --no-install-project --only-group test --python /opt/python/$py/bin/python
+            uv pip install --no-index --no-build --find-links dist pyperscan
+            $VIRTUAL_ENV/bin/pytest
+        done
     EOF
 
 ensure-foreign-emulation target:

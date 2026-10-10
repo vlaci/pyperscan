@@ -176,25 +176,37 @@ jobs:
           echo container= > $GITHUB_ENV
       - name: Setup Python
         id: python
-        uses: actions/setup-python@v6
+        uses: actions/setup-python@v7
         with:
           python-version: "3.14"
       - name: Setup free-threaded Python
         id: python-nogil
-        uses: actions/setup-python@v6
+        uses: actions/setup-python@v7
         with:
           python-version: 3.14t
+      - name: Setup Python 3.15
+        id: python315
+        uses: actions/setup-python@v7
+        with:
+          python-version: "3.15"
+          allow-prereleases: true
+      - name: Setup Python 3.15t
+        id: python-abi3t
+        uses: actions/setup-python@v7
+        with:
+          python-version: 3.15t
+          allow-prereleases: true
       - name: Build wheels
         uses: PyO3/maturin-action@v1
         with:
           target: ${{ matrix.target }}
-          args: --release --out dist -F vectorscan -i "${{ steps.python.outputs.python-path }}"
+          args: --release --out dist -F vectorscan -i "${{ steps.python.outputs.python-path }}" -i "${{ steps.python-nogil.outputs.python-path }}"
           sccache: "true"
-      - name: Build free-threaded wheels
+      - name: Build abi3t wheels
         uses: PyO3/maturin-action@v1
         with:
           target: ${{ matrix.target }}
-          args: --release --out dist -F vectorscan -i "${{ steps.python-nogil.outputs.python-path }}"
+          args: --release --out dist -F vectorscan -i "${{ steps.python-abi3t.outputs.python-path }}"
           sccache: "true"
       - name: Upload wheels
         uses: actions/upload-artifact@v7
@@ -205,15 +217,18 @@ jobs:
         uses: astral-sh/setup-uv@v10.2.0
       - name: Test wheels
         run: |
-          uv sync --no-install-project --only-group test --python "${{ steps.python.outputs.python-path }}"
-          uv pip install dist/*-abi3-*.whl
-          .venv/bin/pytest
-      - name: Test free-threaded wheels
-        run: |
-          rm -rf .venv
-          uv sync --no-install-project --only-group test --python "${{ steps.python-nogil.outputs.python-path }}"
-          uv pip install dist/*-cp314t-*.whl
-          .venv/bin/pytest
+          ls dist/*-cp311-abi3-*.whl dist/*-cp314-cp314t-*.whl dist/*-cp315-abi3.abi3t-*.whl
+          for py in \
+            "${{ steps.python.outputs.python-path }}" \
+            "${{ steps.python-nogil.outputs.python-path }}" \
+            "${{ steps.python315.outputs.python-path }}" \
+            "${{ steps.python-abi3t.outputs.python-path }}"
+          do
+            rm -rf .venv
+            uv sync --no-install-project --only-group test --python "$py"
+            uv pip install --no-index --no-build --find-links dist pyperscan
+            .venv/bin/pytest
+          done
 
   release:
     name: Release
@@ -228,10 +243,8 @@ jobs:
         with:
           path: dist
           merge-multiple: true
+      - uses: astral-sh/setup-uv@v10.2.0
       - name: Publish to PyPI
-        uses: messense/maturin-action@v1
         env:
-          MATURIN_PYPI_TOKEN: ${{ secrets.PYPI_API_TOKEN }}
-        with:
-          command: upload
-          args: --skip-existing dist/*
+          UV_PUBLISH_TOKEN: ${{ secrets.PYPI_API_TOKEN }}
+        run: uv publish --check-url https://pypi.org/simple/
