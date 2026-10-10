@@ -243,10 +243,8 @@ jobs:
         with:
           path: dist
           merge-multiple: true
+      - uses: astral-sh/setup-uv@v10.2.0
       - name: Publish to PyPI
-        uses: messense/maturin-action@v1
         env:
-          MATURIN_PYPI_TOKEN: ${{ secrets.PYPI_API_TOKEN }}
-        with:
-          command: upload
-          args: --skip-existing dist/*
+          UV_PUBLISH_TOKEN: ${{ secrets.PYPI_API_TOKEN }}
+        run: uv publish --check-url https://pypi.org/simple/
