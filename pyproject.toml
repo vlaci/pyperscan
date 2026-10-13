@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2022 László Vaskó <opensource@vlaci.email>
+#
+# SPDX-License-Identifier: MIT OR Apache-2.0
+
 [project]
 name = "pyperscan"
 version = "0.4.0"
@@ -8,6 +12,7 @@ dynamic = [
     'readme',
 ]
 requires-python = ">=3.11"
+license-files = ["LICENSES/*.txt"]
 
 dependencies = []
 

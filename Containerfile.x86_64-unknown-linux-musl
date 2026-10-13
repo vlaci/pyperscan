@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2023 László Vaskó <opensource@vlaci.email>
+#
+# SPDX-License-Identifier: MIT OR Apache-2.0
+
 FROM quay.io/pypa/musllinux_1_2_x86_64:latest AS ragel
 
 WORKDIR /usr/src/colm

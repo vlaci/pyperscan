@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 László Vaskó <opensource@vlaci.email>
+#
+# SPDX-License-Identifier: MIT OR Apache-2.0
+
 [project]
 site_name = "pyperscan"
 site_url = "https://vlaci.github.io/pyperscan"

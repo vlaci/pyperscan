@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2022 László Vaskó <opensource@vlaci.email>
+#
+# SPDX-License-Identifier: MIT OR Apache-2.0
+
 (import
   (fetchTarball {
     url = "https://github.com/edolstra/flake-compat/archive/99f1c2157fba4bfe6211a321fd0ee43199025dbf.tar.gz";

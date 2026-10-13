@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2022 László Vaskó <opensource@vlaci.email>
+#
+# SPDX-License-Identifier: MIT OR Apache-2.0
+
 {
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
@@ -162,6 +166,11 @@
               packageOverrides.cargo = rust;
               packageOverrides.clippy = rust;
             };
+            reuse = {
+              enable = true;
+              entry = "${pkgs.reuse}/bin/reuse --no-multiprocessing lint";
+              after = [ "reuse-annotate" ];
+            };
           };
         }
       );
@@ -176,7 +185,8 @@
           cppFilter = path: _type: builtins.match ".*/hyperscan-sys/(wrapper.h|vectorscan).*$" path != null;
           pyFilter =
             path: _type:
-            builtins.match ".*pyi?$|.*/py.typed$|.*/pyproject.toml|.*/README.md$|.*/LICENSE" path != null;
+            builtins.match ".*pyi?$|.*/py.typed$|.*/pyproject.toml|.*/README.md$|.*/LICENSES(/[^/]+\\.txt)?$" path
+            != null;
           sourceFilter = path: type: (cppFilter path type) || (cmLib.filterCargoSources path type);
           testFilter = p: _t: builtins.match ".*/(tests|tests/.*\.py|examples|examples/.*\.py)$" p != null;
 
