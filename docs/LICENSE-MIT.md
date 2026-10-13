@@ -1,1 +1,1 @@
---8<-- "LICENSE-MIT"
+--8<-- "LICENSES/MIT.txt"

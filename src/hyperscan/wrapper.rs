@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: 2022 László Vaskó <opensource@vlaci.email>
+//
+// SPDX-License-Identifier: MIT OR Apache-2.0
+
 use crate::hyperscan::{AsResult, Error};
 use bitflags::bitflags;
 use foreign_types::{foreign_type, ForeignType};

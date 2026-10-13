@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: 2022 László Vaskó <opensource@vlaci.email>
+//
+// SPDX-License-Identifier: MIT OR Apache-2.0
+
 use foreign_types::ForeignType;
 use hyperscan_sys as hs;
 use std::{ffi::c_void, sync::Arc};

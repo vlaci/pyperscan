@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: 2022 László Vaskó <opensource@vlaci.email>
+//
+// SPDX-License-Identifier: MIT OR Apache-2.0
+
 use std::ffi::{c_int, c_void};
 use std::ops::Deref;
 use std::ptr;

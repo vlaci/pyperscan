@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2023 László Vaskó <opensource@vlaci.email>
+#
+# SPDX-License-Identifier: MIT OR Apache-2.0
+
 name: Docs
 
 on:
@@ -11,7 +15,7 @@ on:
       - "tests/examples/**"
       - "README.md"
       - "CHANGELOG.md"
-      - "LICENSE-*"
+      - "LICENSES/**"
       - "zensical.toml"
       - ".github/workflows/docs.yml"
 

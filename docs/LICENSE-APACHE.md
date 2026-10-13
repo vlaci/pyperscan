@@ -1,1 +1,1 @@
---8<-- "LICENSE-APACHE"
+--8<-- "LICENSES/Apache-2.0.txt"

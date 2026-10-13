@@ -11,9 +11,9 @@ overview.
 Licensed under either of
 
 - Apache License, Version 2.0
-  ([LICENSE-APACHE](https://github.com/vlaci/pyperscan/blob/main/LICENSE-APACHE) or <https://www.apache.org/licenses/LICENSE-2.0>)
+  ([LICENSES/Apache-2.0.txt](https://github.com/vlaci/pyperscan/blob/main/LICENSES/Apache-2.0.txt) or <https://www.apache.org/licenses/LICENSE-2.0>)
 - MIT license
-  ([LICENSE-MIT](https://github.com/vlaci/pyperscan/blob/main/LICENSE-MIT) or <https://opensource.org/licenses/MIT>)
+  ([LICENSES/MIT.txt](https://github.com/vlaci/pyperscan/blob/main/LICENSES/MIT.txt) or <https://opensource.org/licenses/MIT>)
 
 at your option.
 
