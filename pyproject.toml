@@ -15,7 +15,6 @@ dependencies = []
 dev = [
     "maturin-import-hook>=0.2.0",
     "mypy       ~= 2.4",
-    "pre-commit ~= 4.6",
     "ruff       ~=0.16.10",
 ]
 test = [
@@ -42,6 +41,7 @@ module-name = "pyperscan._pyperscan"
 
 [tool.ruff]
 target-version = "py311"
+force-exclude = true
 
 exclude = [
   "hyperscan-sys/hyperscan",
