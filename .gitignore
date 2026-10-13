@@ -70,3 +70,4 @@ docs/_build/
 .vscode/
 .direnv/
 /site
+.pre-commit-config.yaml
