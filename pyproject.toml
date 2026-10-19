@@ -20,7 +20,7 @@ dependencies = []
 dev = [
     "maturin-import-hook>=0.2.0",
     "mypy       ~= 2.4",
-    "ruff       ~=0.16.10",
+    "ruff       ~=0.17.1",
 ]
 test = [
   "pytest ~= 9.1",
