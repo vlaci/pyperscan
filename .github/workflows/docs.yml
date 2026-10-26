@@ -41,7 +41,7 @@ jobs:
       - uses: actions/configure-pages@v5
       - uses: actions/checkout@v7
       - name: Setup uv
-        uses: astral-sh/setup-uv@v10.3.0
+        uses: astral-sh/setup-uv@v10.3.2
       - run: |
           uv sync --no-install-project --only-group docs
           uv run --no-sync zensical build --clean
