@@ -220,7 +220,7 @@ jobs:
           name: wheels-${{ matrix.target }}-darwin
           path: dist
       - name: Setup uv
-        uses: astral-sh/setup-uv@v10.3.0
+        uses: astral-sh/setup-uv@v10.3.2
       - name: Test wheels
         run: |
           ls dist/*-cp311-abi3-*.whl dist/*-cp314-cp314t-*.whl dist/*-cp315-abi3.abi3t-*.whl
@@ -249,7 +249,7 @@ jobs:
         with:
           path: dist
           merge-multiple: true
-      - uses: astral-sh/setup-uv@v10.3.0
+      - uses: astral-sh/setup-uv@v10.3.2
       - name: Publish to PyPI
         env:
           UV_PUBLISH_TOKEN: ${{ secrets.PYPI_API_TOKEN }}
