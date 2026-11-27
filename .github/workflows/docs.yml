@@ -45,7 +45,7 @@ jobs:
       - run: |
           uv sync --no-install-project --only-group docs
           uv run --no-sync zensical build --clean
-      - uses: actions/upload-pages-artifact@v4
+      - uses: actions/upload-pages-artifact@v5
         with:
           path: site
       - uses: actions/deploy-pages@v4
